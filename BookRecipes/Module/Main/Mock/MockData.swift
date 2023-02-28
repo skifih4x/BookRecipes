@@ -13,9 +13,9 @@ struct MockData {
     static let shared = MockData()
     
     private let sales: ListSection = {
-        .sales([.init(title: "", image: "salesBurger"),
-                .init(title: "", image: "salesPizza"),
-                .init(title: "", image: "salesWok")])
+        .sales([.init(title: "", image: "burger3"),
+                .init(title: "", image: "burger3"),
+                .init(title: "", image: "burger3")])
     }()
     
     private let category: ListSection = {
@@ -28,8 +28,8 @@ struct MockData {
     }()
     
     private let example: ListSection = {
-        .example([.init(title: "", image: "burger1"),
-                  .init(title: "", image: "burger2"),
+        .example([.init(title: "", image: "burger3"),
+                  .init(title: "", image: "burger3"),
                   .init(title: "", image: "burger3"),])
     }()
     

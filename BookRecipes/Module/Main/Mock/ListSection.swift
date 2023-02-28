@@ -28,11 +28,11 @@ enum ListSection {
     var title: String {
         switch self {
         case .sales(_):
-            return "Акции"
+            return "Trending now \u{1F525}"
         case .category(_):
-            return "Категории"
+            return "Trending now \u{1F525}"
         case .example(_):
-            return "Примеры"
+            return "Trending now \u{1F525}"
         }
     }
 }

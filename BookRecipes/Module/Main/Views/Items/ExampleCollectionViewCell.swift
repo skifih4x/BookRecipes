@@ -11,7 +11,7 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     
     private let burgerImageView: UIImageView = {
         let view = UIImageView()
-        view.contentMode = .scaleAspectFit
+        view.contentMode = .scaleToFill
         view.image = UIImage(named: "burger1")
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -62,9 +62,9 @@ class ExampleCollectionViewCell: UICollectionViewCell {
         backgroundColor = .brown
         
         addSubview(burgerImageView)
-        addSubview(backgroundTitleView)
-        addSubview(nameLabel)
-        addSubview(priceLabel)
+        //addSubview(backgroundTitleView)
+        //addSubview(nameLabel)
+        //addSubview(priceLabel)
     }
     
     func configureCell(imageName: String) {
@@ -79,16 +79,16 @@ class ExampleCollectionViewCell: UICollectionViewCell {
             burgerImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             burgerImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            backgroundTitleView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.1),
-            backgroundTitleView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            backgroundTitleView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            backgroundTitleView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
-            nameLabel.centerYAnchor.constraint(equalTo: backgroundTitleView.centerYAnchor),
-            nameLabel.leadingAnchor.constraint(equalTo: backgroundTitleView.leadingAnchor, constant: 10),
-            
-            priceLabel.centerYAnchor.constraint(equalTo: backgroundTitleView.centerYAnchor),
-            priceLabel.trailingAnchor.constraint(equalTo: backgroundTitleView.trailingAnchor, constant: -10)
+//            backgroundTitleView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.1),
+//            backgroundTitleView.leadingAnchor.constraint(equalTo: leadingAnchor),
+//            backgroundTitleView.trailingAnchor.constraint(equalTo: trailingAnchor),
+//            backgroundTitleView.bottomAnchor.constraint(equalTo: bottomAnchor),
+//            
+//            nameLabel.centerYAnchor.constraint(equalTo: backgroundTitleView.centerYAnchor),
+//            nameLabel.leadingAnchor.constraint(equalTo: backgroundTitleView.leadingAnchor, constant: 10),
+//            
+//            priceLabel.centerYAnchor.constraint(equalTo: backgroundTitleView.centerYAnchor),
+//            priceLabel.trailingAnchor.constraint(equalTo: backgroundTitleView.trailingAnchor, constant: -10)
         ])
     }
     
