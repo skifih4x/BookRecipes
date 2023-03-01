@@ -92,11 +92,11 @@ extension MainView {
         
         let section = createLayoutSection(group: group,
                                           behavior: .continuous,
-                                          interGroupSpacing: 10,
+                                          interGroupSpacing: 20,
                                           supplementaryItems: [supplementaryHeaderItem()],
                                           contentInsets: false)
         
-        section.contentInsets = .init(top: 0, leading: 10, bottom: 0, trailing: 10)
+        section.contentInsets = .init(top: 0, leading: 20, bottom: 0, trailing: 20)
         return section
     }
     
@@ -128,12 +128,12 @@ extension MainView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         switch sections[indexPath.section] {
-        case .sales(let sale):
+        case .sales(let sales):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? ExampleCollectionViewCell
             else {
                 return UICollectionViewCell()
             }
-            cell.configureCell(imageName: sale[indexPath.row].image)
+            cell.configureCell(imageName: sales[indexPath.row].image)
             return cell
             
         case .category(let category):

@@ -39,7 +39,7 @@ class HeaderSupplementaryView: UICollectionReusableView {
         NSLayoutConstraint.activate([
         
             headerLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            headerLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10)
+            headerLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0)
         ])
     }
     
