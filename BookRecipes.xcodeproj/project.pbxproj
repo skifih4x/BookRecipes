@@ -21,6 +21,9 @@
 		C7CB34C729ABF6C8001AA24C /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CB34C629ABF6C8001AA24C /* MainVC.swift */; };
 		C7DDAC3429ABF80F004F984F /* CategoriesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DDAC3329ABF80F004F984F /* CategoriesVC.swift */; };
 		C7DDAC3629ABF821004F984F /* SavedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DDAC3529ABF821004F984F /* SavedVC.swift */; };
+		CE0A9D5529AF54AF0029F7C8 /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0A9D5429AF54AF0029F7C8 /* APICaller.swift */; };
+		CE0A9D5929AF54FF0029F7C8 /* DetailedRecipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0A9D5829AF54FF0029F7C8 /* DetailedRecipe.swift */; };
+		CE0A9D5B29AF55120029F7C8 /* SortedRecipes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0A9D5A29AF55120029F7C8 /* SortedRecipes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +43,10 @@
 		C7CB34C629ABF6C8001AA24C /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		C7DDAC3329ABF80F004F984F /* CategoriesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesVC.swift; sourceTree = "<group>"; };
 		C7DDAC3529ABF821004F984F /* SavedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedVC.swift; sourceTree = "<group>"; };
+		CE0A9D5429AF54AF0029F7C8 /* APICaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICaller.swift; sourceTree = "<group>"; };
+		CE0A9D5829AF54FF0029F7C8 /* DetailedRecipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedRecipe.swift; sourceTree = "<group>"; };
+		CE0A9D5A29AF55120029F7C8 /* SortedRecipes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortedRecipes.swift; sourceTree = "<group>"; };
+		CE0A9D5C29AF56CF0029F7C8 /* API README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "API README.md"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,13 +79,14 @@
 		00B6AD1229AB6A1E0021095D /* BookRecipes */ = {
 			isa = PBXGroup;
 			children = (
-				C7CB34C229ABF4FF001AA24C /* Module */,
 				00B6AD1329AB6A1E0021095D /* AppDelegate.swift */,
 				00B6AD1529AB6A1E0021095D /* SceneDelegate.swift */,
 				C7CB34CC29ABF736001AA24C /* Helper */,
+				C7CB34C229ABF4FF001AA24C /* Module */,
 				00B6AD1C29AB6A210021095D /* Assets.xcassets */,
 				00B6AD1E29AB6A210021095D /* LaunchScreen.storyboard */,
 				00B6AD2129AB6A210021095D /* Info.plist */,
+				CE0A9D5C29AF56CF0029F7C8 /* API README.md */,
 			);
 			path = BookRecipes;
 			sourceTree = "<group>";
@@ -150,9 +158,20 @@
 		C7CB34CC29ABF736001AA24C /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				CE0A9D5629AF54D20029F7C8 /* Struct */,
 				C7CB34C029ABF49B001AA24C /* BaseTabBarController.swift */,
+				CE0A9D5429AF54AF0029F7C8 /* APICaller.swift */,
 			);
 			path = Helper;
+			sourceTree = "<group>";
+		};
+		CE0A9D5629AF54D20029F7C8 /* Struct */ = {
+			isa = PBXGroup;
+			children = (
+				CE0A9D5829AF54FF0029F7C8 /* DetailedRecipe.swift */,
+				CE0A9D5A29AF55120029F7C8 /* SortedRecipes.swift */,
+			);
+			path = Struct;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -231,9 +250,15 @@
 				2CF0F83A29AE7E220054CE6F /* MainView.swift in Sources */,
 				C7CB34C729ABF6C8001AA24C /* MainVC.swift in Sources */,
 				00B6AD1429AB6A1E0021095D /* AppDelegate.swift in Sources */,
+				CE0A9D5929AF54FF0029F7C8 /* DetailedRecipe.swift in Sources */,
+				CE0A9D5529AF54AF0029F7C8 /* APICaller.swift in Sources */,
 				00B6AD1629AB6A1E0021095D /* SceneDelegate.swift in Sources */,
+
 				2CF0F84029AE7E900054CE6F /* HeaderSupplementaryView.swift in Sources */,
 				2CF0F83E29AE7E710054CE6F /* ExampleCollectionViewCell.swift in Sources */,
+
+				CE0A9D5B29AF55120029F7C8 /* SortedRecipes.swift in Sources */,
+
 				C7DDAC3629ABF821004F984F /* SavedVC.swift in Sources */,
 				2CF0F84529AE7ED80054CE6F /* ListSection.swift in Sources */,
 				C7DDAC3429ABF80F004F984F /* CategoriesVC.swift in Sources */,
