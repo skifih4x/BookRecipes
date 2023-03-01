@@ -34,6 +34,7 @@
 		CE0A9D5429AF54AF0029F7C8 /* APICaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICaller.swift; sourceTree = "<group>"; };
 		CE0A9D5829AF54FF0029F7C8 /* DetailedRecipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedRecipe.swift; sourceTree = "<group>"; };
 		CE0A9D5A29AF55120029F7C8 /* SortedRecipes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortedRecipes.swift; sourceTree = "<group>"; };
+		CE0A9D5C29AF56CF0029F7C8 /* API README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "API README.md"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +74,7 @@
 				00B6AD1C29AB6A210021095D /* Assets.xcassets */,
 				00B6AD1E29AB6A210021095D /* LaunchScreen.storyboard */,
 				00B6AD2129AB6A210021095D /* Info.plist */,
+				CE0A9D5C29AF56CF0029F7C8 /* API README.md */,
 			);
 			path = BookRecipes;
 			sourceTree = "<group>";

@@ -40,7 +40,7 @@ class APICaller {
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, responce, error in
             guard let data = data, error == nil else {return}
             do {
-                let results = try JSONDecoder().decode(DeatiledRecipe.self, from: data)
+                let results = try JSONDecoder().decode(DetailedRecipe.self, from: data)
                 completion(.success(results))
                 
             } catch {
