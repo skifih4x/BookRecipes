@@ -98,4 +98,14 @@ class APICaller {
         }
         task.resume()
     }
+    
+    func convertHTML (from string: String) -> NSAttributedString?{
+        do{
+            let atrString = try NSAttributedString(data: string.data(using: .utf8) ?? .init(), options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil)
+            return atrString
+        }catch{
+            print("I cant convert html to string sorry")
+            return nil
+        }
+    }
 }
