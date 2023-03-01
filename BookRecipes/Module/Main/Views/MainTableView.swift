@@ -28,8 +28,9 @@ final class MainTableView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(model: [String]) {
-        recipesItems = model
+    //TODO: "models: [String]" will be removed by API model
+    func configure(models: [String]) {
+        recipesItems = models
     }
 }
 
@@ -43,7 +44,8 @@ extension MainTableView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = mainTableView.dequeueReusableCell(withIdentifier: "MainTableViewCell", for: indexPath) as? MainTableViewCell else { return UITableViewCell() }
-        
+        //TODO: We'll pass a model here
+        cell.configure(model: "")
         return cell
     }
 }
