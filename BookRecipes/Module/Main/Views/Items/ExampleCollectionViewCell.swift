@@ -9,38 +9,66 @@ import UIKit
 
 class ExampleCollectionViewCell: UICollectionViewCell {
     
+    var isSaved: Bool = false
+    
     private let burgerImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleToFill
         view.image = UIImage(named: "burger1")
+        view.isUserInteractionEnabled = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private let backgroundTitleView: UIView = {
+    private let ratingView: UIView = {
         let view = UIView()
+        view.backgroundColor = UIColor(red: 180/255, green: 182/255, blue: 188/255, alpha: 0.9)
+        view.layer.cornerRadius = 7
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let starImageView: UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(systemName: "star.fill")
+        view.tintColor = .black
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let ratingLabel: UILabel = {
+        let view = UILabel()
+        view.text = "4,5"
+        view.font = UIFont(name: "Helvetica Neue Bold", size: 18)
+        view.textColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let saveButton: UIButton = {
+        let view = UIButton()
         view.backgroundColor = .white
-        view.alpha = 0.6
+        view.layer.cornerRadius = 17.5
+        //view.setImage(UIImage(named: "bookmark"), for: .normal)
+        view.addTarget(nil, action: #selector(saveButtonTapped), for: .touchUpInside)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private let nameLabel: UILabel = {
-        let view = UILabel()
-        view.text = "Egg top Burger"
-        view.textAlignment = .center
-        view.font = UIFont(name: "Arial", size: 16)
-        view.textColor = .black
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    @objc func saveButtonTapped() {
+        print("тыкнул по кнопке сохранить")
+        if !isSaved {
+            isSaved = true
+            bookmarkImageView.image = UIImage(named: "bookmark selected")
+        } else {
+            isSaved = false
+            bookmarkImageView.image = UIImage(named: "bookmark")
+        }
+    }
     
-    private let priceLabel: UILabel = {
-        let view = UILabel()
-        view.text = "7.42"
-        view.textAlignment = .center
-        view.font = UIFont(name: "Arial Bold", size: 24)
-        view.textColor = .red
+    private let bookmarkImageView: UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "bookmark")
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -62,9 +90,11 @@ class ExampleCollectionViewCell: UICollectionViewCell {
         backgroundColor = .brown
         
         addSubview(burgerImageView)
-        //addSubview(backgroundTitleView)
-        //addSubview(nameLabel)
-        //addSubview(priceLabel)
+        burgerImageView.addSubview(ratingView)
+        ratingView.addSubview(starImageView)
+        ratingView.addSubview(ratingLabel)
+        burgerImageView.addSubview(saveButton)
+        saveButton.addSubview(bookmarkImageView)
     }
     
     func configureCell(imageName: String) {
@@ -79,16 +109,31 @@ class ExampleCollectionViewCell: UICollectionViewCell {
             burgerImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             burgerImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-//            backgroundTitleView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.1),
-//            backgroundTitleView.leadingAnchor.constraint(equalTo: leadingAnchor),
-//            backgroundTitleView.trailingAnchor.constraint(equalTo: trailingAnchor),
-//            backgroundTitleView.bottomAnchor.constraint(equalTo: bottomAnchor),
-//            
-//            nameLabel.centerYAnchor.constraint(equalTo: backgroundTitleView.centerYAnchor),
-//            nameLabel.leadingAnchor.constraint(equalTo: backgroundTitleView.leadingAnchor, constant: 10),
-//            
-//            priceLabel.centerYAnchor.constraint(equalTo: backgroundTitleView.centerYAnchor),
-//            priceLabel.trailingAnchor.constraint(equalTo: backgroundTitleView.trailingAnchor, constant: -10)
+            ratingView.topAnchor.constraint(equalTo: burgerImageView.topAnchor, constant: 10),
+            ratingView.leadingAnchor.constraint(equalTo: burgerImageView.leadingAnchor, constant: 10),
+            ratingView.heightAnchor.constraint(equalToConstant: 35),
+            ratingView.widthAnchor.constraint(equalToConstant: 70),
+            
+            starImageView.centerYAnchor.constraint(equalTo: ratingView.centerYAnchor),
+            starImageView.leadingAnchor.constraint(equalTo: ratingView.leadingAnchor, constant: 7),
+            starImageView.heightAnchor.constraint(equalToConstant: 20),
+            starImageView.widthAnchor.constraint(equalToConstant: 20),
+            
+            ratingLabel.centerYAnchor.constraint(equalTo: ratingView.centerYAnchor),
+            ratingLabel.trailingAnchor.constraint(equalTo: ratingView.trailingAnchor, constant: -7),
+            ratingLabel.heightAnchor.constraint(equalToConstant: 20),
+            ratingLabel.widthAnchor.constraint(equalToConstant: 30),
+            
+            saveButton.topAnchor.constraint(equalTo: burgerImageView.topAnchor, constant: 10),
+            saveButton.trailingAnchor.constraint(equalTo: burgerImageView.trailingAnchor, constant: -10),
+            saveButton.heightAnchor.constraint(equalToConstant: 35),
+            saveButton.widthAnchor.constraint(equalToConstant: 35),
+            
+            bookmarkImageView.centerYAnchor.constraint(equalTo: saveButton.centerYAnchor),
+            bookmarkImageView.centerXAnchor.constraint(equalTo: saveButton.centerXAnchor),
+            bookmarkImageView.heightAnchor.constraint(equalToConstant: 19),
+            bookmarkImageView.widthAnchor.constraint(equalToConstant: 15),
+
         ])
     }
     
