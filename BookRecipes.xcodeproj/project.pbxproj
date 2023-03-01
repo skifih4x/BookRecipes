@@ -19,7 +19,7 @@
 		2CF0F84829AE7EFF0054CE6F /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF0F84729AE7EFF0054CE6F /* MockData.swift */; };
 		95564F8729AFAFFA0078BDB3 /* MainTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95564F8629AFAFFA0078BDB3 /* MainTableView.swift */; };
 		95564F8929AFB9A20078BDB3 /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95564F8829AFB9A20078BDB3 /* MainTableViewCell.swift */; };
-		95564F8D29AFE7000078BDB3 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95564F8C29AFE7000078BDB3 /* RatingView.swift */; };
+		955FC9CF29AFE8B7004E36FC /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955FC9CE29AFE8B7004E36FC /* RatingView.swift */; };
 		C710EAC929AE1F0E000C85C9 /* SavedTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C710EAC829AE1F0E000C85C9 /* SavedTableCell.swift */; };
 		C7CB34C129ABF49B001AA24C /* BaseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CB34C029ABF49B001AA24C /* BaseTabBarController.swift */; };
 		C7CB34C729ABF6C8001AA24C /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CB34C629ABF6C8001AA24C /* MainVC.swift */; };
@@ -45,7 +45,7 @@
 		2CF0F84729AE7EFF0054CE6F /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
 		95564F8629AFAFFA0078BDB3 /* MainTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableView.swift; sourceTree = "<group>"; };
 		95564F8829AFB9A20078BDB3 /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
-		95564F8C29AFE7000078BDB3 /* RatingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RatingView.swift; path = ../../../../../../../../BookRecipes/BookRecipes/Module/Main/Views/RatingView.swift; sourceTree = "<group>"; };
+		955FC9CE29AFE8B7004E36FC /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		C710EAC829AE1F0E000C85C9 /* SavedTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedTableCell.swift; sourceTree = "<group>"; };
 		C7CB34C029ABF49B001AA24C /* BaseTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTabBarController.swift; sourceTree = "<group>"; };
 		C7CB34C629ABF6C8001AA24C /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
@@ -106,7 +106,7 @@
 				2CF0F83929AE7E220054CE6F /* MainView.swift */,
 				95564F8629AFAFFA0078BDB3 /* MainTableView.swift */,
 				95564F8829AFB9A20078BDB3 /* MainTableViewCell.swift */,
-				95564F8C29AFE7000078BDB3 /* RatingView.swift */,
+				955FC9CE29AFE8B7004E36FC /* RatingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -273,7 +273,7 @@
 				CE0A9D5B29AF55120029F7C8 /* SortedRecipes.swift in Sources */,
 				C7DDAC3629ABF821004F984F /* SavedVC.swift in Sources */,
 				2CF0F84529AE7ED80054CE6F /* ListSection.swift in Sources */,
-				95564F8D29AFE7000078BDB3 /* RatingView.swift in Sources */,
+				955FC9CF29AFE8B7004E36FC /* RatingView.swift in Sources */,
 				C7DDAC3429ABF80F004F984F /* CategoriesVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
