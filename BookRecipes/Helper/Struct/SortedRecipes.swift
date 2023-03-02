@@ -14,3 +14,5 @@ struct SortedRecipes: Codable {
 struct Recipe: Codable {
     let id : Int
 }
+
+typealias SearchedRecipes = [Recipe]
