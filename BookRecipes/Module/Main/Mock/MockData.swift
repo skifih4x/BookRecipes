@@ -12,29 +12,23 @@ struct MockData {
     
     static let shared = MockData()
     
-    private let sales: ListSection = {
-        .sales([.init(title: "", image: "burger3"),
-                .init(title: "", image: "burger3"),
-                .init(title: "", image: "burger3")])
+    private let popular: ListSection = {
+        .popular([.init(title: "", image: "loading"),
+                .init(title: "", image: "loading")])
     }()
     
-    private let category: ListSection = {
-        .category([.init(title: "Burger", image: "burger3"),
-                   .init(title: "Chicken", image: "burger3"),
-                   .init(title: "Hot-dog", image: "burger3"),
-                   .init(title: "Pizza", image: "burger3"),
-                   .init(title: "Taco", image: "burger3"),
-                   .init(title: "Wok", image: "burger3")])
+    private let healthy: ListSection = {
+        .healthy([.init(title: "", image: "loading"),
+                   .init(title: "", image: "loading")])
     }()
     
-    private let example: ListSection = {
-        .example([.init(title: "", image: "burger3"),
-                  .init(title: "", image: "burger3"),
-                  .init(title: "", image: "burger3"),])
+    private let dessert: ListSection = {
+        .dessert([.init(title: "", image: "loading"),
+                  .init(title: "", image: "loading")])
     }()
     
     var pageData: [ListSection] {
-        [sales, category, example]
+        [popular, healthy, dessert]
     }
     
     
