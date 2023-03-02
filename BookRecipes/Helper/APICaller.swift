@@ -21,6 +21,7 @@ struct Constants {
     static let healthyRecipesURL = "\(basicURL)complexSearch?sort=healthiness&number=10&apiKey=\(APIKey)"
     static let dessertRecipesURL = "\(basicURL)complexSearch?sort=sugar&number=10&apiKey=\(APIKey)"
     static let randomURL = "\(basicURL)random?apiKey=\(APIKey)"
+    static let searchRecipeURL = "\(basicURL)autocomplete?number=10&apiKey=\(APIKey)&query="
     
 }
 
@@ -83,6 +84,23 @@ class APICaller {
             } catch {
                 completion(.failure(error))
                 print ("error in getSortedRecipes")
+            }
+        }
+        task.resume()
+    }
+    
+    func searchRecipe (keyWord: String, completion: @escaping (Result<[Recipe], Error>) -> Void) {
+        guard let url = URL(string: Constants.searchRecipeURL+keyWord) else {return}
+        print ("url for searched : \(url)")
+        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
+            
+            guard let data = data, error == nil else {return}
+            do {
+                let results = try JSONDecoder().decode(SearchedRecipes.self, from: data)
+                completion(.success(results))
+            } catch {
+                completion(.failure(error))
+                print ("error in searchRecipes: \(error)")
             }
         }
         task.resume()
