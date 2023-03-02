@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class SavedTableCell: UITableViewCell {
     
@@ -57,8 +58,8 @@ class SavedTableCell: UITableViewCell {
         ])
     }
     
-    func configure(with image: UIImage?, text: String) {
-        self.cellImageView.image = image
+    func configure(with imageUrl: String, text: String) {
+        self.cellImageView.sd_setImage(with: URL(string: imageUrl))
         self.nameLabel.text = text
     }
 }
