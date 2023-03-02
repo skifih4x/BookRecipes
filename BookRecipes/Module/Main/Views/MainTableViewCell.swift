@@ -24,6 +24,7 @@ final class MainTableViewCell: UITableViewCell {
     private let recipeNameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
         return label
     }()
     
@@ -63,7 +64,7 @@ private extension MainTableViewCell {
         NSLayoutConstraint.activate([
             recipeImageView.topAnchor.constraint(equalTo: topAnchor),
             recipeImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            recipeImageView.bottomAnchor.constraint(equalTo: recipeNameLabel.topAnchor, constant: -10),
+            recipeImageView.bottomAnchor.constraint(equalTo: recipeNameLabel.topAnchor, constant: 10),
             recipeImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
             recipeNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),

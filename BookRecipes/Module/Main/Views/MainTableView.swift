@@ -9,10 +9,11 @@ import UIKit
 
 final class MainTableView: UIView {
 
-    private let mainTableView: UITableView = {
+    let mainTableView: UITableView = {
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
         table.register(MainTableViewCell.self, forCellReuseIdentifier: "MainTableViewCell")
+        table.rowHeight = 200
         return table
     }()
     
