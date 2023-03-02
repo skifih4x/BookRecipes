@@ -87,6 +87,8 @@ class ExampleCollectionViewCell: UICollectionViewCell {
         view.textColor = .black
         view.font = UIFont(name: "Helvetica Neue Bold", size: 18)
         view.textAlignment = .center
+        view.adjustsFontSizeToFitWidth = true
+        view.numberOfLines = 1
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -117,6 +119,14 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     
     func configureCell(imageName: String) {
         burgerImageView.image = UIImage(named: imageName)
+    }
+    
+    func configure(model: SafeRecipe) {
+        //self.nameLabel.text = model.title
+        self.nameLabel.text = model.recipe.title
+        self.burgerImageView.image = UIImage(data: model.imageData)
+        
+        
     }
     
     private func setConstraints() {
@@ -157,7 +167,8 @@ class ExampleCollectionViewCell: UICollectionViewCell {
             nameView.trailingAnchor.constraint(equalTo: trailingAnchor),
             nameView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            nameLabel.centerXAnchor.constraint(equalTo: nameView.centerXAnchor),
+            nameLabel.leadingAnchor.constraint(equalTo: nameView.leadingAnchor),
+            nameLabel.trailingAnchor.constraint(equalTo: nameView.trailingAnchor),
             nameLabel.centerYAnchor.constraint(equalTo: nameView.centerYAnchor),
 
         ])

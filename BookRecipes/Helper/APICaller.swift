@@ -10,7 +10,8 @@ import UIKit
 
 struct Constants {
     
-    static let APIKey = "7e31fd338a334d03aafda200f55348c0"
+    //static let APIKey = "7e31fd338a334d03aafda200f55348c0"
+    static let APIKey = "3632101b02674a0e97fb8b63eb12646e"
     static let basicURL = "https://api.spoonacular.com/recipes/"
     
     static func exactURL(with id: Int) -> String {

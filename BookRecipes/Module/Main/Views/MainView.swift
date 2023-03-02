@@ -8,6 +8,10 @@
 import UIKit
 
 class MainView: UIView {
+    
+    //var mainVC = MainVC()
+    
+    var popularRecipes: [SafeRecipe] = []
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,7 +28,7 @@ class MainView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private let collectionView: UICollectionView = {
+    let collectionView: UICollectionView = {
         let collectionViewLayout = UICollectionViewLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
         collectionView.backgroundColor = .none
@@ -122,7 +126,9 @@ extension MainView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        sections[section].count
+        //sections[section].count
+        print(popularRecipes.count)
+        return 10
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -133,7 +139,13 @@ extension MainView: UICollectionViewDataSource {
             else {
                 return UICollectionViewCell()
             }
-            cell.configureCell(imageName: sales[indexPath.row].image)
+            if popularRecipes.count < 10 {
+                cell.configureCell(imageName: sales[indexPath.row].image)
+            } else {
+                cell.configure(model: popularRecipes[indexPath.item])
+            }
+            
+            
             return cell
             
         case .category(let category):
