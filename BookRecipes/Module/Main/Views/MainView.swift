@@ -9,24 +9,11 @@ import UIKit
 
 class MainView: UIView {
     
-    //var mainVC = MainVC()
-    
     var popularRecipes: [SafeRecipe] = []
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        setupViews()
-        setConstraints()
-        setDelegates()
-        
-        translatesAutoresizingMaskIntoConstraints = false
-
-    }
+    var healthyRecipes: [SafeRecipe] = []
+    var dessertRecipes: [SafeRecipe] = []
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    private let sections = MockData.shared.pageData
     
     let collectionView: UICollectionView = {
         let collectionViewLayout = UICollectionViewLayout()
@@ -36,12 +23,23 @@ class MainView: UIView {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        setupViews()
+        setConstraints()
+        setDelegates()
+        
+        translatesAutoresizingMaskIntoConstraints = false
+    }
     
-    private let sections = MockData.shared.pageData
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private func setupViews() {
         backgroundColor = .white
-        //backgroundColor = .lightGray
         addSubview(collectionView)
         collectionView.register(ExampleCollectionViewCell.self, forCellWithReuseIdentifier: "ComingSoonCollectionViewCell")
         collectionView.register(HeaderSupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderSupplementaryView")
@@ -64,13 +62,13 @@ extension MainView {
             guard let self = self else { return nil}
             let section = self.sections[sectionIndex]
             switch section {
-            case .sales(_):
+            case .popular(_):
                 //return self.createSalesSection()
                 return self.createExampleSection()
-            case .category(_):
+            case .healthy(_):
                 //return self.createCategorySection()
                 return self.createExampleSection()
-            case .example(_):
+            case .dessert(_):
                 return self.createExampleSection()
             }
         }
@@ -126,42 +124,50 @@ extension MainView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //sections[section].count
-        print(popularRecipes.count)
-        return 10
+        if popularRecipes.count < 10 {
+            return sections[section].count
+        } else {
+            return popularRecipes.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         switch sections[indexPath.section] {
-        case .sales(let sales):
+        case .popular(let popular):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? ExampleCollectionViewCell
             else {
                 return UICollectionViewCell()
             }
             if popularRecipes.count < 10 {
-                cell.configureCell(imageName: sales[indexPath.row].image)
+                cell.configureCell(imageName: popular[indexPath.item].image)
             } else {
                 cell.configure(model: popularRecipes[indexPath.item])
             }
-            
-            
             return cell
             
-        case .category(let category):
+        case .healthy(let healthy):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? ExampleCollectionViewCell
             else {
                 return UICollectionViewCell()
             }
-            cell.configureCell(imageName: category[indexPath.row].image)
+            if dessertRecipes.count < 10 {
+                cell.configureCell(imageName: healthy[indexPath.item].image)
+            } else {
+                cell.configure(model: healthyRecipes[indexPath.item])
+            }
             return cell
             
-        case .example(let example):
+        case .dessert(let dessert):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? ExampleCollectionViewCell
             else {
                 return UICollectionViewCell()
             }
-            cell.configureCell(imageName: example[indexPath.row].image)
+            if dessertRecipes.count < 10 {
+                cell.configureCell(imageName: dessert[indexPath.item].image)
+            } else {
+                cell.configure(model: dessertRecipes[indexPath.item])
+            }
             return cell
         }
     }
@@ -176,8 +182,6 @@ extension MainView: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
     }
-    
-    
 }
 
 //MARK: - Set Constraints
