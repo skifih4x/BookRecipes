@@ -39,7 +39,7 @@ class CategoryCollectionViewCell: UICollectionViewCell {
         let view = UIView()
         
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .black.withAlphaComponent(0.7)
+        view.backgroundColor = .black.withAlphaComponent(0.65)
         view.layer.cornerRadius = 8
         
         return view
