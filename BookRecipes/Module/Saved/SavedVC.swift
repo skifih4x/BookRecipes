@@ -6,8 +6,9 @@
 //
 
 import UIKit
+import SwiftUI
 
-class SavedVC: UIViewController {
+final class SavedVC: UIViewController {
     
     lazy var tableView = UITableView()
     var data = [Recipe]()
@@ -15,6 +16,14 @@ class SavedVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Saved recipes"
+        
+        tableViewSetup()
+        loadData()
+        constraints()
+    }
+    
+    private func loadData() {
         APICaller.shared.getSortedRecipes(type: .dessert) { result in
             switch result {
             case .success(let recipes):
@@ -25,22 +34,20 @@ class SavedVC: UIViewController {
             case .failure(let err):
                 print(err.localizedDescription)
             }
-            
         }
-        tableViewSetup()
-        constraints()
     }
     
-    func tableViewSetup() {
+    private func tableViewSetup() {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(SavedTableCell.self, forCellReuseIdentifier: SavedTableCell.reuseId)
+        tableView.separatorStyle = .none
         tableView.dataSource = self
         tableView.delegate = self
         
     }
     
-    func constraints() {
+    private func constraints() {
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -52,7 +59,7 @@ class SavedVC: UIViewController {
 
 extension SavedVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return view.frame.height / 3
+        return UITableView.automaticDimension
     }
 }
 

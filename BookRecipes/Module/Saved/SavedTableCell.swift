@@ -24,7 +24,7 @@ class SavedTableCell: UITableViewCell {
     
     lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 20)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -49,9 +49,9 @@ class SavedTableCell: UITableViewCell {
             cellImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: inset),
             cellImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),
             cellImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -inset),
-            cellImageView.heightAnchor.constraint(equalTo: contentView.widthAnchor, constant: -inset),
+            cellImageView.heightAnchor.constraint(equalTo: cellImageView.widthAnchor, multiplier: 9/16),
             
-            nameLabel.topAnchor.constraint(equalTo: cellImageView.bottomAnchor, constant: inset),
+            nameLabel.topAnchor.constraint(equalTo: cellImageView.bottomAnchor, constant: 12),
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -inset),
             nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -inset)
