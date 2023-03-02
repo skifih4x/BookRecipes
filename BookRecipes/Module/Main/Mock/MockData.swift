@@ -14,7 +14,15 @@ struct MockData {
     
     private let popular: ListSection = {
         .popular([.init(title: "", image: "loading"),
-                .init(title: "", image: "loading")])
+                .init(title: "", image: "loading"),
+                 .init(title: "", image: "loading"),
+                 .init(title: "", image: "loading"),
+                 .init(title: "", image: "loading"),
+                 .init(title: "", image: "loading"),
+                 .init(title: "", image: "loading"),
+                 .init(title: "", image: "loading"),
+                 .init(title: "", image: "loading"),
+                 .init(title: "", image: "loading")])
     }()
     
     private let healthy: ListSection = {

@@ -11,6 +11,8 @@ class MainVC: UIViewController {
     
     var mainView = MainView()
     
+    var APIcaller = APICaller.shared
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchData(for: .popular)

@@ -13,6 +13,10 @@ class MainView: UIView {
     var healthyRecipes: [SafeRecipe] = []
     var dessertRecipes: [SafeRecipe] = []
     
+    var boolArray: [[Bool]] = [[false, false, false, false, false, false, false, false, false, false],
+                               [false, false, false, false, false, false, false, false, false, false],
+                               [false, false, false, false, false, false, false, false, false, false]]
+    
     private let sections = MockData.shared.pageData
     
     let collectionView: UICollectionView = {
@@ -90,7 +94,7 @@ extension MainView {
     private func createExampleSection() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
         
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(0.75), heightDimension: .fractionalHeight(0.3)), subitems: [item])
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(0.7), heightDimension: .fractionalHeight(0.3)), subitems: [item])
         
         let section = createLayoutSection(group: group,
                                           behavior: .continuous,
@@ -111,7 +115,7 @@ extension MainView {
 
 extension MainView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("тыкнул по ячейке \(indexPath.item)")
+        print("тыкнул по ячейке \(indexPath.item) в секции \(indexPath.section)")
     }
 }
 
@@ -140,9 +144,11 @@ extension MainView: UICollectionViewDataSource {
                 return UICollectionViewCell()
             }
             if popularRecipes.count < 10 {
-                cell.configureCell(imageName: popular[indexPath.item].image)
+                cell.configureCell(imageName: popular[indexPath.item].image, section: indexPath.section, item: indexPath.item)
+                print("srabotal cellForItemAt")
             } else {
-                cell.configure(model: popularRecipes[indexPath.item])
+                cell.configure(model: popularRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
+                print("srabotal cellForItemAt")
             }
             return cell
             
@@ -152,9 +158,9 @@ extension MainView: UICollectionViewDataSource {
                 return UICollectionViewCell()
             }
             if dessertRecipes.count < 10 {
-                cell.configureCell(imageName: healthy[indexPath.item].image)
+                cell.configureCell(imageName: healthy[indexPath.item].image, section: indexPath.section, item: indexPath.item)
             } else {
-                cell.configure(model: healthyRecipes[indexPath.item])
+                cell.configure(model: healthyRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
             }
             return cell
             
@@ -164,9 +170,9 @@ extension MainView: UICollectionViewDataSource {
                 return UICollectionViewCell()
             }
             if dessertRecipes.count < 10 {
-                cell.configureCell(imageName: dessert[indexPath.item].image)
+                cell.configureCell(imageName: dessert[indexPath.item].image, section: indexPath.section, item: indexPath.item)
             } else {
-                cell.configure(model: dessertRecipes[indexPath.item])
+                cell.configure(model: dessertRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
             }
             return cell
         }
