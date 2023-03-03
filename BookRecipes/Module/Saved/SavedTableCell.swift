@@ -85,7 +85,7 @@ class SavedTableCell: UITableViewCell {
         saveButtonClosure?()
     }
     
-    func configure(with imageUrl: String, text: String) {
+    func configure(with imageUrl: String, text: String, saveButtonClosure: ()->()) {
         self.cellImageView.sd_setImage(with: URL(string: imageUrl))
         self.nameLabel.text = text
     }
