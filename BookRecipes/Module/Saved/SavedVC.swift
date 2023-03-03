@@ -72,7 +72,7 @@ extension SavedVC: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SavedTableCell.reuseId)
                 as? SavedTableCell else { return UITableViewCell() }
         let recipe = data[indexPath.row]
-        cell.configure(with: recipe.image, text: recipe.title)
+//        cell.configure(with: recipe.image, text: recipe.title)
         return cell
     }  
 }
