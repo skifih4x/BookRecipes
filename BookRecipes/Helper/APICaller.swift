@@ -13,8 +13,8 @@ struct Constants {
     //static let APIKey = "7e31fd338a334d03aafda200f55348c0"
     //static let APIKey = "3632101b02674a0e97fb8b63eb12646e"
     //static let APIKey = "34f7a796b8c345a3abc987d7b2441e31"
-    //static let APIKey = "04864a53f7464c90820b2725af2c6ba0"
-    static let APIKey = "206625f6a74745dda3cb47905f129e1c"
+    static let APIKey = "04864a53f7464c90820b2725af2c6ba0"
+    //static let APIKey = "206625f6a74745dda3cb47905f129e1c"
     static let basicURL = "https://api.spoonacular.com/recipes/"
     
     static func exactURL(with id: Int) -> String {

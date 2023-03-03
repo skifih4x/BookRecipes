@@ -113,7 +113,7 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     
     private let nameLabel: UILabel = {
         let view = UILabel()
-        view.text = "How to sharwama at home"
+        view.text = "Loading..."
         view.textColor = .black
         view.font = UIFont(name: "Helvetica Neue Bold", size: 18)
         view.textAlignment = .center
