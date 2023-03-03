@@ -11,6 +11,7 @@ import UIKit
 struct Constants {
     
     static let APIKey = "7e31fd338a334d03aafda200f55348c0"
+    //static let APIKey = "3632101b02674a0e97fb8b63eb12646e"
     static let basicURL = "https://api.spoonacular.com/recipes/"
     
     static func exactURL(with id: Int) -> String {
@@ -20,6 +21,8 @@ struct Constants {
     static let healthyRecipesURL = "\(basicURL)complexSearch?sort=healthiness&number=10&apiKey=\(APIKey)"
     static let dessertRecipesURL = "\(basicURL)complexSearch?sort=sugar&number=10&apiKey=\(APIKey)"
     static let randomURL = "\(basicURL)random?apiKey=\(APIKey)"
+    static let searchRecipeURL = "\(basicURL)autocomplete?number=10&apiKey=\(APIKey)&query="
+    static let ingredientImageURL = "https://spoonacular.com/cdn/ingredients_100x100/"
     
 }
 
@@ -87,11 +90,37 @@ class APICaller {
         task.resume()
     }
     
-    func getImage(from urlString: String,completion: @escaping (Result<Data, Error>) -> Void) {
-        guard let url = URL(string: urlString) else {return}
+    func searchRecipe (keyWord: String, completion: @escaping (Result<[Recipe], Error>) -> Void) {
+        guard let url = URL(string: Constants.searchRecipeURL+keyWord) else {return}
+        print ("url for searched : \(url)")
+        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
+            
+            guard let data = data, error == nil else {return}
+            do {
+                let results = try JSONDecoder().decode(SearchedRecipes.self, from: data)
+                completion(.success(results))
+            } catch {
+                completion(.failure(error))
+                print ("error in searchRecipes: \(error)")
+            }
+        }
+        task.resume()
+    }
+    
+    func getImage(from urlString: String, isIngredient: Bool = false, completion: @escaping (Result<Data, Error>) -> Void) {
+        
+        var url: String?
+        
+        if isIngredient == true {
+            url = Constants.ingredientImageURL + urlString
+        } else {
+            url = urlString
+        }
+        
+        guard let url = URL(string: url!) else { return }
         
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
-            guard let data = data, error == nil else {return}
+            guard let data = data, error == nil else { return }
             
             completion(.success(data))
             

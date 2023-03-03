@@ -1,5 +1,5 @@
 //
-//  RatingView.swift
+//  RatingContentView.swift
 //  BookRecipes
 //
 //  Created by Buzz on 3/1/23.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class RatingView: UIView {
+final class RatingContentView: UIView {
     
     private let contentView: UIView = {
         let view = UIView()
@@ -49,7 +49,7 @@ final class RatingView: UIView {
 
 //MARK: Setup
 
-private extension RatingView {
+private extension RatingContentView {
     
     func setup() {
         setupView()

@@ -9,8 +9,8 @@ import UIKit
 
 final class MainTableViewCell: UITableViewCell {
     
-    private let ratingView: RatingView = {
-        let view = RatingView()
+    private let ratingView: RatingContentView = {
+        let view = RatingContentView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
