@@ -37,11 +37,10 @@ final class MainTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //TODO: "model: String" will be removed by API model
-    func configure(model: String) {
-        ratingView.configure(rating: "5")
+    func configure(model: Recipe) {
+        ratingView.configure(rating: "4")
         recipeImageView.image = UIImage(named: "burger1")
-        recipeNameLabel.text = "How to sharwama at home"
+        recipeNameLabel.text = model.title
     }
 }
 

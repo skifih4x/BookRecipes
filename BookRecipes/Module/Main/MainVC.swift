@@ -16,10 +16,10 @@ final class MainVC: UIViewController {
         return view
     }()
     
-    //TODO: "models" will be removed by API model
-    private let recipesModels: [String] = ["1", "2", "2", "2", "2", "4", "4", "5"]
-    private var searchedRecipes: [String] = []
+    private var recipesModels: [Recipe] = []
+    private var searchedRecipes: [Recipe] = []
     
+    private let apiManager = APICaller.shared
     private let mainTableView = MainTableView()
     var mainView = MainView()
     
@@ -35,9 +35,6 @@ final class MainVC: UIViewController {
 private extension MainVC {
     
     func setup() {
-        searchedRecipes = recipesModels
-        hideMainTableView(isTableViewHidden: true)
-        mainTableView.configure(models: searchedRecipes)
         setDelegate()
         setupView()
         setConstraints()
@@ -45,6 +42,9 @@ private extension MainVC {
         fetchData(for: .popular)
         fetchData(for: .healthy)
         fetchData(for: .dessert)
+        searchedRecipes = recipesModels
+        hideMainTableView(isTableViewHidden: true)
+        mainTableView.configure(models: searchedRecipes)
     }
     
     func setDelegate() {
@@ -91,6 +91,7 @@ private extension MainVC {
             switch results {
             case .success(let recipes):
                 // Успешно получено
+                self.recipesModels = recipes
                 for i in recipes {
                     dispatchGroup.enter()
                     APICaller.shared.getDetailedRecipe(with: i.id) { results in
@@ -145,9 +146,28 @@ extension MainVC: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        hideMainTableView(isTableViewHidden: false)
-        searchedRecipes = recipesModels.filter { $0.lowercased().prefix(searchText.count) == searchText.lowercased() }
-        updateMainTableView()
+        apiManager.searchRecipe(keyWord: searchText) { [weak self] result in
+            switch result {
+            case .success(let data):
+//                data.forEach { recipe in
+//                    self?.apiManager.getImage(from: recipe.image) { result in
+//                        switch result {
+//                        case .success(let imageData):
+//                            let safeRecipe = SafeRecipe(recipe: recipe, imageData: imageData)
+//                        case .failure(let error):
+//                            print (error)
+//                        }
+//                    }
+//                }
+                
+                DispatchQueue.main.async {
+                    self?.hideMainTableView(isTableViewHidden: false)
+                    self?.updateMainTableView()
+                }
+            case .failure(let error):
+                print (error)
+            }
+        }
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
