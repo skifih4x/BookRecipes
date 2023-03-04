@@ -8,20 +8,12 @@
 import UIKit
 
 class MainView: UIView {
-    
-    private var baseEI = ExtendedIngredient(image: "", name: "", amount: 0.0, unit: "")
-    
-    private lazy var baseDR = DetailedRecipe(id: 0, readyInMinutes: 0, title: "", image: "", aggregateLikes: 0, summary: "", instructions: "", extendedIngredients: [baseEI])
-    
-    lazy var popularRecipes: [DetailedRecipe] = [baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR]
-    lazy var healthyRecipes: [DetailedRecipe] = [baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR]
-    lazy var dessertRecipes: [DetailedRecipe] = [baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR]
-    
+       
     var boolArray: [[Bool]] = [[false, false, false, false, false, false, false, false, false, false],
                                [false, false, false, false, false, false, false, false, false, false],
                                [false, false, false, false, false, false, false, false, false, false]]
     
-    private let sections = MockData.shared.pageData
+    
     
     let collectionView: UICollectionView = {
         let collectionViewLayout = UICollectionViewLayout()
@@ -52,139 +44,20 @@ class MainView: UIView {
         collectionView.register(ExampleCollectionViewCell.self, forCellWithReuseIdentifier: "ComingSoonCollectionViewCell")
         collectionView.register(HeaderSupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderSupplementaryView")
         
-        collectionView.collectionViewLayout = createLayout()
+        
+    }
+    
+    func configure(delegate: UICollectionViewDelegate, dataSource: UICollectionViewDataSource) {
+        collectionView.delegate = delegate
+        collectionView.dataSource = dataSource
     }
     
     private func setDelegates() {
-        collectionView.delegate = self
-        collectionView.dataSource = self
+        //collectionView.delegate = self
+        //collectionView.dataSource = self
     }
 }
 
-//MARK: - Create Layout
-
-extension MainView {
-    
-    private func createLayout() -> UICollectionViewCompositionalLayout {
-        UICollectionViewCompositionalLayout { [weak self] sectionIndex, _ in
-            guard let self = self else { return nil}
-            let section = self.sections[sectionIndex]
-            switch section {
-            case .popular(_):
-                //return self.createSalesSection()
-                return self.createExampleSection()
-            case .healthy(_):
-                //return self.createCategorySection()
-                return self.createExampleSection()
-            case .dessert(_):
-                return self.createExampleSection()
-            }
-        }
-    }
-    
-    private func createLayoutSection(group: NSCollectionLayoutGroup,
-                                     behavior: UICollectionLayoutSectionOrthogonalScrollingBehavior,
-                                     interGroupSpacing: CGFloat,
-                                     supplementaryItems: [NSCollectionLayoutBoundarySupplementaryItem],
-                                     contentInsets: Bool) -> NSCollectionLayoutSection {
-        let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = behavior
-        section.interGroupSpacing = interGroupSpacing
-        section.boundarySupplementaryItems = supplementaryItems
-        //section.supplementariesFollowContentInsets = contentInsets
-        return section
-    }
-     
-    private func createExampleSection() -> NSCollectionLayoutSection {
-        let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
-        
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(0.7), heightDimension: .fractionalHeight(0.3)), subitems: [item])
-        
-        let section = createLayoutSection(group: group,
-                                          behavior: .continuous,
-                                          interGroupSpacing: 20,
-                                          supplementaryItems: [supplementaryHeaderItem()],
-                                          contentInsets: false)
-        
-        section.contentInsets = .init(top: 0, leading: 20, bottom: 0, trailing: 20)
-        return section
-    }
-    
-    private func supplementaryHeaderItem() -> NSCollectionLayoutBoundarySupplementaryItem {
-        .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-    }
-}
-
-//MARK: - UICollectionViewDelegate
-
-extension MainView: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("тыкнул по ячейке \(indexPath.item) в секции \(indexPath.section)")
-        
-    }
-}
-
-//MARK: - UICollectionViewDataSource
-
-extension MainView: UICollectionViewDataSource {
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        sections.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        switch sections[indexPath.section] {
-        case .popular(_):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? ExampleCollectionViewCell
-            else {
-                return UICollectionViewCell()
-            }
-            cell.configure(model: popularRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
-            print("srabotal cellForItemAt")
-            
-//            if popularRecipes.count < 10 {
-//                cell.configureCell(imageName: popular[indexPath.item].image, section: indexPath.section, item: indexPath.item)
-//                print("srabotal cellForItemAt")
-//            } else {
-//                cell.configure(model: popularRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
-//                print("srabotal cellForItemAt")
-//            }
-            return cell
-            
-        case .healthy(_):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? ExampleCollectionViewCell
-            else {
-                return UICollectionViewCell()
-            }
-            cell.configure(model: healthyRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
-            return cell
-            
-        case .dessert(_):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? ExampleCollectionViewCell
-            else {
-                return UICollectionViewCell()
-            }
-            cell.configure(model: dessertRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
-            return cell
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        switch kind {
-        case UICollectionView.elementKindSectionHeader:
-            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderSupplementaryView", for: indexPath) as! HeaderSupplementaryView
-            header.configureHeader(categoryName: sections[indexPath.section].title)
-            return header
-        default:
-            return UICollectionReusableView()
-        }
-    }
-}
 
 //MARK: - Set Constraints
 

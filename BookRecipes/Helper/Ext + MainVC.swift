@@ -24,14 +24,14 @@ extension MainVC {
                             // успешно получены детальные данные
                             switch type {
                             case .popular:
-                                self.mainView.popularRecipes.remove(at: 0)
-                                self.mainView.popularRecipes.append(recipe)
+                                self.popularRecipes.remove(at: 0)
+                                self.popularRecipes.append(recipe)
                             case .healthy:
-                                self.mainView.healthyRecipes.remove(at: 0)
-                                self.mainView.healthyRecipes.append(recipe)
+                                self.healthyRecipes.remove(at: 0)
+                                self.healthyRecipes.append(recipe)
                             case .dessert:
-                                self.mainView.dessertRecipes.remove(at: 0)
-                                self.mainView.dessertRecipes.append(recipe)
+                                self.dessertRecipes.remove(at: 0)
+                                self.dessertRecipes.append(recipe)
                             }
                         case .failure(let error):
                             print(error)
