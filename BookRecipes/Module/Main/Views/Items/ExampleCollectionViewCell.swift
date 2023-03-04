@@ -6,29 +6,18 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ExampleCollectionViewCell: UICollectionViewCell {
-    
-    //var isSaved: Bool = false
     
     var mainView = MainView()
     var localSection = 0
     var localItem = 0
-    
-//    override func prepareForReuse() {
-//        super.prepareForReuse()
-//        if isSaved {
-//            bookmarkImageView.image = UIImage(named: "bookmark selected")
-//        } else {
-//            bookmarkImageView.image = UIImage(named: "bookmark")
-//        }
-//
-//    }
    
     private let foodImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
-        view.image = UIImage(named: "loading")
+        //view.image = UIImage(named: "loading")
         view.isUserInteractionEnabled = true
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
@@ -82,19 +71,6 @@ class ExampleCollectionViewCell: UICollectionViewCell {
             mainView.boolArray[localSection][localItem] = true
             print(mainView.boolArray)
         }
-        
-        
-        
-        
-        
-        
-//        if !isSaved {
-//            isSaved = true
-//            bookmarkImageView.image = UIImage(named: "bookmark selected")
-//        } else {
-//            isSaved = false
-//            bookmarkImageView.image = UIImage(named: "bookmark")
-//        }
     }
     
     private let bookmarkImageView: UIImageView = {
@@ -136,7 +112,6 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     
     private func setupView() {
         clipsToBounds = true
-        //layer.cornerRadius = 10
         addSubview(foodImageView)
         foodImageView.addSubview(ratingView)
         ratingView.addSubview(starImageView)
@@ -155,21 +130,22 @@ class ExampleCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func configureCell(imageName: String, section: Int, item: Int) {
-        foodImageView.image = UIImage(named: imageName)
-        localSection = section
-        localItem = item
-        checkBookmark(section: section, item: item)
-        print("вызвали configureCell  метод")
-    }
+//    func configureCell(imageName: String, section: Int, item: Int) {
+//        foodImageView.image = UIImage(named: imageName)
+//        localSection = section
+//        localItem = item
+//        checkBookmark(section: section, item: item)
+//        print("вызвали configureCell  метод")
+//    }
     
-    func configure(model: SafeRecipe, section: Int, item: Int) {
-        self.nameLabel.text = model.recipe.title
-        self.foodImageView.image = UIImage(data: model.imageData)
+    func configure(model: DetailedRecipe, section: Int, item: Int) {
+        self.nameLabel.text = model.title
+        //self.foodImageView.image = UIImage(data: model.imageData)
         localSection = section
         localItem = item
         checkBookmark(section: section, item: item)
         print("вызвали configure метод")
+        foodImageView.sd_setImage(with: URL(string: model.image!), placeholderImage: UIImage(named: "loading.jpg"))
     }
     
     private func setConstraints() {

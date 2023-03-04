@@ -11,15 +11,17 @@ class MainVC: UIViewController {
     
     var mainView = MainView()
     
-    var APIcaller = APICaller.shared
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.addSubview(mainView)
+        constraintView()
+        fetchData()
+    }
+    
+    func fetchData() {
         fetchData(for: .popular)
         fetchData(for: .healthy)
         fetchData(for: .dessert)
-        view.addSubview(mainView)
-        constraintView()
     }
     
     func constraintView() {

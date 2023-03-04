@@ -22,32 +22,26 @@ extension MainVC {
                         case .success(let recipe):
                             print(recipe)
                             // успешно получены детальные данные
-                            APICaller.shared.getImage(from: recipe.image!) { result in
-                                switch result {
-                                case .success(let imageData):
-                                    let safeRecipe = SafeRecipe(recipe: recipe, imageData: imageData)
-                                    switch type {
-                                    case .popular:
-                                        self.mainView.popularRecipes.append(safeRecipe)
-                                    case .healthy:
-                                        self.mainView.healthyRecipes.append(safeRecipe)
-                                    case .dessert:
-                                        self.mainView.dessertRecipes.append(safeRecipe)
-                                    }
-                                case .failure(let error):
-                                    print(error)
-                                }
-                                dispatchGroup.leave()
+                            switch type {
+                            case .popular:
+                                self.mainView.popularRecipes.remove(at: 0)
+                                self.mainView.popularRecipes.append(recipe)
+                            case .healthy:
+                                self.mainView.healthyRecipes.remove(at: 0)
+                                self.mainView.healthyRecipes.append(recipe)
+                            case .dessert:
+                                self.mainView.dessertRecipes.remove(at: 0)
+                                self.mainView.dessertRecipes.append(recipe)
                             }
                         case .failure(let error):
                             print(error)
-                            // получена ошибка при запросе детальных данных
-                            dispatchGroup.leave()
                         }
+                        dispatchGroup.leave()
                     }
-                }
-                dispatchGroup.notify(queue: .main) {
-                    self.mainView.collectionView.reloadData()
+                    dispatchGroup.notify(queue: .main) {
+                        // Все запросы завершены
+                        self.mainView.collectionView.reloadData()
+                    }
                 }
             case .failure(let error):
                 print (error)
