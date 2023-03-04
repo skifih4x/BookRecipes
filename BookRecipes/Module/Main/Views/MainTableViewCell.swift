@@ -37,10 +37,10 @@ final class MainTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(model: Recipe) {
-        ratingView.configure(rating: "4")
-        recipeImageView.image = UIImage(named: "burger1")
-        recipeNameLabel.text = model.title
+    func configure(model: SafeRecipe) {
+        ratingView.configure(rating: String(model.recipe.aggregateLikes ?? 0))
+        recipeImageView.image = UIImage(data: model.imageData)
+        recipeNameLabel.text = model.recipe.title
     }
 }
 

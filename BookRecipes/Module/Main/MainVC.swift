@@ -16,8 +16,8 @@ final class MainVC: UIViewController {
         return view
     }()
     
-    private var recipesModels: [Recipe] = []
-    private var searchedRecipes: [Recipe] = []
+    private var recipesModels: [SafeRecipe] = []
+    private var searchedRecipes: [SafeRecipe] = []
     
     private let apiManager = APICaller.shared
     private let mainTableView = MainTableView()
@@ -42,9 +42,7 @@ private extension MainVC {
         fetchData(for: .popular)
         fetchData(for: .healthy)
         fetchData(for: .dessert)
-        searchedRecipes = recipesModels
         hideMainTableView(isTableViewHidden: true)
-        mainTableView.configure(models: searchedRecipes)
     }
     
     func setDelegate() {
@@ -91,7 +89,6 @@ private extension MainVC {
             switch results {
             case .success(let recipes):
                 // Успешно получено
-                self.recipesModels = recipes
                 for i in recipes {
                     dispatchGroup.enter()
                     APICaller.shared.getDetailedRecipe(with: i.id) { results in
@@ -103,6 +100,7 @@ private extension MainVC {
                                 switch result {
                                 case .success(let imageData):
                                     let safeRecipe = SafeRecipe(recipe: recipe, imageData: imageData)
+                                    self.recipesModels.append(safeRecipe)
                                     switch type {
                                     case .popular:
                                         self.mainView.popularRecipes.append(safeRecipe)
@@ -125,6 +123,8 @@ private extension MainVC {
                 }
                 dispatchGroup.notify(queue: .main) {
                     self.mainView.collectionView.reloadData()
+                    self.searchedRecipes = self.recipesModels
+                    self.updateMainTableView()
                 }
             case .failure(let error):
                 print (error)
@@ -160,6 +160,13 @@ extension MainVC: UISearchBarDelegate {
 //                    }
 //                }
                 
+                var models: [SafeRecipe] = []
+                data.forEach { recipe in
+                    guard let index = self?.recipesModels.firstIndex(where: { $0.recipe.id == recipe.id }), let model = self?.recipesModels[index] else { return }
+                    models.append(model)
+                }
+                
+                self?.searchedRecipes = models
                 DispatchQueue.main.async {
                     self?.hideMainTableView(isTableViewHidden: false)
                     self?.updateMainTableView()

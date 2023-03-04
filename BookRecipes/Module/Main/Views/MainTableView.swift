@@ -17,7 +17,7 @@ final class MainTableView: UIView {
         return table
     }()
     
-    private var recipesItems: [Recipe] = []
+    private var recipesItems: [SafeRecipe] = []
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,7 +29,7 @@ final class MainTableView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(models: [Recipe]) {
+    func configure(models: [SafeRecipe]) {
         recipesItems = models
     }
 }
