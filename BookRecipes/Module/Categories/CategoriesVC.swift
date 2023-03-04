@@ -20,21 +20,13 @@ class CategoriesVC: UIViewController {
         ["Drink", CategoryImages.drink!]
     ]
     
-    lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
+    lazy var tableView: UITableView = {
+        let tableView = UITableView()
         
-        let screenWidth = UIScreen.main.bounds.width
-        let cellWidth = (screenWidth - 30) / 2
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.separatorStyle = .none
         
-        layout.sectionInset = UIEdgeInsets(top: 20, left: 10, bottom: 10, right: 10)
-        layout.itemSize = CGSize(width: cellWidth, height: 80)
-        layout.scrollDirection = .vertical
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        return collectionView
+        return tableView
     }()
     
     override func viewDidLoad() {
@@ -42,9 +34,9 @@ class CategoriesVC: UIViewController {
         setupView()
         setupConstraints()
         
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.register(CategoryCollectionViewCell.self, forCellWithReuseIdentifier: CategoryCollectionViewCell.identifier)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.identifier)
     }
 }
 
@@ -52,7 +44,7 @@ extension CategoriesVC {
     
     func setupView() {
         
-        view.addSubview(collectionView)
+        view.addSubview(tableView)
     }
     
     func setupConstraints() {
@@ -60,35 +52,37 @@ extension CategoriesVC {
         let safeArea = view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            safeArea.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+            tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            safeArea.trailingAnchor.constraint(equalTo: tableView.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
         ])
     }
 }
 
 // MARK: - Collection View Data Source
-extension CategoriesVC: UICollectionViewDataSource {
+extension CategoriesVC: UITableViewDataSource {
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return categories.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCollectionViewCell.identifier, for: indexPath) as! CategoryCollectionViewCell
-        let title = self.categories[indexPath.item][0]
-        let image = self.categories[indexPath.item][1]
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.identifier, for: indexPath) as! CategoryTableViewCell
+        
+        let title = categories[indexPath.row][0]
+        let image = categories[indexPath.row][1]
+        
         cell.titleLabel.text = title as? String
-        cell.imageView.image = image as? UIImage
+        cell.backImageView.image = image as? UIImage
         return cell
     }
 }
 
 // MARK: - Collection View Delegate
-extension CategoriesVC: UICollectionViewDelegate {
+extension CategoriesVC: UITableViewDelegate {
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Collection view at row \(collectionView.tag) selected index path \(indexPath.item + 1)")
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("\(categories[indexPath.row][0]) is selected!")
     }
 }
