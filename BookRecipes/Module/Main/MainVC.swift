@@ -25,6 +25,17 @@ final class MainVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        view.addSubview(mainView)
+        constraintView()
+        fetchData()
+    }
+    
+    func fetchData() {
+        fetchData(for: .popular)
+        fetchData(for: .healthy)
+        fetchData(for: .dessert)
+
         
         setup()
     }
@@ -39,9 +50,6 @@ private extension MainVC {
         setupView()
         setConstraints()
         
-        fetchData(for: .popular)
-        fetchData(for: .healthy)
-        fetchData(for: .dessert)
         hideMainTableView(isTableViewHidden: true)
     }
     

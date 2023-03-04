@@ -6,15 +6,18 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ExampleCollectionViewCell: UICollectionViewCell {
     
-    var isSaved: Bool = false
-    
+    var mainView = MainView()
+    var localSection = 0
+    var localItem = 0
+   
     private let foodImageView: UIImageView = {
         let view = UIImageView()
-        view.contentMode = .scaleToFill
-        view.image = UIImage(named: "loadin")
+        view.contentMode = .scaleAspectFill
+        //view.image = UIImage(named: "loading")
         view.isUserInteractionEnabled = true
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
@@ -51,19 +54,22 @@ class ExampleCollectionViewCell: UICollectionViewCell {
         let view = UIButton()
         view.backgroundColor = .white
         view.layer.cornerRadius = 17.5
-        view.addTarget(nil, action: #selector(saveButtonTapped), for: .touchUpInside)
+        view.addTarget(nil, action: #selector(bookmarkButtonTapped), for: .touchUpInside)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    @objc func saveButtonTapped() {
+    @objc func bookmarkButtonTapped() {
         print("тыкнул по кнопке сохранить")
-        if !isSaved {
-            isSaved = true
-            bookmarkImageView.image = UIImage(named: "bookmark selected")
-        } else {
-            isSaved = false
+        
+        if mainView.boolArray[localSection][localItem] {
             bookmarkImageView.image = UIImage(named: "bookmark")
+            mainView.boolArray[localSection][localItem] = false
+            print(mainView.boolArray)
+        } else {
+            bookmarkImageView.image = UIImage(named: "bookmark selected")
+            mainView.boolArray[localSection][localItem] = true
+            print(mainView.boolArray)
         }
     }
     
@@ -83,7 +89,7 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     
     private let nameLabel: UILabel = {
         let view = UILabel()
-        view.text = "How to sharwama at home"
+        view.text = "Loading..."
         view.textColor = .black
         view.font = UIFont(name: "Helvetica Neue Bold", size: 18)
         view.textAlignment = .center
@@ -106,7 +112,6 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     
     private func setupView() {
         clipsToBounds = true
-        //layer.cornerRadius = 10
         addSubview(foodImageView)
         foodImageView.addSubview(ratingView)
         ratingView.addSubview(starImageView)
@@ -117,13 +122,30 @@ class ExampleCollectionViewCell: UICollectionViewCell {
         nameView.addSubview(nameLabel)
     }
     
-    func configureCell(imageName: String) {
-        foodImageView.image = UIImage(named: imageName)
+    func checkBookmark(section: Int, item: Int) {
+        if mainView.boolArray[section][item] {
+            bookmarkImageView.image = UIImage(named: "bookmark selected")
+        } else {
+            bookmarkImageView.image = UIImage(named: "bookmark")
+        }
     }
     
-    func configure(model: SafeRecipe) {
-        self.nameLabel.text = model.recipe.title
-        self.foodImageView.image = UIImage(data: model.imageData)
+//    func configureCell(imageName: String, section: Int, item: Int) {
+//        foodImageView.image = UIImage(named: imageName)
+//        localSection = section
+//        localItem = item
+//        checkBookmark(section: section, item: item)
+//        print("вызвали configureCell  метод")
+//    }
+    
+    func configure(model: DetailedRecipe, section: Int, item: Int) {
+        self.nameLabel.text = model.title
+        //self.foodImageView.image = UIImage(data: model.imageData)
+        localSection = section
+        localItem = item
+        checkBookmark(section: section, item: item)
+        print("вызвали configure метод")
+        foodImageView.sd_setImage(with: URL(string: model.image!), placeholderImage: UIImage(named: "loading.jpg"))
     }
     
     private func setConstraints() {

@@ -9,9 +9,17 @@ import UIKit
 
 class MainView: UIView {
     
-    var popularRecipes: [SafeRecipe] = []
-    var healthyRecipes: [SafeRecipe] = []
-    var dessertRecipes: [SafeRecipe] = []
+    private var baseEI = ExtendedIngredient(image: "", name: "", amount: 0.0, unit: "")
+    
+    private lazy var baseDR = DetailedRecipe(id: 0, readyInMinutes: 0, title: "", image: "", aggregateLikes: 0, summary: "", instructions: "", extendedIngredients: [baseEI])
+    
+    lazy var popularRecipes: [DetailedRecipe] = [baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR]
+    lazy var healthyRecipes: [DetailedRecipe] = [baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR]
+    lazy var dessertRecipes: [DetailedRecipe] = [baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR]
+    
+    var boolArray: [[Bool]] = [[false, false, false, false, false, false, false, false, false, false],
+                               [false, false, false, false, false, false, false, false, false, false],
+                               [false, false, false, false, false, false, false, false, false, false]]
     
     private let sections = MockData.shared.pageData
     
@@ -90,7 +98,7 @@ extension MainView {
     private func createExampleSection() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
         
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(0.75), heightDimension: .fractionalHeight(0.3)), subitems: [item])
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(0.7), heightDimension: .fractionalHeight(0.3)), subitems: [item])
         
         let section = createLayoutSection(group: group,
                                           behavior: .continuous,
@@ -111,7 +119,8 @@ extension MainView {
 
 extension MainView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("тыкнул по ячейке \(indexPath.item)")
+        print("тыкнул по ячейке \(indexPath.item) в секции \(indexPath.section)")
+        
     }
 }
 
@@ -124,50 +133,43 @@ extension MainView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if popularRecipes.count < 10 {
-            return sections[section].count
-        } else {
-            return popularRecipes.count
-        }
+        return 10
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         switch sections[indexPath.section] {
-        case .popular(let popular):
+        case .popular(_):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? ExampleCollectionViewCell
             else {
                 return UICollectionViewCell()
             }
-            if popularRecipes.count < 10 {
-                cell.configureCell(imageName: popular[indexPath.item].image)
-            } else {
-                cell.configure(model: popularRecipes[indexPath.item])
-            }
+            cell.configure(model: popularRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
+            print("srabotal cellForItemAt")
+            
+//            if popularRecipes.count < 10 {
+//                cell.configureCell(imageName: popular[indexPath.item].image, section: indexPath.section, item: indexPath.item)
+//                print("srabotal cellForItemAt")
+//            } else {
+//                cell.configure(model: popularRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
+//                print("srabotal cellForItemAt")
+//            }
             return cell
             
-        case .healthy(let healthy):
+        case .healthy(_):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? ExampleCollectionViewCell
             else {
                 return UICollectionViewCell()
             }
-            if dessertRecipes.count < 10 {
-                cell.configureCell(imageName: healthy[indexPath.item].image)
-            } else {
-                cell.configure(model: healthyRecipes[indexPath.item])
-            }
+            cell.configure(model: healthyRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
             return cell
             
-        case .dessert(let dessert):
+        case .dessert(_):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? ExampleCollectionViewCell
             else {
                 return UICollectionViewCell()
             }
-            if dessertRecipes.count < 10 {
-                cell.configureCell(imageName: dessert[indexPath.item].image)
-            } else {
-                cell.configure(model: dessertRecipes[indexPath.item])
-            }
+            cell.configure(model: dessertRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
             return cell
         }
     }
