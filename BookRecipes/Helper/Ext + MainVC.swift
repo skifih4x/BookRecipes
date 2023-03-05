@@ -9,7 +9,7 @@ import Foundation
 
 extension MainVC {
     
-    func fetchData(for type: Types) {
+    func fetchCollectionData(for type: Types) {
         let dispatchGroup = DispatchGroup()
         APICaller.shared.getSortedRecipes(type: type) { results in
             switch results {
