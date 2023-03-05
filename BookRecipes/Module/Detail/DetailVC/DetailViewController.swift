@@ -9,6 +9,8 @@ import UIKit
 
 class DetailViewController: UIViewController  {
     
+    var id: Int?
+    
     //MARK: - Elements
     
     lazy var contentScrollView: UIScrollView = {
