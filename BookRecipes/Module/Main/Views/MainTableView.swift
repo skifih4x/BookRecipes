@@ -13,11 +13,10 @@ final class MainTableView: UIView {
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
         table.register(MainTableViewCell.self, forCellReuseIdentifier: "MainTableViewCell")
-        table.rowHeight = 200
         return table
     }()
     
-    private var recipesItems: [SafeRecipe] = []
+    private var recipesItems: [Recipe] = []
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,7 +28,7 @@ final class MainTableView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(models: [SafeRecipe]) {
+    func configure(models: [Recipe]) {
         recipesItems = models
     }
 }
@@ -46,6 +45,10 @@ extension MainTableView: UITableViewDelegate, UITableViewDataSource {
         guard let cell = mainTableView.dequeueReusableCell(withIdentifier: "MainTableViewCell", for: indexPath) as? MainTableViewCell else { return UITableViewCell() }
         cell.configure(model: recipesItems[indexPath.item])
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 200
     }
 }
 
