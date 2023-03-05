@@ -168,28 +168,33 @@ extension MainVC: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        guard !searchText.isEmpty else {
+            searchedRecipes = recipesModels
+            updateMainTableView()
+            return
+        }
+        
         apiManager.searchRecipe(keyWord: searchText) { [weak self] result in
             switch result {
-            case .success(let data):
-//                data.forEach { recipe in
-//                    self?.apiManager.getImage(from: recipe.image) { result in
-//                        switch result {
-//                        case .success(let imageData):
-//                            let safeRecipe = SafeRecipe(recipe: recipe, imageData: imageData)
-//                        case .failure(let error):
-//                            print (error)
-//                        }
-//                    }
-//                }
-                
-                var models: [SafeRecipe] = []
-                data.forEach { recipe in
-                    guard let index = self?.recipesModels.firstIndex(where: { $0.recipe.id == recipe.id }), let model = self?.recipesModels[index] else { return }
-                    models.append(model)
+            case .success(let recipes):
+                let dispatchGroup = DispatchGroup()
+                var models: [Recipe] = []
+                recipes.forEach { recipe in
+                    dispatchGroup.enter()
+                    self?.apiManager.getDetailedRecipe(with: recipe.id) { result in
+                        defer { dispatchGroup.leave() }
+                        switch result {
+                        case .success(let data):
+                            guard let title = data.title, let image = data.image else { return }
+                            models.append(Recipe(id: data.id, image: image, title: title))
+                        case .failure(let error):
+                            print(error)
+                        }
+                    }
                 }
-                
-                self?.searchedRecipes = models
-                DispatchQueue.main.async {
+
+                dispatchGroup.notify(queue: .main) {
+                    self?.searchedRecipes = models
                     self?.hideMainTableView(isTableViewHidden: false)
                     self?.updateMainTableView()
                 }

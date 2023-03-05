@@ -17,4 +17,8 @@ struct Recipe: Codable {
     let title: String
 }
 
+struct RecipeId: Codable {
+    let id : Int
+}
+
 typealias SearchedRecipes = [Recipe]
