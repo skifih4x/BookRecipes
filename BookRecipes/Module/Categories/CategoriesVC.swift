@@ -83,6 +83,9 @@ extension CategoriesVC: UITableViewDataSource {
 extension CategoriesVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("\(categories[indexPath.row][0]) is selected!")
+        let VC = RecipeListVC()
+        VC.title = "Desserts"
+        navigationController?.pushViewController(VC, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

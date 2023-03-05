@@ -25,6 +25,11 @@
 		CE0A9D5B29AF55120029F7C8 /* SortedRecipes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0A9D5A29AF55120029F7C8 /* SortedRecipes.swift */; };
 		CE15D3F329B0994500930765 /* CategoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE15D3F229B0994500930765 /* CategoryCollectionViewCell.swift */; };
 		CE1B85FB29B343BE00665969 /* CategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B85FA29B343BE00665969 /* CategoryTableViewCell.swift */; };
+		CE1B860129B4A25D00665969 /* SavedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B860029B4A25D00665969 /* SavedVC.swift */; };
+		CE1B860329B4A26F00665969 /* SavedTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B860229B4A26F00665969 /* SavedTableCell.swift */; };
+		CE1B860B29B4A31700665969 /* RecipesListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B860A29B4A31700665969 /* RecipesListVC.swift */; };
+		CE1B860D29B4A33800665969 /* RecipeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B860C29B4A33800665969 /* RecipeCell.swift */; };
+		CE1B860F29B4A36100665969 /* SafeRecipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B860E29B4A36100665969 /* SafeRecipe.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +54,11 @@
 		CE0A9D5C29AF56CF0029F7C8 /* API README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "API README.md"; sourceTree = "<group>"; };
 		CE15D3F229B0994500930765 /* CategoryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCollectionViewCell.swift; sourceTree = "<group>"; };
 		CE1B85FA29B343BE00665969 /* CategoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CategoryTableViewCell.swift; path = ../../../../../../../Desktop/CategoryTableViewCell.swift; sourceTree = "<group>"; };
+		CE1B860029B4A25D00665969 /* SavedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedVC.swift; sourceTree = "<group>"; };
+		CE1B860229B4A26F00665969 /* SavedTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedTableCell.swift; sourceTree = "<group>"; };
+		CE1B860A29B4A31700665969 /* RecipesListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesListVC.swift; sourceTree = "<group>"; };
+		CE1B860C29B4A33800665969 /* RecipeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCell.swift; sourceTree = "<group>"; };
+		CE1B860E29B4A36100665969 /* SafeRecipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeRecipe.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +137,8 @@
 				C7CB34C529ABF6B3001AA24C /* Saved */,
 				C7CB34C429ABF511001AA24C /* Categories */,
 				C7CB34C329ABF50A001AA24C /* Main */,
+				CE1B860A29B4A31700665969 /* RecipesListVC.swift */,
+				CE1B860C29B4A33800665969 /* RecipeCell.swift */,
 			);
 			path = Module;
 			sourceTree = "<group>";
@@ -153,6 +165,8 @@
 		C7CB34C529ABF6B3001AA24C /* Saved */ = {
 			isa = PBXGroup;
 			children = (
+				CE1B860029B4A25D00665969 /* SavedVC.swift */,
+				CE1B860229B4A26F00665969 /* SavedTableCell.swift */,
 			);
 			path = Saved;
 			sourceTree = "<group>";
@@ -172,6 +186,7 @@
 			children = (
 				CE0A9D5829AF54FF0029F7C8 /* DetailedRecipe.swift */,
 				CE0A9D5A29AF55120029F7C8 /* SortedRecipes.swift */,
+				CE1B860E29B4A36100665969 /* SafeRecipe.swift */,
 			);
 			path = Struct;
 			sourceTree = "<group>";
@@ -258,6 +273,7 @@
 				2CF0F84329AE7EBE0054CE6F /* ListItem.swift in Sources */,
 				2CF0F84829AE7EFF0054CE6F /* MockData.swift in Sources */,
 				CE15D3F329B0994500930765 /* CategoryCollectionViewCell.swift in Sources */,
+				CE1B860F29B4A36100665969 /* SafeRecipe.swift in Sources */,
 				C7CB34C129ABF49B001AA24C /* BaseTabBarController.swift in Sources */,
 				2CF0F83A29AE7E220054CE6F /* MainView.swift in Sources */,
 				C7CB34C729ABF6C8001AA24C /* MainVC.swift in Sources */,
@@ -267,7 +283,11 @@
 				00B6AD1629AB6A1E0021095D /* SceneDelegate.swift in Sources */,
 				2CF0F84029AE7E900054CE6F /* HeaderSupplementaryView.swift in Sources */,
 				2CF0F83E29AE7E710054CE6F /* ExampleCollectionViewCell.swift in Sources */,
+				CE1B860329B4A26F00665969 /* SavedTableCell.swift in Sources */,
+				CE1B860129B4A25D00665969 /* SavedVC.swift in Sources */,
 				CE0A9D5B29AF55120029F7C8 /* SortedRecipes.swift in Sources */,
+				CE1B860D29B4A33800665969 /* RecipeCell.swift in Sources */,
+				CE1B860B29B4A31700665969 /* RecipesListVC.swift in Sources */,
 				2CF0F84529AE7ED80054CE6F /* ListSection.swift in Sources */,
 				C7DDAC3429ABF80F004F984F /* CategoriesVC.swift in Sources */,
 				CE1B85FB29B343BE00665969 /* CategoryTableViewCell.swift in Sources */,
@@ -409,7 +429,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = W4T587833Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BookRecipes/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -438,7 +458,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = W4T587833Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BookRecipes/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
