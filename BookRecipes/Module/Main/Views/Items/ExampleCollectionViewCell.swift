@@ -13,7 +13,7 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     
     private let burgerImageView: UIImageView = {
         let view = UIImageView()
-        view.contentMode = .scaleAspectFill
+        view.contentMode = .scaleToFill
         view.image = UIImage(named: "burger1")
         view.isUserInteractionEnabled = true
         view.translatesAutoresizingMaskIntoConstraints = false
