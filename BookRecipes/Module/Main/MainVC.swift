@@ -244,7 +244,14 @@ extension MainVC: UICollectionViewDataSource {
             else {
                 return UICollectionViewCell()
             }
-            cell.configure(model: popularRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
+            let detailedRecipe = popularRecipes[indexPath.item]
+            
+            cell.configure(
+                model: detailedRecipe,
+                section: indexPath.section,
+                item: indexPath.item,
+                saveButtonCompletion: self.createCompletion(with: detailedRecipe))
+            
             print("srabotal cellForItemAt")
             
 //            if popularRecipes.count < 10 {
@@ -261,7 +268,13 @@ extension MainVC: UICollectionViewDataSource {
             else {
                 return UICollectionViewCell()
             }
-            cell.configure(model: healthyRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
+            let detailedRecipe = healthyRecipes[indexPath.item]
+            
+            cell.configure(
+                model: detailedRecipe,
+                section: indexPath.section,
+                item: indexPath.item,
+                saveButtonCompletion: self.createCompletion(with: detailedRecipe))
             return cell
             
         case .dessert(_):
@@ -269,7 +282,13 @@ extension MainVC: UICollectionViewDataSource {
             else {
                 return UICollectionViewCell()
             }
-            cell.configure(model: dessertRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
+            let detailedRecipe = dessertRecipes[indexPath.item]
+            
+            cell.configure(
+                model: detailedRecipe,
+                section: indexPath.section,
+                item: indexPath.item,
+                saveButtonCompletion: self.createCompletion(with: detailedRecipe))
             return cell
         }
     }
@@ -283,6 +302,13 @@ extension MainVC: UICollectionViewDataSource {
         default:
             return UICollectionReusableView()
         }
+    }
+    
+    private func createCompletion(with recipe: DetailedRecipe) -> (() -> ()) {
+        let closure = {
+            DataBase.shared.write(recipe: recipe)
+        }
+        return closure
     }
 }
 

@@ -13,6 +13,8 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     var mainView = MainView()
     var localSection = 0
     var localItem = 0
+    
+    var saveButtonCompletion: (() -> ())?
    
     private let foodImageView: UIImageView = {
         let view = UIImageView()
@@ -61,6 +63,8 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     
     @objc func bookmarkButtonTapped() {
         print("тыкнул по кнопке сохранить")
+        
+        saveButtonCompletion?()
         
         if mainView.boolArray[localSection][localItem] {
             bookmarkImageView.image = UIImage(named: "bookmark")
@@ -123,6 +127,7 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     }
     
     func checkBookmark(section: Int, item: Int) {
+        saveButtonCompletion?()
         if mainView.boolArray[section][item] {
             bookmarkImageView.image = UIImage(named: "bookmark selected")
         } else {
@@ -138,7 +143,7 @@ class ExampleCollectionViewCell: UICollectionViewCell {
 //        print("вызвали configureCell  метод")
 //    }
     
-    func configure(model: DetailedRecipe, section: Int, item: Int) {
+    func configure(model: DetailedRecipe, section: Int, item: Int, saveButtonCompletion: @escaping () -> ()) {
         self.nameLabel.text = model.title
         //self.foodImageView.image = UIImage(data: model.imageData)
         localSection = section
@@ -146,6 +151,8 @@ class ExampleCollectionViewCell: UICollectionViewCell {
         checkBookmark(section: section, item: item)
         print("вызвали configure метод")
         foodImageView.sd_setImage(with: URL(string: model.image!), placeholderImage: UIImage(named: "loading.jpg"))
+        
+        self.saveButtonCompletion = saveButtonCompletion
     }
     
     private func setConstraints() {

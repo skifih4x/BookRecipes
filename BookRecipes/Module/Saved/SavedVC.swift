@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SwiftUI
+import RealmSwift
 
 final class SavedVC: UIViewController {
     
@@ -16,25 +16,52 @@ final class SavedVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let deleteAllItems = UIBarButtonItem(
+            title: "Remove All",
+            style: .plain,
+            target: self,
+            action: #selector(deleteAllItemsAction))
+        navigationItem.rightBarButtonItem = deleteAllItems
+        
         title = "Saved recipes"
         
         tableViewSetup()
-        loadData()
         constraints()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        loadData()
+    }
+    
     private func loadData() {
-        APICaller.shared.getSortedRecipes(type: .dessert) { result in
-            switch result {
-            case .success(let recipes):
-                self.data = recipes
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
+        
+        var items: Results<RealmRecipe>!
+        
+        DataBase.shared.read { recipes in
+            items = recipes
+        }
+        var error: Error? = nil
+        
+        for i in items {
+            APICaller.shared.getDetailedRecipe(with: i.id) { recipe in
+                switch recipe {
+                case .success(let result):
+                    let recipe = Recipe(
+                        id: result.id,
+                        image: result.image,
+                        title: result.title)
+                    self.data.append(recipe)
+                case .failure(let err):
+                    error = err
+                    print(err)
                 }
-            case .failure(let err):
-                print(err.localizedDescription)
+            }
+            
+            if let error = error {
+                presentErrorAlert(with: error)
             }
         }
+        
     }
     
     private func tableViewSetup() {
@@ -55,6 +82,23 @@ final class SavedVC: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
     }
+    
+    private func presentErrorAlert(with error: Error) {
+        let alertController = UIAlertController(
+            title: "Error",
+            message: error.localizedDescription,
+            preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+}
+
+extension SavedVC {
+    @objc func deleteAllItemsAction() {
+        DataBase.shared.deleteAll()
+    }
 }
 
 extension SavedVC: UITableViewDelegate {
@@ -72,7 +116,11 @@ extension SavedVC: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SavedTableCell.reuseId)
                 as? SavedTableCell else { return UITableViewCell() }
         let recipe = data[indexPath.row]
-//        cell.configure(with: recipe.image, text: recipe.title)
+        
+        guard let recipeImage = recipe.image,
+              let recipeTitle = recipe.title else { return UITableViewCell() }
+        
+        cell.configure(with: recipeImage, text: recipeTitle)
         return cell
     }  
 }

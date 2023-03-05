@@ -30,6 +30,8 @@
 		C710EAC929AE1F0E000C85C9 /* SavedTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C710EAC829AE1F0E000C85C9 /* SavedTableCell.swift */; };
 		C77A3FE529B4A29E0090F5BA /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = C77A3FE429B4A29E0090F5BA /* Realm */; };
 		C77A3FE729B4A29E0090F5BA /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = C77A3FE629B4A29E0090F5BA /* RealmSwift */; };
+		C77A3FEC29B4A31A0090F5BA /* RealmRecipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77A3FEB29B4A31A0090F5BA /* RealmRecipe.swift */; };
+		C77A3FEE29B4A33A0090F5BA /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77A3FED29B4A33A0090F5BA /* Storage.swift */; };
 		C7CB34C129ABF49B001AA24C /* BaseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CB34C029ABF49B001AA24C /* BaseTabBarController.swift */; };
 		C7CB34C729ABF6C8001AA24C /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CB34C629ABF6C8001AA24C /* MainVC.swift */; };
 		C7D90F9C29B23EA40008F962 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D90F9B29B23EA40008F962 /* RatingView.swift */; };
@@ -63,6 +65,8 @@
 		95564F8829AFB9A20078BDB3 /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
 		955FC9CE29AFE8B7004E36FC /* RatingContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingContentView.swift; sourceTree = "<group>"; };
 		C710EAC829AE1F0E000C85C9 /* SavedTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedTableCell.swift; sourceTree = "<group>"; };
+		C77A3FEB29B4A31A0090F5BA /* RealmRecipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmRecipe.swift; sourceTree = "<group>"; };
+		C77A3FED29B4A33A0090F5BA /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		C7CB34C029ABF49B001AA24C /* BaseTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTabBarController.swift; sourceTree = "<group>"; };
 		C7CB34C629ABF6C8001AA24C /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		C7D90F9B29B23EA40008F962 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
@@ -109,6 +113,7 @@
 		00B6AD1229AB6A1E0021095D /* BookRecipes */ = {
 			isa = PBXGroup;
 			children = (
+				C77A3FE929B4A3020090F5BA /* Storage */,
 				00B6AD1329AB6A1E0021095D /* AppDelegate.swift */,
 				00B6AD1529AB6A1E0021095D /* SceneDelegate.swift */,
 				C7CB34CC29ABF736001AA24C /* Helper */,
@@ -176,6 +181,15 @@
 				4E76CB8829B1DD2100A9791E /* IngridientsTableViewHeader.swift */,
 			);
 			path = Items;
+			sourceTree = "<group>";
+		};
+		C77A3FE929B4A3020090F5BA /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				C77A3FEB29B4A31A0090F5BA /* RealmRecipe.swift */,
+				C77A3FED29B4A33A0090F5BA /* Storage.swift */,
+			);
+			path = Storage;
 			sourceTree = "<group>";
 		};
 		C7CB34C229ABF4FF001AA24C /* Module */ = {
@@ -320,6 +334,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C710EAC929AE1F0E000C85C9 /* SavedTableCell.swift in Sources */,
+				C77A3FEE29B4A33A0090F5BA /* Storage.swift in Sources */,
 				C7D90F9C29B23EA40008F962 /* RatingView.swift in Sources */,
 				4E76CB8429B1DC6A00A9791E /* DetailViewController.swift in Sources */,
 				2CF0F84329AE7EBE0054CE6F /* ListItem.swift in Sources */,
@@ -344,6 +359,7 @@
 				2CF0F84529AE7ED80054CE6F /* ListSection.swift in Sources */,
 				955FC9CF29AFE8B7004E36FC /* RatingContentView.swift in Sources */,
 				C7DDAC3429ABF80F004F984F /* CategoriesVC.swift in Sources */,
+				C77A3FEC29B4A31A0090F5BA /* RealmRecipe.swift in Sources */,
 				4E76CB8929B1DD2100A9791E /* IngridientsTableViewHeader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
