@@ -27,12 +27,10 @@ final class MainVC: UIViewController {
     
     var mainView = MainView()
     private let sections = MockData.shared.pageData
-    private var baseEI = ExtendedIngredient(image: "", name: "", amount: 0.0, unit: "")
-    private lazy var baseDR = DetailedRecipe(id: 0, readyInMinutes: 0, title: "", image: "", aggregateLikes: 0, summary: "", instructions: "", extendedIngredients: [baseEI])
-    lazy var popularRecipes: [DetailedRecipe] = [baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR]
-    lazy var healthyRecipes: [DetailedRecipe] = [baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR]
-    lazy var dessertRecipes: [DetailedRecipe] = [baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR]
-    
+    private lazy var baseRecipe = Recipe(id: 0, image: "", title: "")
+    lazy var popularRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
+    lazy var healthyRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
+    lazy var dessertRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
     
     
     
@@ -48,9 +46,9 @@ final class MainVC: UIViewController {
     }
     
     func fetchData() {
-        fetchData(for: .popular)
-        fetchData(for: .healthy)
-        fetchData(for: .dessert)
+        fetchCollectionData(for: .popular)
+        fetchCollectionData(for: .healthy)
+        fetchCollectionData(for: .dessert)
 
         
         //setup()
@@ -107,24 +105,24 @@ private extension MainVC {
         mainView.isHidden = !isTableViewHidden
     }
     
-//    func fetchData(for type: Types) {
-//        let dispatchGroup = DispatchGroup()
-//        APICaller.shared.getSortedRecipes(type: type) { results in
-//            switch results {
-//            case .success(let recipes):
-//                // Успешно получено
-//                for i in recipes {
-//                    dispatchGroup.enter()
-//                    APICaller.shared.getDetailedRecipe(with: i.id) { results in
-//                        switch results {
-//                        case .success(let recipe):
-//                            print(recipe)
-//                            // успешно получены детальные данные
-//                            APICaller.shared.getImage(from: recipe.image!) { result in
-//                                switch result {
-//                                case .success(let imageData):
-//                                    let safeRecipe = SafeRecipe(recipe: recipe, imageData: imageData)
-//                                    self.recipesModels.append(safeRecipe)
+    func fetchData(for type: Types) {
+        let dispatchGroup = DispatchGroup()
+        APICaller.shared.getSortedRecipes(type: type) { results in
+            switch results {
+            case .success(let recipes):
+                // Успешно получено
+                for i in recipes {
+                    dispatchGroup.enter()
+                    APICaller.shared.getDetailedRecipe(with: i.id) { results in
+                        switch results {
+                        case .success(let recipe):
+                            print(recipe)
+                            // успешно получены детальные данные
+                            APICaller.shared.getImage(from: recipe.image!) { result in
+                                switch result {
+                                case .success(let imageData):
+                                    let safeRecipe = SafeRecipe(recipe: recipe, imageData: imageData)
+                                    self.recipesModels.append(safeRecipe)
 //                                    switch type {
 //                                    case .popular:
 //                                        self.mainView.popularRecipes.append(safeRecipe)
@@ -133,29 +131,29 @@ private extension MainVC {
 //                                    case .dessert:
 //                                        self.mainView.dessertRecipes.append(safeRecipe)
 //                                    }
-//                                case .failure(let error):
-//                                    print(error)
-//                                }
-//                                dispatchGroup.leave()
-//                            }
-//                        case .failure(let error):
-//                            print(error)
-//                            // получена ошибка при запросе детальных данных
-//                            dispatchGroup.leave()
-//                        }
-//                    }
-//                }
-//                dispatchGroup.notify(queue: .main) {
-//                    self.mainView.collectionView.reloadData()
-//                    self.searchedRecipes = self.recipesModels
-//                    self.updateMainTableView()
-//                }
-//            case .failure(let error):
-//                print (error)
-//                // получена ошибка
-//            }
-//        }
-//    }
+                                case .failure(let error):
+                                    print(error)
+                                }
+                                dispatchGroup.leave()
+                            }
+                        case .failure(let error):
+                            print(error)
+                            // получена ошибка при запросе детальных данных
+                            dispatchGroup.leave()
+                        }
+                    }
+                }
+                dispatchGroup.notify(queue: .main) {
+                    self.mainView.collectionView.reloadData()
+                    self.searchedRecipes = self.recipesModels
+                    self.updateMainTableView()
+                }
+            case .failure(let error):
+                print (error)
+                // получена ошибка
+            }
+        }
+    }
 }
  
 //MARK: - UISearchBarDelegate
@@ -215,12 +213,8 @@ extension MainVC: UISearchBarDelegate {
 extension MainVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("тыкнул по ячейке \(indexPath.item) в секции \(indexPath.section)")
-//        let navVC = UINavigationController()
         let detailVC = DetailViewController()
         navigationController?.pushViewController(detailVC, animated: true)
-//        navVC.pushViewController(detailVC, animated: true)
-        
-        
     }
 }
 
@@ -304,7 +298,7 @@ extension MainVC: UICollectionViewDataSource {
         }
     }
     
-    private func createCompletion(with recipe: DetailedRecipe) -> (() -> ()) {
+    private func createCompletion(with recipe: Recipe) -> (() -> ()) {
         let closure = {
             DataBase.shared.write(recipe: recipe)
         }

@@ -16,7 +16,7 @@ class DataBase {
     
     private init() { }
     
-    func write(recipe: DetailedRecipe) {
+    func write(recipe: Recipe) {
         
         let realmRecipe = RealmRecipe()
         

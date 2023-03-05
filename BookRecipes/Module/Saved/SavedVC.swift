@@ -39,6 +39,7 @@ final class SavedVC: UIViewController {
         
         DataBase.shared.read { recipes in
             items = recipes
+            print(items)
         }
         var error: Error? = nil
         
@@ -61,6 +62,7 @@ final class SavedVC: UIViewController {
                 presentErrorAlert(with: error)
             }
         }
+        tableView.reloadData()
         
     }
     
@@ -98,6 +100,8 @@ final class SavedVC: UIViewController {
 extension SavedVC {
     @objc func deleteAllItemsAction() {
         DataBase.shared.deleteAll()
+        data = []
+        tableView.reloadData()
     }
 }
 
