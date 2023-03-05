@@ -18,7 +18,6 @@ struct CategoryImages {
     static let snack = UIImage(named: "Snack")
     static let drink = UIImage(named: "Drink")
 }
-
 class CategoryCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "CategoryCollectionViewCell"
