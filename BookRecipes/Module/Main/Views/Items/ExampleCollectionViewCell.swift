@@ -13,7 +13,7 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     var mainView = MainView()
     var localSection = 0
     var localItem = 0
-   
+    
     private let foodImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
@@ -138,6 +138,11 @@ class ExampleCollectionViewCell: UICollectionViewCell {
 //        print("вызвали configureCell  метод")
 //    }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        foodImageView.image = nil
+    }
+    
     func configure(model: Recipe, section: Int, item: Int) {
         self.nameLabel.text = model.title
         //self.foodImageView.image = UIImage(data: model.imageData)
@@ -145,7 +150,9 @@ class ExampleCollectionViewCell: UICollectionViewCell {
         localItem = item
         checkBookmark(section: section, item: item)
         print("вызвали configure метод")
-        foodImageView.sd_setImage(with: URL(string: model.image), placeholderImage: UIImage(named: "loading.jpg"))
+        foodImageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
+        guard let url = URL(string: model.image) else { return }
+        foodImageView.sd_setImage(with: url)
     }
     
     private func setConstraints() {

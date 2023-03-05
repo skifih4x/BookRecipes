@@ -21,6 +21,7 @@ class MainView: UIView {
         collectionView.backgroundColor = .none
         collectionView.bounces = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.showsVerticalScrollIndicator = false
         return collectionView
     }()
 

@@ -37,7 +37,7 @@ final class MainVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(mainView)
-        
+        title = "Team 11"
         mainView.configure(delegate: self, dataSource: self)
         mainView.collectionView.collectionViewLayout = createLayout()
         //constraintView()
@@ -168,7 +168,21 @@ extension MainVC: UISearchBarDelegate {
 extension MainVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("тыкнул по ячейке \(indexPath.item) в секции \(indexPath.section)")
+        var id = 0
+        switch indexPath.section {
+        case 0:
+            id = popularRecipes[indexPath.item].id
+        case 1:
+            id = healthyRecipes[indexPath.item].id
+        case 2:
+            id = dessertRecipes[indexPath.item].id
+        default:
+            return
+        }
+        
+        
         let detailVC = DetailViewController()
+        detailVC.id = id
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }
