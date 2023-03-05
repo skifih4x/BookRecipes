@@ -31,6 +31,10 @@ struct Constants {
     static let searchRecipeURL = "\(basicURL)autocomplete?number=10&apiKey=\(APIKey)&query="
     static let ingredientImageURL = "https://spoonacular.com/cdn/ingredients_100x100/"
     
+    static func categoryURL(with category: String) -> String {
+        return "https://api.spoonacular.com/recipes/complexSearch?type=\(category)&apiKey=\(APIKey)"
+    }
+
 }
 
 enum Types {
@@ -143,5 +147,34 @@ class APICaller {
             print("I cant convert html to string sorry")
             return nil
         }
+    }
+}
+
+//MARK: - for categories
+
+enum Categories: String {
+    case maincourse, sidedish, dessert, salad, breakfast, soup, snack, drink
+}
+
+extension APICaller {
+    
+    func getCategoryRecipes (category: String, completion: @escaping (Result<[Recipe], Error>) -> Void) {
+        
+        let url = Constants.categoryURL(with: category)
+        
+        guard let url = URL(string: url) else {return}
+        print ("url for sorted : \(url)")
+        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
+            
+            guard let data = data, error == nil else {return}
+            do {
+                let results = try JSONDecoder().decode(SortedRecipes.self, from: data)
+                completion(.success(results.results))
+            } catch {
+                completion(.failure(error))
+                print ("error in getSortedRecipes")
+            }
+        }
+        task.resume()
     }
 }

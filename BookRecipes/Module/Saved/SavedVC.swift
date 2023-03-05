@@ -74,5 +74,5 @@ extension SavedVC: UITableViewDataSource {
         let recipe = data[indexPath.row]
 //        cell.configure(with: recipe.image, text: recipe.title)
         return cell
-    }  
+    }
 }
