@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import SDWebImage
 
 class SavedTableCell: UITableViewCell {
     
     static let reuseId = "SavedTableCell"
+
     let inset: CGFloat = 16
     
     lazy var cellImageView: UIImageView = {
@@ -23,17 +25,27 @@ class SavedTableCell: UITableViewCell {
     
     lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 20)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    lazy var ratingView = RatingView()
+    lazy var saveButton = SaveButton()
+    
+    var saveButtonClosure: (() -> ())?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         contentView.addSubview(cellImageView)
         contentView.addSubview(nameLabel)
+        contentView.addSubview(ratingView)
+        contentView.addSubview(saveButton)
+        
+        saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+        
         backgroundColor = .clear
         
         constraints()
@@ -45,20 +57,36 @@ class SavedTableCell: UITableViewCell {
     
     private func constraints() {
         NSLayoutConstraint.activate([
+            
             cellImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: inset),
             cellImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),
             cellImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -inset),
-            cellImageView.heightAnchor.constraint(equalTo: contentView.widthAnchor, constant: -inset),
+            cellImageView.heightAnchor.constraint(equalTo: cellImageView.widthAnchor, multiplier: 9/16),
             
-            nameLabel.topAnchor.constraint(equalTo: cellImageView.bottomAnchor, constant: inset),
+            nameLabel.topAnchor.constraint(equalTo: cellImageView.bottomAnchor, constant: 12),
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -inset),
-            nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -inset)
+            nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -inset),
+            
+            ratingView.topAnchor.constraint(equalTo: cellImageView.topAnchor, constant: 10),
+            ratingView.leadingAnchor.constraint(equalTo: cellImageView.leadingAnchor, constant: 10),
+            ratingView.heightAnchor.constraint(equalToConstant: 35),
+            ratingView.widthAnchor.constraint(equalToConstant: 70),
+            
+            saveButton.topAnchor.constraint(equalTo: cellImageView.topAnchor, constant: 10),
+            saveButton.trailingAnchor.constraint(equalTo: cellImageView.trailingAnchor, constant: -10),
+            saveButton.heightAnchor.constraint(equalToConstant: 35),
+            saveButton.widthAnchor.constraint(equalToConstant: 35),
         ])
     }
     
-    func configure(with image: UIImage?, text: String) {
-        self.cellImageView.image = image
+    @objc func saveButtonTapped() {
+        
+        saveButtonClosure?()
+    }
+    
+    func configure(with imageUrl: String, text: String, saveButtonClosure: ()->()) {
+        self.cellImageView.sd_setImage(with: URL(string: imageUrl))
         self.nameLabel.text = text
     }
 }

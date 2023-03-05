@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class BaseTabBarController: UITabBarController {
     
@@ -32,4 +33,25 @@ class BaseTabBarController: UITabBarController {
         return navController
     }
     
+}
+
+
+struct PeopleVCProvider: PreviewProvider {
+    static var previews: some View {
+        Container().edgesIgnoringSafeArea(.all)
+            .previewDevice("iPhone 13 Pro Max")
+    }
+    
+    struct Container: UIViewControllerRepresentable {
+        
+        let tabBarVC = BaseTabBarController()
+        
+        func makeUIViewController(context: Context) -> some UIViewController {
+            tabBarVC
+        }
+        
+        func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+            
+        }
+    }
 }

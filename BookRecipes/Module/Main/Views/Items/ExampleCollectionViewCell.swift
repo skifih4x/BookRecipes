@@ -6,16 +6,21 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ExampleCollectionViewCell: UICollectionViewCell {
     
-    var isSaved: Bool = false
-    
-    private let burgerImageView: UIImageView = {
+    var mainView = MainView()
+    var localSection = 0
+    var localItem = 0
+   
+    private let foodImageView: UIImageView = {
         let view = UIImageView()
-        view.contentMode = .scaleToFill
-        view.image = UIImage(named: "burger1")
+        view.contentMode = .scaleAspectFill
+        //view.image = UIImage(named: "loading")
         view.isUserInteractionEnabled = true
+        view.layer.cornerRadius = 10
+        view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -45,30 +50,51 @@ class ExampleCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    private let saveButton: UIButton = {
+    private let bookmarkButton: UIButton = {
         let view = UIButton()
         view.backgroundColor = .white
         view.layer.cornerRadius = 17.5
-        //view.setImage(UIImage(named: "bookmark"), for: .normal)
-        view.addTarget(nil, action: #selector(saveButtonTapped), for: .touchUpInside)
+        view.addTarget(nil, action: #selector(bookmarkButtonTapped), for: .touchUpInside)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    @objc func saveButtonTapped() {
+    @objc func bookmarkButtonTapped() {
         print("тыкнул по кнопке сохранить")
-        if !isSaved {
-            isSaved = true
-            bookmarkImageView.image = UIImage(named: "bookmark selected")
-        } else {
-            isSaved = false
+        
+        if mainView.boolArray[localSection][localItem] {
             bookmarkImageView.image = UIImage(named: "bookmark")
+            mainView.boolArray[localSection][localItem] = false
+            print(mainView.boolArray)
+        } else {
+            bookmarkImageView.image = UIImage(named: "bookmark selected")
+            mainView.boolArray[localSection][localItem] = true
+            print(mainView.boolArray)
         }
     }
     
     private let bookmarkImageView: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "bookmark")
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let nameView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let nameLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Loading..."
+        view.textColor = .black
+        view.font = UIFont(name: "Helvetica Neue Bold", size: 18)
+        view.textAlignment = .center
+        view.adjustsFontSizeToFitWidth = true
+        view.numberOfLines = 1
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -86,31 +112,52 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     
     private func setupView() {
         clipsToBounds = true
-        layer.cornerRadius = 10
-        backgroundColor = .brown
-        
-        addSubview(burgerImageView)
-        burgerImageView.addSubview(ratingView)
+        addSubview(foodImageView)
+        foodImageView.addSubview(ratingView)
         ratingView.addSubview(starImageView)
         ratingView.addSubview(ratingLabel)
-        burgerImageView.addSubview(saveButton)
-        saveButton.addSubview(bookmarkImageView)
+        foodImageView.addSubview(bookmarkButton)
+        bookmarkButton.addSubview(bookmarkImageView)
+        addSubview(nameView)
+        nameView.addSubview(nameLabel)
     }
     
-    func configureCell(imageName: String) {
-        burgerImageView.image = UIImage(named: imageName)
+    func checkBookmark(section: Int, item: Int) {
+        if mainView.boolArray[section][item] {
+            bookmarkImageView.image = UIImage(named: "bookmark selected")
+        } else {
+            bookmarkImageView.image = UIImage(named: "bookmark")
+        }
+    }
+    
+//    func configureCell(imageName: String, section: Int, item: Int) {
+//        foodImageView.image = UIImage(named: imageName)
+//        localSection = section
+//        localItem = item
+//        checkBookmark(section: section, item: item)
+//        print("вызвали configureCell  метод")
+//    }
+    
+    func configure(model: Recipe, section: Int, item: Int) {
+        self.nameLabel.text = model.title
+        //self.foodImageView.image = UIImage(data: model.imageData)
+        localSection = section
+        localItem = item
+        checkBookmark(section: section, item: item)
+        print("вызвали configure метод")
+        foodImageView.sd_setImage(with: URL(string: model.image), placeholderImage: UIImage(named: "loading.jpg"))
     }
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
         
-            burgerImageView.topAnchor.constraint(equalTo: topAnchor),
-            burgerImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            burgerImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            burgerImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            foodImageView.topAnchor.constraint(equalTo: topAnchor),
+            foodImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            foodImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            foodImageView.bottomAnchor.constraint(equalTo: nameView.topAnchor),
             
-            ratingView.topAnchor.constraint(equalTo: burgerImageView.topAnchor, constant: 10),
-            ratingView.leadingAnchor.constraint(equalTo: burgerImageView.leadingAnchor, constant: 10),
+            ratingView.topAnchor.constraint(equalTo: foodImageView.topAnchor, constant: 10),
+            ratingView.leadingAnchor.constraint(equalTo: foodImageView.leadingAnchor, constant: 10),
             ratingView.heightAnchor.constraint(equalToConstant: 35),
             ratingView.widthAnchor.constraint(equalToConstant: 70),
             
@@ -124,15 +171,24 @@ class ExampleCollectionViewCell: UICollectionViewCell {
             ratingLabel.heightAnchor.constraint(equalToConstant: 20),
             ratingLabel.widthAnchor.constraint(equalToConstant: 30),
             
-            saveButton.topAnchor.constraint(equalTo: burgerImageView.topAnchor, constant: 10),
-            saveButton.trailingAnchor.constraint(equalTo: burgerImageView.trailingAnchor, constant: -10),
-            saveButton.heightAnchor.constraint(equalToConstant: 35),
-            saveButton.widthAnchor.constraint(equalToConstant: 35),
+            bookmarkButton.topAnchor.constraint(equalTo: foodImageView.topAnchor, constant: 10),
+            bookmarkButton.trailingAnchor.constraint(equalTo: foodImageView.trailingAnchor, constant: -10),
+            bookmarkButton.heightAnchor.constraint(equalToConstant: 35),
+            bookmarkButton.widthAnchor.constraint(equalToConstant: 35),
             
-            bookmarkImageView.centerYAnchor.constraint(equalTo: saveButton.centerYAnchor),
-            bookmarkImageView.centerXAnchor.constraint(equalTo: saveButton.centerXAnchor),
+            bookmarkImageView.centerYAnchor.constraint(equalTo: bookmarkButton.centerYAnchor),
+            bookmarkImageView.centerXAnchor.constraint(equalTo: bookmarkButton.centerXAnchor),
             bookmarkImageView.heightAnchor.constraint(equalToConstant: 19),
             bookmarkImageView.widthAnchor.constraint(equalToConstant: 15),
+            
+            nameView.heightAnchor.constraint(equalToConstant: 30),
+            nameView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            nameView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            nameView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            nameLabel.leadingAnchor.constraint(equalTo: nameView.leadingAnchor),
+            nameLabel.trailingAnchor.constraint(equalTo: nameView.trailingAnchor),
+            nameLabel.centerYAnchor.constraint(equalTo: nameView.centerYAnchor),
 
         ])
     }
