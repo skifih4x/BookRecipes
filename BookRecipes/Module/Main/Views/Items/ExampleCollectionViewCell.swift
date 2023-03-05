@@ -138,14 +138,14 @@ class ExampleCollectionViewCell: UICollectionViewCell {
 //        print("вызвали configureCell  метод")
 //    }
     
-    func configure(model: DetailedRecipe, section: Int, item: Int) {
+    func configure(model: Recipe, section: Int, item: Int) {
         self.nameLabel.text = model.title
         //self.foodImageView.image = UIImage(data: model.imageData)
         localSection = section
         localItem = item
         checkBookmark(section: section, item: item)
         print("вызвали configure метод")
-        foodImageView.sd_setImage(with: URL(string: model.image!), placeholderImage: UIImage(named: "loading.jpg"))
+        foodImageView.sd_setImage(with: URL(string: model.image), placeholderImage: UIImage(named: "loading.jpg"))
     }
     
     private func setConstraints() {

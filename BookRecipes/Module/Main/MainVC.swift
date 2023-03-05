@@ -27,12 +27,10 @@ final class MainVC: UIViewController {
     
     var mainView = MainView()
     private let sections = MockData.shared.pageData
-    private var baseEI = ExtendedIngredient(image: "", name: "", amount: 0.0, unit: "")
-    private lazy var baseDR = DetailedRecipe(id: 0, readyInMinutes: 0, title: "", image: "", aggregateLikes: 0, summary: "", instructions: "", extendedIngredients: [baseEI])
-    lazy var popularRecipes: [DetailedRecipe] = [baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR]
-    lazy var healthyRecipes: [DetailedRecipe] = [baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR]
-    lazy var dessertRecipes: [DetailedRecipe] = [baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR, baseDR]
-    
+    private lazy var baseRecipe = Recipe(id: 0, image: "", title: "")
+    lazy var popularRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
+    lazy var healthyRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
+    lazy var dessertRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
     
     
     
@@ -215,12 +213,8 @@ extension MainVC: UISearchBarDelegate {
 extension MainVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("тыкнул по ячейке \(indexPath.item) в секции \(indexPath.section)")
-//        let navVC = UINavigationController()
         let detailVC = DetailViewController()
         navigationController?.pushViewController(detailVC, animated: true)
-//        navVC.pushViewController(detailVC, animated: true)
-        
-        
     }
 }
 
