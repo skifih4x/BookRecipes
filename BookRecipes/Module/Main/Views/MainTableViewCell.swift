@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 final class MainTableViewCell: UITableViewCell {
     
@@ -17,6 +18,8 @@ final class MainTableViewCell: UITableViewCell {
     
     private let recipeImageView: UIImageView = {
         let view = UIImageView()
+        view.layer.cornerRadius = 10
+        view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -37,10 +40,10 @@ final class MainTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(model: SafeRecipe) {
-        ratingView.configure(rating: String(model.recipe.aggregateLikes ?? 0))
-        recipeImageView.image = UIImage(data: model.imageData)
-        recipeNameLabel.text = model.recipe.title
+    func configure(model: Recipe) {
+        ratingView.configure(rating: "")
+        recipeImageView.sd_setImage(with: URL(string: model.image), placeholderImage: UIImage(named: "loading.jpg"))
+        recipeNameLabel.text = model.title
     }
 }
 
@@ -62,10 +65,10 @@ private extension MainTableViewCell {
     func setConstraints() {
         NSLayoutConstraint.activate([
             recipeImageView.topAnchor.constraint(equalTo: topAnchor),
-            recipeImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            recipeImageView.bottomAnchor.constraint(equalTo: recipeNameLabel.topAnchor, constant: 10),
-            recipeImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            recipeImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            recipeImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             
+            recipeNameLabel.topAnchor.constraint(equalTo: recipeImageView.bottomAnchor, constant: -10),
             recipeNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             recipeNameLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
             recipeNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor),

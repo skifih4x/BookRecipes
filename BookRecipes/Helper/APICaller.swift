@@ -12,7 +12,7 @@ struct Constants {
     
     //static let APIKey = "7e31fd338a334d03aafda200f55348c0"
     //static let APIKey = "3632101b02674a0e97fb8b63eb12646e"
-    static let APIKey = "34f7a796b8c345a3abc987d7b2441e31"
+    static let APIKey = "4ea5853dc94c40a296c7ac12e7fe5eb4"
     //static let APIKey = "04864a53f7464c90820b2725af2c6ba0"
     //static let APIKey = "206625f6a74745dda3cb47905f129e1c"
     //static let APIKey = "bc63ec8984094be58b7a2d77da76b373"
@@ -101,14 +101,14 @@ class APICaller {
         task.resume()
     }
     
-    func searchRecipe (keyWord: String, completion: @escaping (Result<[Recipe], Error>) -> Void) {
+    func searchRecipe (keyWord: String, completion: @escaping (Result<[RecipeId], Error>) -> Void) {
         guard let url = URL(string: Constants.searchRecipeURL+keyWord) else {return}
         print ("url for searched : \(url)")
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
             
             guard let data = data, error == nil else {return}
             do {
-                let results = try JSONDecoder().decode(SearchedRecipes.self, from: data)
+                let results = try JSONDecoder().decode([RecipeId].self, from: data)
                 completion(.success(results))
             } catch {
                 completion(.failure(error))

@@ -16,8 +16,8 @@ final class MainVC: UIViewController {
         return view
     }()
     
-    private var recipesModels: [SafeRecipe] = []
-    private var searchedRecipes: [SafeRecipe] = []
+    var recipesModels: [Recipe] = []
+    var searchedRecipes: [Recipe] = []
     
     private let apiManager = APICaller.shared
     private let mainTableView = MainTableView()
@@ -52,6 +52,11 @@ final class MainVC: UIViewController {
 
         
         //setup()
+    }
+    
+    func updateMainTableView() {
+        mainTableView.configure(models: searchedRecipes)
+        mainTableView.mainTableView.reloadData()
     }
 }
 
@@ -95,64 +100,9 @@ private extension MainVC {
         ])
     }
     
-    func updateMainTableView() {
-        mainTableView.configure(models: searchedRecipes)
-        mainTableView.mainTableView.reloadData()
-    }
-    
     func hideMainTableView(isTableViewHidden: Bool) {
         mainTableView.isHidden = isTableViewHidden
         mainView.isHidden = !isTableViewHidden
-    }
-    
-    func fetchData(for type: Types) {
-        let dispatchGroup = DispatchGroup()
-        APICaller.shared.getSortedRecipes(type: type) { results in
-            switch results {
-            case .success(let recipes):
-                // Успешно получено
-                for i in recipes {
-                    dispatchGroup.enter()
-                    APICaller.shared.getDetailedRecipe(with: i.id) { results in
-                        switch results {
-                        case .success(let recipe):
-                            print(recipe)
-                            // успешно получены детальные данные
-                            APICaller.shared.getImage(from: recipe.image!) { result in
-                                switch result {
-                                case .success(let imageData):
-                                    let safeRecipe = SafeRecipe(recipe: recipe, imageData: imageData)
-                                    self.recipesModels.append(safeRecipe)
-//                                    switch type {
-//                                    case .popular:
-//                                        self.mainView.popularRecipes.append(safeRecipe)
-//                                    case .healthy:
-//                                        self.mainView.healthyRecipes.append(safeRecipe)
-//                                    case .dessert:
-//                                        self.mainView.dessertRecipes.append(safeRecipe)
-//                                    }
-                                case .failure(let error):
-                                    print(error)
-                                }
-                                dispatchGroup.leave()
-                            }
-                        case .failure(let error):
-                            print(error)
-                            // получена ошибка при запросе детальных данных
-                            dispatchGroup.leave()
-                        }
-                    }
-                }
-                dispatchGroup.notify(queue: .main) {
-                    self.mainView.collectionView.reloadData()
-                    self.searchedRecipes = self.recipesModels
-                    self.updateMainTableView()
-                }
-            case .failure(let error):
-                print (error)
-                // получена ошибка
-            }
-        }
     }
 }
  
@@ -168,28 +118,33 @@ extension MainVC: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        guard !searchText.isEmpty else {
+            searchedRecipes = recipesModels
+            updateMainTableView()
+            return
+        }
+        
         apiManager.searchRecipe(keyWord: searchText) { [weak self] result in
             switch result {
-            case .success(let data):
-//                data.forEach { recipe in
-//                    self?.apiManager.getImage(from: recipe.image) { result in
-//                        switch result {
-//                        case .success(let imageData):
-//                            let safeRecipe = SafeRecipe(recipe: recipe, imageData: imageData)
-//                        case .failure(let error):
-//                            print (error)
-//                        }
-//                    }
-//                }
-                
-                var models: [SafeRecipe] = []
-                data.forEach { recipe in
-                    guard let index = self?.recipesModels.firstIndex(where: { $0.recipe.id == recipe.id }), let model = self?.recipesModels[index] else { return }
-                    models.append(model)
+            case .success(let recipes):
+                let dispatchGroup = DispatchGroup()
+                var models: [Recipe] = []
+                recipes.forEach { recipe in
+                    dispatchGroup.enter()
+                    self?.apiManager.getDetailedRecipe(with: recipe.id) { result in
+                        defer { dispatchGroup.leave() }
+                        switch result {
+                        case .success(let data):
+                            guard let title = data.title, let image = data.image else { return }
+                            models.append(Recipe(id: data.id, image: image, title: title))
+                        case .failure(let error):
+                            print(error)
+                        }
+                    }
                 }
-                
-                self?.searchedRecipes = models
-                DispatchQueue.main.async {
+
+                dispatchGroup.notify(queue: .main) {
+                    self?.searchedRecipes = models
                     self?.hideMainTableView(isTableViewHidden: false)
                     self?.updateMainTableView()
                 }
