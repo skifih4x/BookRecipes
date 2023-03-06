@@ -11,6 +11,24 @@ class RecipeListVC: UIViewController {
     
     var recipeTableView = UITableView()
     
+    lazy var imageView: UIImageView = {
+        let imageView = UIImageView()
+        
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        if let gifUrl = URL(string: "https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif") {
+            imageView.sd_setImage(with: gifUrl) { (image, error, cacheType, url) in
+                if error != nil {
+                    print("Error loading GIF image")
+                } else {
+                    imageView.image = image
+                }
+            }
+        }
+        
+        return imageView
+    }()
+    
 //    var categoryLabel: UILabel = {
 //        let label = UILabel()
 //        label.text = "Desserts"
@@ -31,18 +49,36 @@ class RecipeListVC: UIViewController {
         view.backgroundColor = .white
         fetchData(for: category!)
         configureTableView()
-        
+        configureNavigationBar()
     }
     
-    func configureTableView () {
-//        view.addSubview(categoryLabel)
+    func configureTableView() {
+        
         view.addSubview(recipeTableView)
+        view.addSubview(imageView)
         recipeTableView.translatesAutoresizingMaskIntoConstraints = false
+        recipeTableView.separatorStyle = .none
         setTableviewDelegates()
         setConstraints()
-        recipeTableView.register(RecipeCell.self, forCellReuseIdentifier: "RecipeCell")
-        recipeTableView.rowHeight = view.frame.height/6
+        recipeTableView.register(RecipeTableViewCell.self, forCellReuseIdentifier: RecipeTableViewCell.identifier)
+//        recipeTableView.rowHeight = view.frame.height/6
+    }
+    
+    func configureNavigationBar() {
         
+        let backButtonImage = UIImage(named: "BackButton")
+        let backButton = UIBarButtonItem(image: backButtonImage, style: .plain, target: self, action: #selector(goBack))
+        backButton.tintColor = .black
+        navigationItem.leftBarButtonItem = backButton
+        navigationItem.leftItemsSupplementBackButton = true
+        navigationItem.hidesBackButton = true
+        
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.barTintColor = .systemBackground
+    }
+    
+    @objc func goBack() {
+        navigationController?.popViewController(animated: true)
     }
     
     func setTableviewDelegates () {
@@ -53,13 +89,19 @@ class RecipeListVC: UIViewController {
 //MARK: - Constraints
 
     func setConstraints () {
+        
+        let safeArea = view.safeAreaLayoutGuide
+        
+        let screenHeight = UIScreen.main.bounds.height
+        
         NSLayoutConstraint.activate([
-            
-//            categoryLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
-//            categoryLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-//            categoryLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-//            categoryLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.05),
-            
+            imageView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: screenHeight / 16),
+            imageView.widthAnchor.constraint(equalToConstant: screenHeight / 16)
+        ])
+        
+        NSLayoutConstraint.activate([
             recipeTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             recipeTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
             recipeTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
@@ -83,9 +125,9 @@ extension RecipeListVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = recipeTableView.dequeueReusableCell(withIdentifier: "RecipeCell") as! RecipeCell
+        let cell = recipeTableView.dequeueReusableCell(withIdentifier: RecipeTableViewCell.identifier) as! RecipeTableViewCell
         let recipe = recipesInList[indexPath.row]
-        cell.setData(recipe: recipe)
+        cell.setupData(recipe: recipe)
         return cell
     }
     
@@ -131,6 +173,7 @@ extension RecipeListVC {
                 }
                 dispatchGroup.notify(queue: .main) {
                     self.recipeTableView.reloadData()
+                    self.imageView.isHidden = true
                 }
             case .failure(let error) : print ("error in category: \(error)")
                 

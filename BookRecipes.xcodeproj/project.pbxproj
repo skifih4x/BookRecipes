@@ -39,10 +39,8 @@
 		CE0A9D5B29AF55120029F7C8 /* SortedRecipes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0A9D5A29AF55120029F7C8 /* SortedRecipes.swift */; };
 		CE15D3F329B0994500930765 /* CategoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE15D3F229B0994500930765 /* CategoryCollectionViewCell.swift */; };
 		CE1B860B29B4A31700665969 /* RecipesListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B860A29B4A31700665969 /* RecipesListVC.swift */; };
-		CE1B860D29B4A33800665969 /* RecipeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B860C29B4A33800665969 /* RecipeCell.swift */; };
 		CE1B860F29B4A36100665969 /* SafeRecipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B860E29B4A36100665969 /* SafeRecipe.swift */; };
-		CE7A20DF29B4D8FB002C6F12 /* SavedTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B860229B4A26F00665969 /* SavedTableCell.swift */; };
-		CE7A20E029B4D946002C6F12 /* SavedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B860029B4A25D00665969 /* SavedVC.swift */; };
+		CE7A20E729B6A560002C6F12 /* RecipeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7A20E629B6A560002C6F12 /* RecipeTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,8 +78,8 @@
 		CE1B860029B4A25D00665969 /* SavedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedVC.swift; sourceTree = "<group>"; };
 		CE1B860229B4A26F00665969 /* SavedTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedTableCell.swift; sourceTree = "<group>"; };
 		CE1B860A29B4A31700665969 /* RecipesListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesListVC.swift; sourceTree = "<group>"; };
-		CE1B860C29B4A33800665969 /* RecipeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCell.swift; sourceTree = "<group>"; };
 		CE1B860E29B4A36100665969 /* SafeRecipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeRecipe.swift; sourceTree = "<group>"; };
+		CE7A20E629B6A560002C6F12 /* RecipeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,7 +200,7 @@
 				C7CB34C429ABF511001AA24C /* Categories */,
 				C7CB34C329ABF50A001AA24C /* Main */,
 				CE1B860A29B4A31700665969 /* RecipesListVC.swift */,
-				CE1B860C29B4A33800665969 /* RecipeCell.swift */,
+				CE7A20E629B6A560002C6F12 /* RecipeTableViewCell.swift */,
 			);
 			path = Module;
 			sourceTree = "<group>";
@@ -265,14 +263,6 @@
 				003A12F929B4D8F5001F29F0 /* CategoryTableViewCell.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		CE7A20DE29B4D7F7002C6F12 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				C710EAC829AE1F0E000C85C9 /* SavedTableCell.swift */,
-			);
-			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -361,6 +351,7 @@
 				2CF0F84829AE7EFF0054CE6F /* MockData.swift in Sources */,
 				CE15D3F329B0994500930765 /* CategoryCollectionViewCell.swift in Sources */,
 				CE1B860F29B4A36100665969 /* SafeRecipe.swift in Sources */,
+				CE7A20E729B6A560002C6F12 /* RecipeTableViewCell.swift in Sources */,
 				C7CB34C129ABF49B001AA24C /* BaseTabBarController.swift in Sources */,
 				2CF0F83A29AE7E220054CE6F /* MainView.swift in Sources */,
 				4E76CB8729B1DCEB00A9791E /* IngridientTableViewCell.swift in Sources */,
@@ -373,7 +364,6 @@
 				2CF0F84029AE7E900054CE6F /* HeaderSupplementaryView.swift in Sources */,
 				95564F8729AFAFFA0078BDB3 /* MainTableView.swift in Sources */,
 				2CF0F83E29AE7E710054CE6F /* ExampleCollectionViewCell.swift in Sources */,
-				CE1B860D29B4A33800665969 /* RecipeCell.swift in Sources */,
 				CE1B860B29B4A31700665969 /* RecipesListVC.swift in Sources */,
 				2CA0483429B1F7BB0016BDC1 /* Ext + MainVC.swift in Sources */,
 				CE0A9D5B29AF55120029F7C8 /* SortedRecipes.swift in Sources */,
