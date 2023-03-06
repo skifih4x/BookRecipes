@@ -41,6 +41,8 @@
 		CE1B860B29B4A31700665969 /* RecipesListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B860A29B4A31700665969 /* RecipesListVC.swift */; };
 		CE1B860D29B4A33800665969 /* RecipeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B860C29B4A33800665969 /* RecipeCell.swift */; };
 		CE1B860F29B4A36100665969 /* SafeRecipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B860E29B4A36100665969 /* SafeRecipe.swift */; };
+		CE7A20DF29B4D8FB002C6F12 /* SavedTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B860229B4A26F00665969 /* SavedTableCell.swift */; };
+		CE7A20E029B4D946002C6F12 /* SavedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B860029B4A25D00665969 /* SavedVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -263,6 +265,14 @@
 				003A12F929B4D8F5001F29F0 /* CategoryTableViewCell.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		CE7A20DE29B4D7F7002C6F12 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				C710EAC829AE1F0E000C85C9 /* SavedTableCell.swift */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

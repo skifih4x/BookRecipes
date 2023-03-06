@@ -24,10 +24,12 @@ class RecipeListVC: UIViewController {
 //
     var recipesInList: [SafeRecipe] = []
     
+    var category: String?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        fetchData(for: Categories.breakfast.rawValue)
+        fetchData(for: category!)
         configureTableView()
         
     }
