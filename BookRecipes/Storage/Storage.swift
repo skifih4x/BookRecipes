@@ -7,9 +7,9 @@
 
 import RealmSwift
 
-class DataBase {
+class Storage {
     
-    static let shared = DataBase()
+    static let shared = Storage()
 
     private let realm = try! Realm()
     private var items: Results<RealmRecipe>!

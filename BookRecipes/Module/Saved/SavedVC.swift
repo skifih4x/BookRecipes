@@ -37,9 +37,8 @@ final class SavedVC: UIViewController {
         
         var items: Results<RealmRecipe>!
         
-        DataBase.shared.read { recipes in
+        Storage.shared.read { recipes in
             items = recipes
-            print(items)
         }
         var error: Error? = nil
         
@@ -99,7 +98,7 @@ final class SavedVC: UIViewController {
 
 extension SavedVC {
     @objc func deleteAllItemsAction() {
-        DataBase.shared.deleteAll()
+        Storage.shared.deleteAll()
         data = []
         tableView.reloadData()
     }

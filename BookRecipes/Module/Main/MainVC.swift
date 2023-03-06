@@ -300,7 +300,7 @@ extension MainVC: UICollectionViewDataSource {
     
     private func createCompletion(with recipe: Recipe) -> (() -> ()) {
         let closure = {
-            DataBase.shared.write(recipe: recipe)
+            Storage.shared.write(recipe: recipe)
         }
         return closure
     }
