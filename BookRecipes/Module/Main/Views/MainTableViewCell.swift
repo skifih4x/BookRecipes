@@ -21,6 +21,7 @@ final class MainTableViewCell: UITableViewCell {
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.sd_imageIndicator = SDWebImageActivityIndicator.gray
         return view
     }()
     
@@ -70,6 +71,7 @@ private extension MainTableViewCell {
             recipeImageView.topAnchor.constraint(equalTo: topAnchor),
             recipeImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             recipeImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            recipeImageView.heightAnchor.constraint(equalToConstant: 200),
             
             recipeNameLabel.topAnchor.constraint(equalTo: recipeImageView.bottomAnchor, constant: 10),
             recipeNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
