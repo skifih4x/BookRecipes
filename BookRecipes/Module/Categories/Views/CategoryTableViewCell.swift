@@ -9,7 +9,7 @@ import UIKit
 
 class CategoryTableViewCell: UITableViewCell {
     
-    static let identifier = "CategoryCollectionViewCell"
+    static let identifier = "CategoryTableViewCell"
 
     lazy var backImageView: UIImageView = {
         let imageView = UIImageView()
