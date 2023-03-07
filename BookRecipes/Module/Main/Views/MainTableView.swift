@@ -13,6 +13,8 @@ final class MainTableView: UIView {
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
         table.register(MainTableViewCell.self, forCellReuseIdentifier: "MainTableViewCell")
+        table.separatorStyle = .none
+        table.showsVerticalScrollIndicator = false
         return table
     }()
     
@@ -45,10 +47,6 @@ extension MainTableView: UITableViewDelegate, UITableViewDataSource {
         guard let cell = mainTableView.dequeueReusableCell(withIdentifier: "MainTableViewCell", for: indexPath) as? MainTableViewCell else { return UITableViewCell() }
         cell.configure(model: recipesItems[indexPath.item])
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200
     }
 }
 
