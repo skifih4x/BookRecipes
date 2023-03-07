@@ -9,11 +9,11 @@ import UIKit
 
 final class MainVC: UIViewController {
     
-    private let searchBar: UISearchBar = {
-        let view = UISearchBar()
-        view.showsCancelButton = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    private var searchController: UISearchController = {
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.obscuresBackgroundDuringPresentation = false
+        
+        return searchController
     }()
     
     var recipesModels: [Recipe] = []
@@ -45,6 +45,11 @@ final class MainVC: UIViewController {
         fetchData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        searchController.isActive = false
+        hideMainTableView(isTableViewHidden: true)
+    }
+    
     func fetchData() {
         fetchCollectionData(for: .popular)
         fetchCollectionData(for: .healthy)
@@ -73,29 +78,26 @@ private extension MainVC {
     }
     
     func setDelegate() {
-        searchBar.delegate = self
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.delegate = self
     }
     
     func setupView() {
-        view.addSubview(searchBar)
+        navigationItem.searchController = searchController
         view.addSubview(mainView)
         view.addSubview(mainTableView)
     }
     
     func setConstraints() {
         NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            searchBar.bottomAnchor.constraint(equalTo: mainView.topAnchor, constant: -20),
-            searchBar.bottomAnchor.constraint(equalTo: mainTableView.topAnchor, constant: -20),
-            
-            mainView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            mainView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            mainView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            mainView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            mainTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            mainTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mainTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            mainTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            mainTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             mainTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
@@ -111,19 +113,34 @@ private extension MainVC {
 extension MainVC: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.text = ""
-        searchedRecipes = recipesModels
-        updateMainTableView()
         hideMainTableView(isTableViewHidden: true)
     }
+ 
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        hideMainTableView(isTableViewHidden: false)
+    }
+}
+
+//MARK: - UISearchResultsUpdating
+
+extension MainVC: UISearchResultsUpdating {
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        guard !searchText.isEmpty else {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text, !searchText.isEmpty else {
             searchedRecipes = recipesModels
             updateMainTableView()
             return
         }
         
+        fetchSearchedRecipe(with: searchText)
+    }
+}
+
+//MARK: - Search Recipes
+
+private extension MainVC {
+    
+    func fetchSearchedRecipe(with searchText: String) {
         apiManager.searchRecipe(keyWord: searchText) { [weak self] result in
             switch result {
             case .success(let recipes):
@@ -145,23 +162,15 @@ extension MainVC: UISearchBarDelegate {
 
                 dispatchGroup.notify(queue: .main) {
                     self?.searchedRecipes = models
-                    self?.hideMainTableView(isTableViewHidden: false)
                     self?.updateMainTableView()
+                    self?.hideMainTableView(isTableViewHidden: false)
                 }
             case .failure(let error):
                 print (error)
             }
         }
     }
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        hideMainTableView(isTableViewHidden: false)
-    }
 }
-
-
-
-
 
 //MARK: - UICollectionViewDelegate
 

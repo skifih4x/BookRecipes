@@ -27,7 +27,9 @@ final class MainTableViewCell: UITableViewCell {
     private let recipeNameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
+        label.textAlignment = .left
+        label.font = UIFont(name: "Helvetica Neue Bold", size: 18)
+        label.numberOfLines = 0
         return label
     }()
     
@@ -41,7 +43,7 @@ final class MainTableViewCell: UITableViewCell {
     }
     
     func configure(model: Recipe) {
-        ratingView.configure(rating: "")
+        ratingView.configure(rating: "4,5")
         recipeImageView.sd_setImage(with: URL(string: model.image), placeholderImage: UIImage(named: "loading.jpg"))
         recipeNameLabel.text = model.title
     }
@@ -57,6 +59,7 @@ private extension MainTableViewCell {
     }
     
     func setupView() {
+        clipsToBounds = true
         recipeImageView.addSubview(ratingView)
         addSubview(recipeImageView)
         addSubview(recipeNameLabel)
@@ -68,9 +71,9 @@ private extension MainTableViewCell {
             recipeImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             recipeImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             
-            recipeNameLabel.topAnchor.constraint(equalTo: recipeImageView.bottomAnchor, constant: -10),
-            recipeNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            recipeNameLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
+            recipeNameLabel.topAnchor.constraint(equalTo: recipeImageView.bottomAnchor, constant: 10),
+            recipeNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            recipeNameLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
             recipeNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             
             ratingView.topAnchor.constraint(equalTo: recipeImageView.topAnchor, constant: 10),
