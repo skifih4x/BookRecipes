@@ -23,7 +23,7 @@ final class DetailViewController: UIViewController  {
                 self?.recipe = recipes
                 DispatchQueue.main.async {
                     self?.ingridientsTableView.reloadData()
-                    self?.dishNameLableView.text = recipes.title
+                    self?.navigationItem.title = recipes.title
                     self?.numberOfReviewsLabel.text = "\(recipes.aggregateLikes!)" + " Likes"
                     self?.descriptionOfDishesLabel.text = recipes.summary
                     self?.descriptionOfCookingLabel.text = recipes.instructions
@@ -49,21 +49,45 @@ final class DetailViewController: UIViewController  {
         return scroll
     }()
     
-    lazy var dishNameLableView: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 24, weight: .bold)
-        label.textColor = .black
-        label.numberOfLines = 0
-        label.adjustsFontSizeToFitWidth = true
-        return label
-    }()
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        var label = UILabel()
+            // Проверить, виден ли лейбл на экране
+        let labelFrame = view.convert(label.frame, from: contentScrollView)
+        let labelVisible = contentScrollView.bounds.intersects(labelFrame)
+        label.font = UIFont.systemFont(ofSize: 10.0)
+//        label.numberOfLines = 0
+//        label.frame.size.width = 200
+//        label.adjustsFontSizeToFitWidth = true
+            // Если лейбл не виден, то изменить заголовок панели навигации и уменьшить размер лейбла
+        if !labelVisible {
+            let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .bold)]
+            navigationItem.title = self.recipe?.title
+            navigationController?.navigationBar.titleTextAttributes = attributes
+            navigationController?.navigationItem.largeTitleDisplayMode = .never
+            label.font = UIFont.systemFont(ofSize: 12.0)
+        } else {
+//          label.font = UIFont.systemFont(ofSize: 20.0)
+//          label.numberOfLines = 0
+//          label.frame.size.width = 200
+        }
+    }
+
+    
+//    lazy var dishNameLableView: UILabel = {
+//        let label = UILabel()
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        label.font = .systemFont(ofSize: 24, weight: .bold)
+//        label.textColor = .black
+//        label.numberOfLines = 0
+//        label.adjustsFontSizeToFitWidth = true
+//        return label
+//    }()
 
     lazy var dishPictureImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-//        imageView.image = UIImage(named: "fish")
-//        imageView.bounds = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 343, height: 223))
+        imageView.image = UIImage(named: "fish")
+        imageView.bounds = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 343, height: 223))
         return imageView
     }()
     
@@ -142,7 +166,7 @@ final class DetailViewController: UIViewController  {
      private func setupUI() {
         view.backgroundColor = .white
         view.addSubview(contentScrollView)
-        contentScrollView.addSubview(dishNameLableView)
+        //contentScrollView.addSubview(dishNameLableView)
         contentScrollView.addSubview(dishPictureImageView)
         contentScrollView.addSubview(raitingStackView)
         raitingStackView.addArrangedSubview(starRaitngImageView)
@@ -160,16 +184,16 @@ final class DetailViewController: UIViewController  {
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            dishPictureImageView.topAnchor.constraint(equalTo: dishNameLableView.bottomAnchor, constant: 27),
+            dishPictureImageView.topAnchor.constraint(equalTo: contentScrollView.topAnchor, constant: 50),
 //            contentImageView.bottomAnchor.constraint(lessThanOrEqualTo: contentScrollView.bottomAnchor, constant: -20),
             dishPictureImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20 ),
             dishPictureImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             dishPictureImageView.heightAnchor.constraint(equalToConstant: 200),
   
-            dishNameLableView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
-            dishNameLableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 19),
-            dishNameLableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -23),
-//            dishNameLableView.bottomAnchor.constraint(equalTo: contentImageView.topAnchor, constant: -27)
+//            dishNameLableView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
+//            dishNameLableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 19),
+//            dishNameLableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -23),
+           // dishNameLableView.bottomAnchor.constraint(equalTo: contentImageView.topAnchor, constant: -27)
  
             contentScrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 19),
             contentScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
@@ -213,12 +237,23 @@ final class DetailViewController: UIViewController  {
         fetchData()
         setupUI()
         setDelegates()
+        let backButton = UIBarButtonItem(image: UIImage(systemName: "arrow.left"), style: .plain, target: self, action: #selector(backAction))
+        navigationItem.leftBarButtonItem = backButton
+        backButton.tintColor = .black
+        
+
 //        fetchData()
+    }
+    
+    @objc func backAction() {
+        navigationController?.popViewController(animated: true)
+        
     }
     
     private func setDelegates() {
         ingridientsTableView.delegate = self
         ingridientsTableView.dataSource = self
+        contentScrollView.delegate = self
     }
 }
 
