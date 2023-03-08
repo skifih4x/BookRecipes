@@ -13,7 +13,7 @@ extension MainVC {
         APICaller.shared.getSortedRecipes(type: type) { results in
             switch results {
             case .success(let recipes):
-                self.recipesModels = recipes
+                self.recipesModels = self.recipesModels + recipes
                 for recipe in recipes {
                     switch type {
                     case .popular:

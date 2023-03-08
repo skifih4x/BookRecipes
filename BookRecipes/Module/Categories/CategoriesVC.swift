@@ -10,14 +10,14 @@ import UIKit
 class CategoriesVC: UIViewController {
     
     var categories = [
-        ["Main Course", CategoryImages.mainCourse!],
-        ["Side Dish", CategoryImages.sideDish!],
-        ["Dessert", CategoryImages.dessert!],
-        ["Salad", CategoryImages.salad!],
-        ["Breakfast", CategoryImages.breakfast!],
-        ["Soup", CategoryImages.soup!],
-        ["Snack", CategoryImages.snack!],
-        ["Drink", CategoryImages.drink!]
+        ["Main Course", CategoryImages.mainCourse!, Categories.maincourse.rawValue],
+        ["Side Dish", CategoryImages.sideDish!, Categories.sidedish.rawValue],
+        ["Dessert", CategoryImages.dessert!, Categories.dessert.rawValue],
+        ["Salad", CategoryImages.salad!, Categories.salad.rawValue],
+        ["Breakfast", CategoryImages.breakfast!, Categories.breakfast.rawValue],
+        ["Soup", CategoryImages.soup!, Categories.soup.rawValue],
+        ["Snack", CategoryImages.snack!, Categories.snack.rawValue],
+        ["Drink", CategoryImages.drink!, Categories.drink.rawValue]
     ]
     
     lazy var tableView: UITableView = {
@@ -44,6 +44,8 @@ extension CategoriesVC {
     
     func setupView() {
         
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.barTintColor = .systemBackground
         view.addSubview(tableView)
     }
     
@@ -83,8 +85,13 @@ extension CategoriesVC: UITableViewDataSource {
 extension CategoriesVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let category = categories[indexPath.item][2] as? String
+        let title = categories[indexPath.item][0] as? String
+        
         let VC = RecipeListVC()
-        VC.title = "Desserts"
+        VC.category = category
+        VC.title = title
         navigationController?.pushViewController(VC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
