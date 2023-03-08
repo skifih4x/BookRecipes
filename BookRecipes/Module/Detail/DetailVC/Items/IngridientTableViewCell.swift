@@ -6,14 +6,15 @@
 //
 
 import UIKit
+import SDWebImage
 
-class IngridientTableViewCell: UITableViewCell {
+ final class IngridientTableViewCell: UITableViewCell {
     
     //MARK: - Elements
     
     private let backgroundCell: UIView = {
         let view = UIView()
-        view.backgroundColor = #colorLiteral(red: 0.9562537074, green: 0.9562535882, blue: 0.9562535882, alpha: 1) //#F1F1F1
+//        view.backgroundColor = #colorLiteral(red: 0.9562537074, green: 0.9562535882, blue: 0.9562535882, alpha: 1) //#F1F1F1
         view.layer.cornerRadius = 12
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -58,11 +59,22 @@ class IngridientTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
-        setCinstraints()
+        setConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+     
+//MARK: - Configure Cell
+     
+    func configure(_ ingridient: ExtendedIngredient) {
+        backgroundCell.backgroundColor = #colorLiteral(red: 0.9562537074, green: 0.9562535882, blue: 0.9562535882, alpha: 1)
+        ingridientNameLable.text = ingridient.name?.capitalized
+        ingridientCountLable.text = String(format: "%.1F", ingridient.amount!) + " " + (ingridient.unit!)
+        DispatchQueue.main.async {
+            self.ingridientImageView.sd_setImage(with: URL(string: "https://spoonacular.com/cdn/ingredients_100x100/" + ingridient.image!), placeholderImage: UIImage(systemName: "fish"))
+        }
     }
     
     //MARK: - setupUI
@@ -78,18 +90,18 @@ class IngridientTableViewCell: UITableViewCell {
     
     //MARK: - setContraints
     
-    private func setCinstraints() {
+    private func setConstraints() {
         NSLayoutConstraint.activate([
             backgroundCell.topAnchor.constraint(equalTo: topAnchor, constant: 7),
             backgroundCell.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             backgroundCell.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             backgroundCell.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
+
             contentStackView.topAnchor.constraint(equalTo: backgroundCell.topAnchor),
             contentStackView.bottomAnchor.constraint(equalTo: backgroundCell.bottomAnchor),
             contentStackView.leadingAnchor.constraint(equalTo: backgroundCell.leadingAnchor),
             contentStackView.trailingAnchor.constraint(equalTo: backgroundCell.trailingAnchor),
-            
+
 //            ingridientImageView.heightAnchor.constraint(equalToConstant: 35),
             ingridientImageView.widthAnchor.constraint(equalToConstant: 50),
             ingridientImageView.centerYAnchor.constraint(equalTo: backgroundCell.centerYAnchor),
@@ -98,7 +110,7 @@ class IngridientTableViewCell: UITableViewCell {
             ingridientImageView.bottomAnchor.constraint(equalTo: contentStackView.bottomAnchor, constant: -5),
 
             ingridientNameLable.centerYAnchor.constraint(equalTo: backgroundCell.centerYAnchor),
-            
+
             ingridientCountLable.centerYAnchor.constraint(equalTo: backgroundCell.centerYAnchor),
             ingridientCountLable.trailingAnchor.constraint(equalTo: backgroundCell.trailingAnchor, constant: -20),
             ingridientCountLable.widthAnchor.constraint(equalToConstant: 100)

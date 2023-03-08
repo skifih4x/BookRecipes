@@ -191,7 +191,7 @@ extension MainVC: UICollectionViewDelegate {
         
         
         let detailVC = DetailViewController()
-        detailVC.id = id
+        detailVC.detailRecipeID = id
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }

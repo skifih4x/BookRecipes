@@ -6,8 +6,34 @@
 //
 
 import UIKit
+import SDWebImage
 
-class DetailViewController: UIViewController  {
+final class DetailViewController: UIViewController  {
+    
+    private let apiManager = APICaller.shared
+    
+    private var recipe: DetailedRecipe?
+    var detailRecipeID: Int = 1697641
+    
+    //MARK: - FetchData
+    private func fetchData() {
+        APICaller.shared.getDetailedRecipe(with: detailRecipeID) { [weak self] result in
+            switch result {
+            case .success(let recipes):
+                self?.recipe = recipes
+                DispatchQueue.main.async {
+                    self?.ingridientsTableView.reloadData()
+                    self?.dishNameLableView.text = recipes.title
+                    self?.numberOfReviewsLabel.text = "\(recipes.aggregateLikes!)" + " Likes"
+                    self?.descriptionOfDishesLabel.text = recipes.summary
+                    self?.descriptionOfCookingLabel.text = recipes.instructions
+                    self?.dishPictureImageView.sd_setImage(with: URL(string: recipes.image ?? ""))
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
     
     var id: Int?
     
@@ -19,13 +45,13 @@ class DetailViewController: UIViewController  {
 //        scroll.backgroundColor = .red
         scroll.contentSize = CGSize(width: 100, height: 1500)
         scroll.isUserInteractionEnabled = true
+        scroll.showsVerticalScrollIndicator = false
         return scroll
     }()
     
     lazy var dishNameLableView: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "How to make Tasty Fish (point & Kill)"
         label.font = .systemFont(ofSize: 24, weight: .bold)
         label.textColor = .black
         label.numberOfLines = 0
@@ -36,14 +62,14 @@ class DetailViewController: UIViewController  {
     lazy var dishPictureImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "fish")
+//        imageView.image = UIImage(named: "fish")
 //        imageView.bounds = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 343, height: 223))
         return imageView
     }()
     
     lazy var starRaitngImageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(systemName: "star.fill")
+        view.image = UIImage(systemName: "hand.thumbsup.fill")
         view.contentMode = .scaleAspectFit
         view.tintColor = .black
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -80,10 +106,6 @@ class DetailViewController: UIViewController  {
     
     lazy var descriptionOfDishesLabel: UILabel = {
         let label = UILabel()
-        label.text = """
-    Описание блюда:
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-"""
         label.font = .systemFont(ofSize: 15, weight: .regular)
         label.textColor = .black
         label.numberOfLines = 0
@@ -95,10 +117,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     lazy var descriptionOfCookingLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = """
-    Описание готовки:
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-"""
         label.font = .systemFont(ofSize: 15, weight: .regular)
         label.textColor = .black
         label.numberOfLines = 0
@@ -106,20 +124,22 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         return label
     }()
     
-    lazy var ingridientsTableView: UITableView = {
-        let table = UITableView(frame: .zero, style: .plain)
+    private let ingridientsTableView: UITableView = {
+//        let table = UITableView(frame: .zero, style: .plain)
+        let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
         table.register(IngridientTableViewCell.self, forCellReuseIdentifier: "cell")
         table.bounces = false
         table.separatorStyle = .none
         table.register(IngridientsTableViewHeader.self, forHeaderFooterViewReuseIdentifier: "header")
         table.sectionHeaderTopPadding = 0
+        table.showsVerticalScrollIndicator = false
         return table
     }()
     
     //MARK: - setupUI
     
-    func setupUI() {
+     private func setupUI() {
         view.backgroundColor = .white
         view.addSubview(contentScrollView)
         contentScrollView.addSubview(dishNameLableView)
@@ -138,7 +158,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     
     //MARK: - setConstraints
     
-    func setConstraints() {
+    private func setConstraints() {
         NSLayoutConstraint.activate([
             dishPictureImageView.topAnchor.constraint(equalTo: dishNameLableView.bottomAnchor, constant: 27),
 //            contentImageView.bottomAnchor.constraint(lessThanOrEqualTo: contentScrollView.bottomAnchor, constant: -20),
@@ -190,8 +210,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        fetchData()
         setupUI()
         setDelegates()
+//        fetchData()
     }
     
     private func setDelegates() {
@@ -204,19 +226,26 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 extension DetailViewController: UITableViewDataSource {
     
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-         return 10
+        guard let ingridients = recipe?.extendedIngredients else {return 1}
+        return ingridients.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell" , for: indexPath) as! IngridientTableViewCell
-        //setup cell
+//        guard let ingridient = recipe?.extendedIngredients[indexPath.row] else { return UITableViewCell() } //  если делать через guard то создается пустая ячейка
+        if let ingridient = recipe?.extendedIngredients[indexPath.row]  {
+            cell.configure(ingridient)
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as! IngridientsTableViewHeader
-        header.configure(text: "5 items") //set number of items
+        let ingridientsCount = recipe?.extendedIngredients.count ?? 0
+        header.configure(text: "\(ingridientsCount) items") //set number of items
         return header
     }
     
@@ -233,5 +262,10 @@ extension DetailViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
          65
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("нажата ячейка \(recipe?.extendedIngredients[indexPath.row].name ?? "не прогрузилась")")
+    }
 }
+
 
