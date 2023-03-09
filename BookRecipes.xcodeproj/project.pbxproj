@@ -220,6 +220,15 @@
 			path = Items;
 			sourceTree = "<group>";
 		};
+		80956CA429BA649900E314FF /* RecipeList */ = {
+			isa = PBXGroup;
+			children = (
+				CE1B860A29B4A31700665969 /* RecipesListVC.swift */,
+				CE7A20E629B6A560002C6F12 /* RecipeTableViewCell.swift */,
+			);
+			path = RecipeList;
+			sourceTree = "<group>";
+		};
 		C77A3FE929B4A3020090F5BA /* Storage */ = {
 			isa = PBXGroup;
 			children = (
@@ -237,8 +246,7 @@
 				C7CB34C529ABF6B3001AA24C /* Saved */,
 				C7CB34C429ABF511001AA24C /* Categories */,
 				C7CB34C329ABF50A001AA24C /* Main */,
-				CE1B860A29B4A31700665969 /* RecipesListVC.swift */,
-				CE7A20E629B6A560002C6F12 /* RecipeTableViewCell.swift */,
+				80956CA429BA649900E314FF /* RecipeList */,
 			);
 			path = Module;
 			sourceTree = "<group>";

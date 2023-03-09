@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class RecipeTableViewCell: UITableViewCell {
     
@@ -43,6 +44,8 @@ class RecipeTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+ 
+        self.selectionStyle = .none
         setupView()
         setupConstraints()
     }
@@ -50,7 +53,13 @@ class RecipeTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    
 }
+
+
+
+//MARK: - Setups
 
 extension RecipeTableViewCell {
     
@@ -91,9 +100,9 @@ extension RecipeTableViewCell {
         ])
     }
     
-    func setupData(recipe: SafeRecipe) {
-        recipeImageView.image = UIImage(data: recipe.imageData)
-        titleLabel.text = recipe.recipe.title
-        likesLabel.text = "Likes: \(recipe.recipe.aggregateLikes!)"
+    func setupData(recipe: DetailedRecipe) {
+        recipeImageView.sd_setImage(with: URL(string: recipe.image!))
+        titleLabel.text = recipe.title
+        likesLabel.text = "Likes: \(recipe.aggregateLikes!)"
     }
 }

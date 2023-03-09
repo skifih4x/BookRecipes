@@ -9,6 +9,8 @@ import UIKit
 
 class HeaderSupplementaryView: UICollectionReusableView {
     
+    weak var navigationController: UINavigationController?
+    
     private let headerLabel: UILabel = {
         let view = UILabel()
         view.text = "header"
@@ -60,10 +62,24 @@ class HeaderSupplementaryView: UICollectionReusableView {
     
     @objc func seeAllButtonTapped() {
         print("кнопка See all нажалась")
+    
+        let VC = RecipeListVC()
+        VC.title = headerLabel.text
+        
+        switch VC.title {
+        case "Popular \u{1F525}": VC.category = Types.popularity.rawValue
+        case "Healthy \u{1F966}": VC.category = Types.healthiness.rawValue
+        case "Dessert \u{1F370}": VC.category = Types.sugar.rawValue
+        default : break
+        }
+        
+        VC.isSorted = true
+        navigationController?.pushViewController(VC, animated: true)
     }
     
-    func configureHeader(categoryName: String) {
+    func configureHeader(categoryName: String, navController: UINavigationController) {
         headerLabel.text = categoryName
+        navigationController = navController
     }
     
     private func setConstraints() {

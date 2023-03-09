@@ -25,7 +25,7 @@ class CategoriesVC: UIViewController {
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
-        
+        tableView.showsVerticalScrollIndicator = false
         return tableView
     }()
     
@@ -91,6 +91,7 @@ extension CategoriesVC: UITableViewDelegate {
         
         let VC = RecipeListVC()
         VC.category = category
+        VC.isSorted = false
         VC.title = title
         navigationController?.pushViewController(VC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
