@@ -10,6 +10,8 @@ import SDWebImage
 
 final class DetailViewController: UIViewController  {
     
+    var label: UILabel?
+    
     private let apiManager = APICaller.shared
     
     private var recipe: DetailedRecipe?
@@ -25,10 +27,16 @@ final class DetailViewController: UIViewController  {
                     self?.ingridientsTableView.reloadData()
                     self?.navigationItem.title = recipes.title
                     self?.numberOfReviewsLabel.text = "\(recipes.aggregateLikes!)" + " Likes"
-                    self?.descriptionOfDishesLabel.text = recipes.summary
+                    //self?.descriptionOfDishesLabel.text = recipes.summary
                     self?.descriptionOfCookingLabel.text = recipes.instructions
                     self?.dishPictureImageView.sd_setImage(with: URL(string: recipes.image ?? ""))
+                    
+                    let saveText = APICaller.shared.convertHTML(from: recipes.summary!)
+                    //let saveText2 = APICaller.shared.convertHTML(from: recipes.instructions!)
+                    self?.descriptionOfDishesLabel.text = saveText as? String
+                    //self?.descriptionOfCookingLabel.text = saveText2 as? String
                 }
+                
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -42,35 +50,12 @@ final class DetailViewController: UIViewController  {
     lazy var contentScrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
-//        scroll.backgroundColor = .red
         scroll.contentSize = CGSize(width: 100, height: 1500)
         scroll.isUserInteractionEnabled = true
         scroll.showsVerticalScrollIndicator = false
         return scroll
     }()
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        var label = UILabel()
-            // Проверить, виден ли лейбл на экране
-        let labelFrame = view.convert(label.frame, from: contentScrollView)
-        let labelVisible = contentScrollView.bounds.intersects(labelFrame)
-        label.font = UIFont.systemFont(ofSize: 10.0)
-//        label.numberOfLines = 0
-//        label.frame.size.width = 200
-//        label.adjustsFontSizeToFitWidth = true
-            // Если лейбл не виден, то изменить заголовок панели навигации и уменьшить размер лейбла
-        if !labelVisible {
-            let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .bold)]
-            navigationItem.title = self.recipe?.title
-            navigationController?.navigationBar.titleTextAttributes = attributes
-            navigationController?.navigationItem.largeTitleDisplayMode = .never
-            label.font = UIFont.systemFont(ofSize: 12.0)
-        } else {
-//          label.font = UIFont.systemFont(ofSize: 20.0)
-//          label.numberOfLines = 0
-//          label.frame.size.width = 200
-        }
-    }
 
     
 //    lazy var dishNameLableView: UILabel = {
@@ -87,6 +72,8 @@ final class DetailViewController: UIViewController  {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "fish")
+        imageView.layer.cornerRadius = 15
+        imageView.clipsToBounds = true
         imageView.bounds = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 343, height: 223))
         return imageView
     }()
@@ -119,7 +106,7 @@ final class DetailViewController: UIViewController  {
         return label
     }()
     
-    private let raitingStackView: UIStackView = {
+    lazy var raitingStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .fillProportionally
@@ -148,7 +135,7 @@ final class DetailViewController: UIViewController  {
         return label
     }()
     
-    private let ingridientsTableView: UITableView = {
+    lazy var ingridientsTableView: UITableView = {
 //        let table = UITableView(frame: .zero, style: .plain)
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -184,7 +171,7 @@ final class DetailViewController: UIViewController  {
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            dishPictureImageView.topAnchor.constraint(equalTo: contentScrollView.topAnchor, constant: 50),
+            dishPictureImageView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
 //            contentImageView.bottomAnchor.constraint(lessThanOrEqualTo: contentScrollView.bottomAnchor, constant: -20),
             dishPictureImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20 ),
             dishPictureImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
@@ -215,7 +202,7 @@ final class DetailViewController: UIViewController  {
             raitingStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             raitingStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
   
-            descriptionOfDishesLabel.topAnchor.constraint(equalTo: raitingStackView.bottomAnchor, constant: 25),
+            descriptionOfDishesLabel.topAnchor.constraint(equalTo: raitingStackView.bottomAnchor),
             descriptionOfDishesLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 27),
             descriptionOfDishesLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -25),
 //            descriptionOfDishesLabel.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
@@ -247,7 +234,6 @@ final class DetailViewController: UIViewController  {
     
     @objc func backAction() {
         navigationController?.popViewController(animated: true)
-        
     }
     
     private func setDelegates() {
