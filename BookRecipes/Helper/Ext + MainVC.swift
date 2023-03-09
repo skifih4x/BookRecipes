@@ -13,6 +13,7 @@ extension MainVC {
         APICaller.shared.getSortedRecipes(type: type) { results in
             switch results {
             case .success(let recipes):
+                self.recipesModels = self.recipesModels + recipes
                 for recipe in recipes {
                     switch type {
                     case .popular:
@@ -28,6 +29,8 @@ extension MainVC {
                 }
                 DispatchQueue.main.async {
                     self.mainView.collectionView.reloadData()
+                    self.searchedRecipes = self.recipesModels
+                    self.updateMainTableView()
                 }
             case .failure(let error):
                 print (error)

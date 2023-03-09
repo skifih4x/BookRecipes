@@ -14,8 +14,10 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     var localSection = 0
     var localItem = 0
     
+
     var saveButtonCompletion: (() -> ())?
    
+
     private let foodImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
@@ -143,18 +145,26 @@ class ExampleCollectionViewCell: UICollectionViewCell {
 //    }
     
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        foodImageView.image = nil
+    }
     func configure(model: Recipe, section: Int, item: Int, saveButtonCompletion: @escaping () -> ()) {
-
+        
         self.nameLabel.text = model.title
         //self.foodImageView.image = UIImage(data: model.imageData)
         localSection = section
         localItem = item
         checkBookmark(section: section, item: item)
         print("вызвали configure метод")
-
-        foodImageView.sd_setImage(with: URL(string: model.image!), placeholderImage: UIImage(named: "loading.jpg"))
         
         self.saveButtonCompletion = saveButtonCompletion
+        
+        foodImageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
+        guard let image = model.image else { return }
+        guard let url = URL(string: image) else { return }
+        foodImageView.sd_setImage(with: url)
+
     }
     
     private func setConstraints() {

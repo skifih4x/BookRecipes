@@ -36,6 +36,8 @@ final class SavedVC: UIViewController {
     
     private func loadData() {
         
+        
+        
         Storage.shared.read { recipes in
             self.items = recipes
         }
@@ -113,5 +115,5 @@ extension SavedVC: UITableViewDataSource {
                 forItem: recipe.id))
         
         return cell
-    }  
+    }
 }

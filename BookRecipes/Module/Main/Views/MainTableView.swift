@@ -13,11 +13,12 @@ final class MainTableView: UIView {
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
         table.register(MainTableViewCell.self, forCellReuseIdentifier: "MainTableViewCell")
-        table.rowHeight = 200
+        table.separatorStyle = .none
+        table.showsVerticalScrollIndicator = false
         return table
     }()
     
-    private var recipesItems: [SafeRecipe] = []
+    private var recipesItems: [Recipe] = []
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,7 +30,7 @@ final class MainTableView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(models: [SafeRecipe]) {
+    func configure(models: [Recipe]) {
         recipesItems = models
     }
 }

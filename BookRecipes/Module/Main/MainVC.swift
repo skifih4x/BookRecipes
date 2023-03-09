@@ -9,15 +9,15 @@ import UIKit
 
 final class MainVC: UIViewController {
     
-    private let searchBar: UISearchBar = {
-        let view = UISearchBar()
-        view.showsCancelButton = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    private var searchController: UISearchController = {
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.obscuresBackgroundDuringPresentation = false
+        
+        return searchController
     }()
     
-    private var recipesModels: [SafeRecipe] = []
-    private var searchedRecipes: [SafeRecipe] = []
+    var recipesModels: [Recipe] = []
+    var searchedRecipes: [Recipe] = []
     
     private let apiManager = APICaller.shared
     private let mainTableView = MainTableView()
@@ -37,12 +37,17 @@ final class MainVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(mainView)
-        
+        title = "Team 11"
         mainView.configure(delegate: self, dataSource: self)
         mainView.collectionView.collectionViewLayout = createLayout()
         //constraintView()
         setup()
         fetchData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        searchController.isActive = false
+        hideMainTableView(isTableViewHidden: true)
     }
     
     func fetchData() {
@@ -52,6 +57,11 @@ final class MainVC: UIViewController {
 
         
         //setup()
+    }
+    
+    func updateMainTableView() {
+        mainTableView.configure(models: searchedRecipes)
+        mainTableView.mainTableView.reloadData()
     }
 }
 
@@ -68,91 +78,33 @@ private extension MainVC {
     }
     
     func setDelegate() {
-        searchBar.delegate = self
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.delegate = self
     }
     
     func setupView() {
-        view.addSubview(searchBar)
+        navigationItem.searchController = searchController
         view.addSubview(mainView)
         view.addSubview(mainTableView)
     }
     
     func setConstraints() {
         NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            searchBar.bottomAnchor.constraint(equalTo: mainView.topAnchor, constant: -20),
-            searchBar.bottomAnchor.constraint(equalTo: mainTableView.topAnchor, constant: -20),
-            
-            mainView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            mainView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            mainView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            mainView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            mainTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            mainTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mainTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            mainTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            mainTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             mainTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
-    }
-    
-    func updateMainTableView() {
-        mainTableView.configure(models: searchedRecipes)
-        mainTableView.mainTableView.reloadData()
     }
     
     func hideMainTableView(isTableViewHidden: Bool) {
         mainTableView.isHidden = isTableViewHidden
         mainView.isHidden = !isTableViewHidden
-    }
-    
-    func fetchData(for type: Types) {
-        let dispatchGroup = DispatchGroup()
-        APICaller.shared.getSortedRecipes(type: type) { results in
-            switch results {
-            case .success(let recipes):
-                // Успешно получено
-                for i in recipes {
-                    dispatchGroup.enter()
-                    APICaller.shared.getDetailedRecipe(with: i.id) { results in
-                        switch results {
-                        case .success(let recipe):
-                            print(recipe)
-                            // успешно получены детальные данные
-                            APICaller.shared.getImage(from: recipe.image!) { result in
-                                switch result {
-                                case .success(let imageData):
-                                    let safeRecipe = SafeRecipe(recipe: recipe, imageData: imageData)
-                                    self.recipesModels.append(safeRecipe)
-//                                    switch type {
-//                                    case .popular:
-//                                        self.mainView.popularRecipes.append(safeRecipe)
-//                                    case .healthy:
-//                                        self.mainView.healthyRecipes.append(safeRecipe)
-//                                    case .dessert:
-//                                        self.mainView.dessertRecipes.append(safeRecipe)
-//                                    }
-                                case .failure(let error):
-                                    print(error)
-                                }
-                                dispatchGroup.leave()
-                            }
-                        case .failure(let error):
-                            print(error)
-                            // получена ошибка при запросе детальных данных
-                            dispatchGroup.leave()
-                        }
-                    }
-                }
-                dispatchGroup.notify(queue: .main) {
-                    self.mainView.collectionView.reloadData()
-                    self.searchedRecipes = self.recipesModels
-                    self.updateMainTableView()
-                }
-            case .failure(let error):
-                print (error)
-                // получена ошибка
-            }
-        }
     }
 }
  
@@ -161,59 +113,85 @@ private extension MainVC {
 extension MainVC: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.text = ""
-        searchedRecipes = recipesModels
-        updateMainTableView()
         hideMainTableView(isTableViewHidden: true)
     }
+ 
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        hideMainTableView(isTableViewHidden: false)
+    }
+}
+
+//MARK: - UISearchResultsUpdating
+
+extension MainVC: UISearchResultsUpdating {
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text, !searchText.isEmpty else {
+            searchedRecipes = recipesModels
+            updateMainTableView()
+            return
+        }
+        
+        fetchSearchedRecipe(with: searchText)
+    }
+}
+
+//MARK: - Search Recipes
+
+private extension MainVC {
+    
+    func fetchSearchedRecipe(with searchText: String) {
         apiManager.searchRecipe(keyWord: searchText) { [weak self] result in
             switch result {
-            case .success(let data):
-//                data.forEach { recipe in
-//                    self?.apiManager.getImage(from: recipe.image) { result in
-//                        switch result {
-//                        case .success(let imageData):
-//                            let safeRecipe = SafeRecipe(recipe: recipe, imageData: imageData)
-//                        case .failure(let error):
-//                            print (error)
-//                        }
-//                    }
-//                }
-                
-                var models: [SafeRecipe] = []
-                data.forEach { recipe in
-                    guard let index = self?.recipesModels.firstIndex(where: { $0.recipe.id == recipe.id }), let model = self?.recipesModels[index] else { return }
-                    models.append(model)
+            case .success(let recipes):
+                let dispatchGroup = DispatchGroup()
+                var models: [Recipe] = []
+                recipes.forEach { recipe in
+                    dispatchGroup.enter()
+                    self?.apiManager.getDetailedRecipe(with: recipe.id) { result in
+                        defer { dispatchGroup.leave() }
+                        switch result {
+                        case .success(let data):
+                            guard let title = data.title, let image = data.image else { return }
+                            models.append(Recipe(id: data.id, image: image, title: title))
+                        case .failure(let error):
+                            print(error)
+                        }
+                    }
                 }
-                
-                self?.searchedRecipes = models
-                DispatchQueue.main.async {
-                    self?.hideMainTableView(isTableViewHidden: false)
+
+                dispatchGroup.notify(queue: .main) {
+                    self?.searchedRecipes = models
                     self?.updateMainTableView()
+                    self?.hideMainTableView(isTableViewHidden: false)
                 }
             case .failure(let error):
                 print (error)
             }
         }
     }
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        hideMainTableView(isTableViewHidden: false)
-    }
 }
-
-
-
-
 
 //MARK: - UICollectionViewDelegate
 
 extension MainVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("тыкнул по ячейке \(indexPath.item) в секции \(indexPath.section)")
+        var id = 0
+        switch indexPath.section {
+        case 0:
+            id = popularRecipes[indexPath.item].id
+        case 1:
+            id = healthyRecipes[indexPath.item].id
+        case 2:
+            id = dessertRecipes[indexPath.item].id
+        default:
+            return
+        }
+        
+        
         let detailVC = DetailViewController()
+        detailVC.detailRecipeID = id
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }

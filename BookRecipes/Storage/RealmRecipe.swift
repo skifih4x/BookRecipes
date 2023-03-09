@@ -13,3 +13,5 @@ class RealmRecipe: Object {
     @Persisted var title : String
     @Persisted var image = Data()
 }
+
+
