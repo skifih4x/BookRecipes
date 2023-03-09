@@ -31,8 +31,8 @@ class SavedTableCell: UITableViewCell {
         return label
     }()
     
-    lazy var ratingView = RatingView()
-    lazy var saveButton = SaveButton()
+//    lazy var ratingView = RatingView()
+    lazy var saveButton = SaveButton(isChecked: true)
     
     var saveButtonClosure: (() -> ())?
     
@@ -41,7 +41,7 @@ class SavedTableCell: UITableViewCell {
         
         contentView.addSubview(cellImageView)
         contentView.addSubview(nameLabel)
-        contentView.addSubview(ratingView)
+//        contentView.addSubview(ratingView)
         contentView.addSubview(saveButton)
         
         saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
@@ -68,10 +68,10 @@ class SavedTableCell: UITableViewCell {
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -inset),
             nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -inset),
             
-            ratingView.topAnchor.constraint(equalTo: cellImageView.topAnchor, constant: 10),
-            ratingView.leadingAnchor.constraint(equalTo: cellImageView.leadingAnchor, constant: 10),
-            ratingView.heightAnchor.constraint(equalToConstant: 35),
-            ratingView.widthAnchor.constraint(equalToConstant: 70),
+//            ratingView.topAnchor.constraint(equalTo: cellImageView.topAnchor, constant: 10),
+//            ratingView.leadingAnchor.constraint(equalTo: cellImageView.leadingAnchor, constant: 10),
+//            ratingView.heightAnchor.constraint(equalToConstant: 35),
+//            ratingView.widthAnchor.constraint(equalToConstant: 70),
             
             saveButton.topAnchor.constraint(equalTo: cellImageView.topAnchor, constant: 10),
             saveButton.trailingAnchor.constraint(equalTo: cellImageView.trailingAnchor, constant: -10),
@@ -85,8 +85,9 @@ class SavedTableCell: UITableViewCell {
         saveButtonClosure?()
     }
     
-    func configure(with imageUrl: String, text: String, saveButtonClosure: ()->()) {
-        self.cellImageView.sd_setImage(with: URL(string: imageUrl))
+    func configure(with image: Data, text: String,  saveButtonAction: @escaping () -> ()) {
+        self.cellImageView.image = UIImage(data: image)
         self.nameLabel.text = text
+        self.saveButtonClosure = saveButtonAction
     }
 }
