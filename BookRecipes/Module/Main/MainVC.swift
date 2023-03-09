@@ -32,11 +32,9 @@ final class MainVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(mainView)
         title = "Team 11"
         mainView.configure(delegate: self, dataSource: self)
         mainView.collectionView.collectionViewLayout = createLayout()
-        //constraintView()
         setup()
         fetchData()
     }
@@ -51,9 +49,6 @@ final class MainVC: UIViewController {
         fetchCollectionData(for: .popularity)
         fetchCollectionData(for: .healthiness)
         fetchCollectionData(for: .sugar)
-
-        
-        //setup()
     }
     
     func updateMainTableView() {
@@ -179,7 +174,6 @@ private extension MainVC {
 
 extension MainVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("тыкнул по ячейке \(indexPath.item) в секции \(indexPath.section)")
         var id = 0
         switch indexPath.section {
         case 0:
@@ -191,7 +185,6 @@ extension MainVC: UICollectionViewDelegate {
         default:
             return
         }
-        
         
         let detailVC = DetailViewController()
         detailVC.detailRecipeID = id
@@ -226,16 +219,6 @@ extension MainVC: UICollectionViewDataSource {
                 section: indexPath.section,
                 item: indexPath.item,
                 saveButtonCompletion: self.createCompletion(with: detailedRecipe))
-            
-            print("srabotal cellForItemAt")
-            
-//            if popularRecipes.count < 10 {
-//                cell.configureCell(imageName: popular[indexPath.item].image, section: indexPath.section, item: indexPath.item)
-//                print("srabotal cellForItemAt")
-//            } else {
-//                cell.configure(model: popularRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
-//                print("srabotal cellForItemAt")
-//            }
             return cell
             
         case .healthy(_):
@@ -301,10 +284,8 @@ extension MainVC {
             let section = self.sections[sectionIndex]
             switch section {
             case .popular(_):
-                //return self.createSalesSection()
                 return self.createExampleSection()
             case .healthy(_):
-                //return self.createCategorySection()
                 return self.createExampleSection()
             case .dessert(_):
                 return self.createExampleSection()
@@ -321,7 +302,6 @@ extension MainVC {
         section.orthogonalScrollingBehavior = behavior
         section.interGroupSpacing = interGroupSpacing
         section.boundarySupplementaryItems = supplementaryItems
-        //section.supplementariesFollowContentInsets = contentInsets
         return section
     }
      
@@ -342,6 +322,4 @@ extension MainVC {
     private func supplementaryHeaderItem() -> NSCollectionLayoutBoundarySupplementaryItem {
         .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
     }
-    
-    
 }

@@ -69,20 +69,8 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     }()
     
     @objc func bookmarkButtonTapped() {
-        print("тыкнул по кнопке сохранить")
-        
         saveButtonCompletion?()
         isSaved.toggle()
-        
-//        if mainView.boolArray[localSection][localItem] {
-//            bookmarkImageView.image = UIImage(named: "bookmark")
-//            mainView.boolArray[localSection][localItem] = false
-//            print(mainView.boolArray)
-//        } else {
-//            bookmarkImageView.image = UIImage(named: "bookmark selected")
-//            mainView.boolArray[localSection][localItem] = true
-//            print(mainView.boolArray)
-//        }
     }
     
     private let bookmarkImageView: UIImageView = {
@@ -134,23 +122,6 @@ class ExampleCollectionViewCell: UICollectionViewCell {
         nameView.addSubview(nameLabel)
     }
     
-//    func checkBookmark(section: Int, item: Int) {
-//        if mainView.boolArray[section][item] {
-//            bookmarkImageView.image = UIImage(named: "bookmark selected")
-//        } else {
-//            bookmarkImageView.image = UIImage(named: "bookmark")
-//        }
-//    }
-    
-//    func configureCell(imageName: String, section: Int, item: Int) {
-//        foodImageView.image = UIImage(named: imageName)
-//        localSection = section
-//        localItem = item
-//        checkBookmark(section: section, item: item)
-//        print("вызвали configureCell  метод")
-//    }
-    
-
     override func prepareForReuse() {
         super.prepareForReuse()
         foodImageView.image = nil
@@ -158,11 +129,8 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     func configure(model: Recipe, section: Int, item: Int, saveButtonCompletion: @escaping () -> ()) {
         
         self.nameLabel.text = model.title
-        //self.foodImageView.image = UIImage(data: model.imageData)
         localSection = section
         localItem = item
-//        checkBookmark(section: section, item: item)
-        print("вызвали configure метод")
         
         self.saveButtonCompletion = saveButtonCompletion
         
@@ -173,8 +141,6 @@ class ExampleCollectionViewCell: UICollectionViewCell {
         
         // checking whether the recipe is saved in database
         isSaved = Storage.shared.isItemSaved(withId: model.id)
-//
-
     }
     
     private func setConstraints() {

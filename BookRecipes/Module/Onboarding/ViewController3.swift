@@ -47,7 +47,6 @@ class ViewController3: UIViewController {
     }
     
     @objc func endButtonTapped() {
-        print("endButton Tapped")
         UserDefaults.standard.set(true, forKey: "hasOnboarded")
         let tabBar = BaseTabBarController()
         tabBar.modalPresentationStyle = .fullScreen
