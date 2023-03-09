@@ -70,6 +70,7 @@ private extension MainVC {
         setDelegate()
         setupView()
         setConstraints()
+        configureNavigationBar()
         
         hideMainTableView(isTableViewHidden: true)
     }
@@ -97,6 +98,11 @@ private extension MainVC {
             mainTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             mainTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
+    }
+    
+    func configureNavigationBar() {
+        navigationController?.navigationBar.barTintColor = .systemBackground
+        navigationController?.hidesBarsWhenKeyboardAppears = false
     }
     
     func hideMainTableView(isTableViewHidden: Bool) {
