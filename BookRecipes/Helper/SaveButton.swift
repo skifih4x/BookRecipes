@@ -11,10 +11,14 @@ final class SaveButton: UIButton {
     
     lazy var bookmarkImageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "bookmark")
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    convenience init(isChecked: Bool) {
+        self.init(frame: .zero)
+        bookmarkImageView.image = isChecked ? UIImage(named: "bookmark selected") : UIImage(named: "bookmark")
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)

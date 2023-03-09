@@ -45,7 +45,8 @@ final class MainTableViewCell: UITableViewCell {
     
     func configure(model: Recipe) {
         ratingView.configure(rating: "4,5")
-        recipeImageView.sd_setImage(with: URL(string: model.image), placeholderImage: UIImage(named: "loading.jpg"))
+        guard let image = model.image else { return }
+        recipeImageView.sd_setImage(with: URL(string: image), placeholderImage: UIImage(named: "loading.jpg"))
         recipeNameLabel.text = model.title
     }
 }

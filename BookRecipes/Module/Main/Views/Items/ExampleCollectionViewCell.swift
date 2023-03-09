@@ -13,7 +13,16 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     var mainView = MainView()
     var localSection = 0
     var localItem = 0
-    
+    var isSaved = false {
+        didSet {
+            bookmarkImageView.image = isSaved ?
+            UIImage(named: "bookmark selected") : UIImage(named: "bookmark")
+        }
+    }
+
+    var saveButtonCompletion: (() -> ())?
+   
+
     private let foodImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
@@ -62,15 +71,18 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     @objc func bookmarkButtonTapped() {
         print("тыкнул по кнопке сохранить")
         
-        if mainView.boolArray[localSection][localItem] {
-            bookmarkImageView.image = UIImage(named: "bookmark")
-            mainView.boolArray[localSection][localItem] = false
-            print(mainView.boolArray)
-        } else {
-            bookmarkImageView.image = UIImage(named: "bookmark selected")
-            mainView.boolArray[localSection][localItem] = true
-            print(mainView.boolArray)
-        }
+        saveButtonCompletion?()
+        isSaved.toggle()
+        
+//        if mainView.boolArray[localSection][localItem] {
+//            bookmarkImageView.image = UIImage(named: "bookmark")
+//            mainView.boolArray[localSection][localItem] = false
+//            print(mainView.boolArray)
+//        } else {
+//            bookmarkImageView.image = UIImage(named: "bookmark selected")
+//            mainView.boolArray[localSection][localItem] = true
+//            print(mainView.boolArray)
+//        }
     }
     
     private let bookmarkImageView: UIImageView = {
@@ -122,13 +134,13 @@ class ExampleCollectionViewCell: UICollectionViewCell {
         nameView.addSubview(nameLabel)
     }
     
-    func checkBookmark(section: Int, item: Int) {
-        if mainView.boolArray[section][item] {
-            bookmarkImageView.image = UIImage(named: "bookmark selected")
-        } else {
-            bookmarkImageView.image = UIImage(named: "bookmark")
-        }
-    }
+//    func checkBookmark(section: Int, item: Int) {
+//        if mainView.boolArray[section][item] {
+//            bookmarkImageView.image = UIImage(named: "bookmark selected")
+//        } else {
+//            bookmarkImageView.image = UIImage(named: "bookmark")
+//        }
+//    }
     
 //    func configureCell(imageName: String, section: Int, item: Int) {
 //        foodImageView.image = UIImage(named: imageName)
@@ -138,21 +150,31 @@ class ExampleCollectionViewCell: UICollectionViewCell {
 //        print("вызвали configureCell  метод")
 //    }
     
+
     override func prepareForReuse() {
         super.prepareForReuse()
         foodImageView.image = nil
     }
-    
-    func configure(model: Recipe, section: Int, item: Int) {
+    func configure(model: Recipe, section: Int, item: Int, saveButtonCompletion: @escaping () -> ()) {
+        
         self.nameLabel.text = model.title
         //self.foodImageView.image = UIImage(data: model.imageData)
         localSection = section
         localItem = item
-        checkBookmark(section: section, item: item)
+//        checkBookmark(section: section, item: item)
         print("вызвали configure метод")
+        
+        self.saveButtonCompletion = saveButtonCompletion
+        
         foodImageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
-        guard let url = URL(string: model.image) else { return }
+        guard let image = model.image else { return }
+        guard let url = URL(string: image) else { return }
         foodImageView.sd_setImage(with: url)
+        
+        // checking whether the recipe is saved in database
+        isSaved = Storage.shared.isItemSaved(withId: model.id)
+//
+
     }
     
     private func setConstraints() {

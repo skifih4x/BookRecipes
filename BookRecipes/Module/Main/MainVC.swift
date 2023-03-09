@@ -22,16 +22,12 @@ final class MainVC: UIViewController {
     private let apiManager = APICaller.shared
     private let mainTableView = MainTableView()
     
-    
-    
-    
     var mainView = MainView()
     private let sections = MockData.shared.pageData
     private lazy var baseRecipe = Recipe(id: 0, image: "", title: "")
     lazy var popularRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
     lazy var healthyRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
     lazy var dessertRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
-    
     
     
     override func viewDidLoad() {
@@ -48,6 +44,7 @@ final class MainVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         searchController.isActive = false
         hideMainTableView(isTableViewHidden: true)
+        mainView.collectionView.reloadData()
     }
     
     func fetchData() {
@@ -216,7 +213,14 @@ extension MainVC: UICollectionViewDataSource {
             else {
                 return UICollectionViewCell()
             }
-            cell.configure(model: popularRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
+            let detailedRecipe = popularRecipes[indexPath.item]
+            
+            cell.configure(
+                model: detailedRecipe,
+                section: indexPath.section,
+                item: indexPath.item,
+                saveButtonCompletion: self.createCompletion(with: detailedRecipe))
+            
             print("srabotal cellForItemAt")
             
 //            if popularRecipes.count < 10 {
@@ -233,7 +237,13 @@ extension MainVC: UICollectionViewDataSource {
             else {
                 return UICollectionViewCell()
             }
-            cell.configure(model: healthyRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
+            let detailedRecipe = healthyRecipes[indexPath.item]
+            
+            cell.configure(
+                model: detailedRecipe,
+                section: indexPath.section,
+                item: indexPath.item,
+                saveButtonCompletion: self.createCompletion(with: detailedRecipe))
             return cell
             
         case .dessert(_):
@@ -241,7 +251,13 @@ extension MainVC: UICollectionViewDataSource {
             else {
                 return UICollectionViewCell()
             }
-            cell.configure(model: dessertRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
+            let detailedRecipe = dessertRecipes[indexPath.item]
+            
+            cell.configure(
+                model: detailedRecipe,
+                section: indexPath.section,
+                item: indexPath.item,
+                saveButtonCompletion: self.createCompletion(with: detailedRecipe))
             return cell
         }
     }
@@ -255,6 +271,17 @@ extension MainVC: UICollectionViewDataSource {
         default:
             return UICollectionReusableView()
         }
+    }
+    
+    private func createCompletion(with recipe: Recipe) -> (() -> ()) {
+        let closure = {
+            if Storage.shared.isItemSaved(withId: recipe.id) {
+                Storage.shared.deleteitem(withId: recipe.id)
+            } else {
+                Storage.shared.write(recipe: recipe)
+            }
+        }
+        return closure
     }
 }
 
