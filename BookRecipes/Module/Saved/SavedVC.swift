@@ -11,8 +11,9 @@ import RealmSwift
 final class SavedVC: UIViewController {
     
     lazy var tableView = UITableView()
-    var data = [Recipe]()
     
+    var items: Results<RealmRecipe>!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,31 +36,8 @@ final class SavedVC: UIViewController {
     
     private func loadData() {
         
-        var items: Results<RealmRecipe>!
-        
         Storage.shared.read { recipes in
-            items = recipes
-        }
-        var error: Error? = nil
-        
-        for i in items {
-            APICaller.shared.getDetailedRecipe(with: i.id) { recipe in
-                switch recipe {
-                case .success(let result):
-                    let recipe = Recipe(
-                        id: result.id,
-                        image: result.image,
-                        title: result.title)
-                    self.data.append(recipe)
-                case .failure(let err):
-                    error = err
-                    print(err)
-                }
-            }
-            
-            if let error = error {
-                presentErrorAlert(with: error)
-            }
+            self.items = recipes
         }
         tableView.reloadData()
         
@@ -94,12 +72,18 @@ final class SavedVC: UIViewController {
         
         present(alertController, animated: true, completion: nil)
     }
+    
+    private func createClosure(forItem id: Int) -> (() -> ()) {
+        return {
+            Storage.shared.deleteitem(withId: id)
+            self.tableView.reloadData()
+        }
+    }
 }
 
 extension SavedVC {
     @objc func deleteAllItemsAction() {
         Storage.shared.deleteAll()
-        data = []
         tableView.reloadData()
     }
 }
@@ -112,18 +96,22 @@ extension SavedVC: UITableViewDelegate {
 
 extension SavedVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return items.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SavedTableCell.reuseId)
                 as? SavedTableCell else { return UITableViewCell() }
-        let recipe = data[indexPath.row]
         
-        guard let recipeImage = recipe.image,
-              let recipeTitle = recipe.title else { return UITableViewCell() }
+        let recipe = items[indexPath.row]
         
-        cell.configure(with: recipeImage, text: recipeTitle)
+        cell.configure(
+            with: recipe.image,
+            text: recipe.title,
+            saveButtonAction: createClosure(
+                forItem: recipe.id))
+        
         return cell
     }  
 }

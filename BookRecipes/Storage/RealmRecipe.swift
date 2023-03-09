@@ -6,7 +6,10 @@
 //
 
 import RealmSwift
+import Foundation
 
 class RealmRecipe: Object {
     @Persisted var id : Int
+    @Persisted var title : String
+    @Persisted var image = Data()
 }
