@@ -73,14 +73,14 @@ class HeaderSupplementaryView: UICollectionReusableView {
             headerLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
             
             seeAllButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            seeAllButton.widthAnchor.constraint(equalToConstant: 85),
+            seeAllButton.widthAnchor.constraint(equalTo: widthAnchor),
             seeAllButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
             
-            seeAllLabel.centerYAnchor.constraint(equalTo: seeAllButton.centerYAnchor),
-            seeAllLabel.leadingAnchor.constraint(equalTo: seeAllButton.leadingAnchor),
-            
             arrowImageView.centerYAnchor.constraint(equalTo: seeAllButton.centerYAnchor),
-            arrowImageView.trailingAnchor.constraint(equalTo: seeAllButton.trailingAnchor),
+            arrowImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
+            
+            seeAllLabel.centerYAnchor.constraint(equalTo: seeAllButton.centerYAnchor),
+            seeAllLabel.trailingAnchor.constraint(equalTo: arrowImageView.leadingAnchor, constant: -10),
         ])
     }
     
