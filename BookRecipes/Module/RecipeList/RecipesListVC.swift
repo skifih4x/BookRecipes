@@ -29,20 +29,10 @@ class RecipeListVC: UIViewController {
         return imageView
     }()
     
-//    var categoryLabel: UILabel = {
-//        let label = UILabel()
-//        label.text = "Desserts"
-//        label.textColor = .black
-//        label.numberOfLines = 0
-//        label.textAlignment = .center
-//        label.font = UIFont.systemFont(ofSize: 25)
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        return label
-//    }()
-//
-    var recipesInList: [SafeRecipe] = []
+    var recipesInList: [DetailedRecipe] = []
     
     var category: String?
+    var isSorted: Bool?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,15 +43,15 @@ class RecipeListVC: UIViewController {
     }
     
     func configureTableView() {
-        
         view.addSubview(recipeTableView)
         view.addSubview(imageView)
+        recipeTableView.showsVerticalScrollIndicator = false
         recipeTableView.translatesAutoresizingMaskIntoConstraints = false
         recipeTableView.separatorStyle = .none
         setTableviewDelegates()
         setConstraints()
         recipeTableView.register(RecipeTableViewCell.self, forCellReuseIdentifier: RecipeTableViewCell.identifier)
-//        recipeTableView.rowHeight = view.frame.height/6
+
     }
     
     func configureNavigationBar() {
@@ -117,6 +107,10 @@ extension RecipeListVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print ("tapped on \(indexPath.row) row!!!")
+        let id = recipesInList[indexPath.row].id
+        let detailVC = DetailViewController()
+        detailVC.detailRecipeID = id
+        navigationController?.pushViewController(detailVC, animated: true)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -140,7 +134,7 @@ extension RecipeListVC {
     func fetchData(for category: String) {
         let dispatchGroup = DispatchGroup()
         
-        APICaller.shared.getCategoryRecipes(category: category) { categoryResults in
+        APICaller.shared.getCategoryRecipes(sorted: isSorted!, searchParameter: category) { categoryResults in
             switch categoryResults {
                 
             case .success(let recipes):
@@ -148,27 +142,12 @@ extension RecipeListVC {
                     dispatchGroup.enter()
                     
                     APICaller.shared.getDetailedRecipe(with: recipe.id) { detailedResults in
+                        
                         switch detailedResults {
-                            
-                        case .success(let recipe):
-                            print ("успешно получены детальные данные")
-                            APICaller.shared.getImage(from: recipe.image!) { imageResults in
-                                
-                                switch imageResults {
-                                case.success(let imageData):
-                                    
-                                    let safeRecipe = SafeRecipe(recipe: recipe, imageData: imageData)
-                                    self.recipesInList.append(safeRecipe)
-                                    
-                                case .failure(let error): print ("error in image: \(error)")
-                                }
-                                dispatchGroup.leave()
-                            }
-                            
-                            
+                        case .success(let recipe): self.recipesInList.append(recipe)
                         case .failure(let error): print("error in detailed: \(error)")
-                            dispatchGroup.leave()
                         }
+                        dispatchGroup.leave()
                     }
                 }
                 dispatchGroup.notify(queue: .main) {

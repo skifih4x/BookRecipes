@@ -48,9 +48,9 @@ final class MainVC: UIViewController {
     }
     
     func fetchData() {
-        fetchCollectionData(for: .popular)
-        fetchCollectionData(for: .healthy)
-        fetchCollectionData(for: .dessert)
+        fetchCollectionData(for: .popularity)
+        fetchCollectionData(for: .healthiness)
+        fetchCollectionData(for: .sugar)
 
         
         //setup()
@@ -272,7 +272,7 @@ extension MainVC: UICollectionViewDataSource {
         switch kind {
         case UICollectionView.elementKindSectionHeader:
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderSupplementaryView", for: indexPath) as! HeaderSupplementaryView
-            header.configureHeader(categoryName: sections[indexPath.section].title)
+            header.configureHeader(categoryName: sections[indexPath.section].title, navController: navigationController!)
             return header
         default:
             return UICollectionReusableView()
