@@ -13,7 +13,12 @@ class ExampleCollectionViewCell: UICollectionViewCell {
     var mainView = MainView()
     var localSection = 0
     var localItem = 0
-    
+    var isSaved = false {
+        didSet {
+            bookmarkImageView.image = isSaved ?
+            UIImage(named: "bookmark selected") : UIImage(named: "bookmark")
+        }
+    }
 
     var saveButtonCompletion: (() -> ())?
    
@@ -67,16 +72,17 @@ class ExampleCollectionViewCell: UICollectionViewCell {
         print("тыкнул по кнопке сохранить")
         
         saveButtonCompletion?()
+        isSaved.toggle()
         
-        if mainView.boolArray[localSection][localItem] {
-            bookmarkImageView.image = UIImage(named: "bookmark")
-            mainView.boolArray[localSection][localItem] = false
-            print(mainView.boolArray)
-        } else {
-            bookmarkImageView.image = UIImage(named: "bookmark selected")
-            mainView.boolArray[localSection][localItem] = true
-            print(mainView.boolArray)
-        }
+//        if mainView.boolArray[localSection][localItem] {
+//            bookmarkImageView.image = UIImage(named: "bookmark")
+//            mainView.boolArray[localSection][localItem] = false
+//            print(mainView.boolArray)
+//        } else {
+//            bookmarkImageView.image = UIImage(named: "bookmark selected")
+//            mainView.boolArray[localSection][localItem] = true
+//            print(mainView.boolArray)
+//        }
     }
     
     private let bookmarkImageView: UIImageView = {
@@ -128,13 +134,13 @@ class ExampleCollectionViewCell: UICollectionViewCell {
         nameView.addSubview(nameLabel)
     }
     
-    func checkBookmark(section: Int, item: Int) {
-        if mainView.boolArray[section][item] {
-            bookmarkImageView.image = UIImage(named: "bookmark selected")
-        } else {
-            bookmarkImageView.image = UIImage(named: "bookmark")
-        }
-    }
+//    func checkBookmark(section: Int, item: Int) {
+//        if mainView.boolArray[section][item] {
+//            bookmarkImageView.image = UIImage(named: "bookmark selected")
+//        } else {
+//            bookmarkImageView.image = UIImage(named: "bookmark")
+//        }
+//    }
     
 //    func configureCell(imageName: String, section: Int, item: Int) {
 //        foodImageView.image = UIImage(named: imageName)
@@ -155,7 +161,7 @@ class ExampleCollectionViewCell: UICollectionViewCell {
         //self.foodImageView.image = UIImage(data: model.imageData)
         localSection = section
         localItem = item
-        checkBookmark(section: section, item: item)
+//        checkBookmark(section: section, item: item)
         print("вызвали configure метод")
         
         self.saveButtonCompletion = saveButtonCompletion
@@ -164,6 +170,10 @@ class ExampleCollectionViewCell: UICollectionViewCell {
         guard let image = model.image else { return }
         guard let url = URL(string: image) else { return }
         foodImageView.sd_setImage(with: url)
+        
+        // checking whether the recipe is saved in database
+        isSaved = Storage.shared.isItemSaved(withId: model.id)
+//
 
     }
     

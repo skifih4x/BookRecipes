@@ -22,16 +22,12 @@ final class MainVC: UIViewController {
     private let apiManager = APICaller.shared
     private let mainTableView = MainTableView()
     
-    
-    
-    
     var mainView = MainView()
     private let sections = MockData.shared.pageData
     private lazy var baseRecipe = Recipe(id: 0, image: "", title: "")
     lazy var popularRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
     lazy var healthyRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
     lazy var dessertRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
-    
     
     
     override func viewDidLoad() {
@@ -48,6 +44,7 @@ final class MainVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         searchController.isActive = false
         hideMainTableView(isTableViewHidden: true)
+        mainView.collectionView.reloadData()
     }
     
     func fetchData() {
@@ -278,7 +275,11 @@ extension MainVC: UICollectionViewDataSource {
     
     private func createCompletion(with recipe: Recipe) -> (() -> ()) {
         let closure = {
-            Storage.shared.write(recipe: recipe)
+            if Storage.shared.isItemSaved(withId: recipe.id) {
+                Storage.shared.deleteitem(withId: recipe.id)
+            } else {
+                Storage.shared.write(recipe: recipe)
+            }
         }
         return closure
     }
