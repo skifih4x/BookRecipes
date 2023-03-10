@@ -26,16 +26,11 @@ final class DetailViewController: UIViewController  {
                 DispatchQueue.main.async {
                     self?.ingridientsTableView.reloadData()
                     self?.navigationItem.title = recipes.title
-                    self?.dishNameLableView.text = recipes.title
+                    //self?.dishNameLableView.text = recipes.title
                     self?.numberOfReviewsLabel.text = "\(recipes.aggregateLikes!)" + " Likes"
-                    self?.descriptionOfDishesLabel.text = recipes.summary
-                    self?.descriptionOfCookingLabel.text = recipes.instructions
+                    self?.descriptionOfDishesLabel.text = self?.apiManager.convertHTML(from: recipes.summary ?? "cant convert from html")?.string
+                    self?.descriptionOfCookingLabel.text = self?.apiManager.convertHTML(from: recipes.instructions ?? "cant convert from html")?.string
                     self?.dishPictureImageView.sd_setImage(with: URL(string: recipes.image ?? ""))
-                    
-                    let saveText = APICaller.shared.convertHTML(from: recipes.summary!)
-                    //let saveText2 = APICaller.shared.convertHTML(from: recipes.instructions!)
-                    self?.descriptionOfDishesLabel.text = saveText as? String
-                    //self?.descriptionOfCookingLabel.text = saveText2 as? String
                 }
                 
             case .failure(let error):
@@ -72,10 +67,10 @@ final class DetailViewController: UIViewController  {
     lazy var dishPictureImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "fish")
+        //imageView.image = UIImage(named: "fish")
         imageView.layer.cornerRadius = 10
         imageView.clipsToBounds = true
-        imageView.bounds = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 343, height: 223))
+        //imageView.bounds = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 343, height: 223))
         return imageView
     }()
     
@@ -87,15 +82,15 @@ final class DetailViewController: UIViewController  {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-//
-//    lazy var ratingLabel: UILabel = {
-//        let view = UILabel()
-//        view.text = "4,5"
-//        view.font = UIFont(name: "Poppins", size: 15)
-//        view.textColor = .black
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }()
+
+    lazy var ratingLabel: UILabel = {
+        let view = UILabel()
+        //view.text = "4,5"
+        view.font = UIFont(name: "Poppins", size: 15)
+        view.textColor = .black
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     lazy var numberOfReviewsLabel: UILabel = {
         let label = UILabel()
@@ -155,13 +150,15 @@ final class DetailViewController: UIViewController  {
          
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.barTintColor = .systemBackground
+         
+         
         view.backgroundColor = .white
         view.addSubview(contentScrollView)
         //contentScrollView.addSubview(dishNameLableView)
         contentScrollView.addSubview(dishPictureImageView)
         contentScrollView.addSubview(raitingStackView)
         raitingStackView.addArrangedSubview(starRaitngImageView)
-        //raitingStackView.addArrangedSubview(ratingLabel)
+        raitingStackView.addArrangedSubview(ratingLabel)
         raitingStackView.addArrangedSubview(numberOfReviewsLabel)
         contentScrollView.addSubview(descriptionOfDishesLabel)
         contentScrollView.addSubview(descriptionOfCookingLabel)
@@ -195,9 +192,9 @@ final class DetailViewController: UIViewController  {
             starRaitngImageView.widthAnchor.constraint(equalToConstant: 18),
             starRaitngImageView.heightAnchor.constraint(equalToConstant: 20),
 
-//            ratingLabel.widthAnchor.constraint(equalToConstant: 25),
-//            ratingLabel.heightAnchor.constraint(equalToConstant: 20),
-//            ratingLabel.leadingAnchor.constraint(equalTo: starRaitngImageView.trailingAnchor, constant: 7),
+            ratingLabel.widthAnchor.constraint(equalToConstant: 25),
+            ratingLabel.heightAnchor.constraint(equalToConstant: 20),
+            ratingLabel.leadingAnchor.constraint(equalTo: starRaitngImageView.trailingAnchor, constant: 7),
  
             numberOfReviewsLabel.leadingAnchor.constraint(equalTo: starRaitngImageView.trailingAnchor, constant: 10),
         
