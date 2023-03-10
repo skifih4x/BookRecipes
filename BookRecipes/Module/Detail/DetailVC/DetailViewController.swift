@@ -25,8 +25,8 @@ final class DetailViewController: UIViewController  {
                     self?.ingridientsTableView.reloadData()
                     self?.dishNameLableView.text = recipes.title
                     self?.numberOfReviewsLabel.text = "\(recipes.aggregateLikes!)" + " Likes"
-                    self?.descriptionOfDishesLabel.text = recipes.summary
-                    self?.descriptionOfCookingLabel.text = recipes.instructions
+                    self?.descriptionOfDishesLabel.text = self?.apiManager.convertHTML(from: recipes.summary ?? "cant convert from html")?.string
+                    self?.descriptionOfCookingLabel.text = self?.apiManager.convertHTML(from: recipes.instructions ?? "cant convert from html")?.string
                     self?.dishPictureImageView.sd_setImage(with: URL(string: recipes.image ?? ""))
                 }
             case .failure(let error):
@@ -62,14 +62,12 @@ final class DetailViewController: UIViewController  {
     lazy var dishPictureImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-//        imageView.image = UIImage(named: "fish")
-//        imageView.bounds = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 343, height: 223))
         return imageView
     }()
     
     lazy var starRaitngImageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(systemName: "hand.thumbsup.fill")
+        view.image = UIImage(systemName: "hand.thumbsup")
         view.contentMode = .scaleAspectFit
         view.tintColor = .black
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -78,7 +76,6 @@ final class DetailViewController: UIViewController  {
     
     lazy var ratingLabel: UILabel = {
         let view = UILabel()
-        view.text = "4,5"
         view.font = UIFont(name: "Poppins", size: 15)
         view.textColor = .black
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -99,7 +96,7 @@ final class DetailViewController: UIViewController  {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .fillProportionally
-        stackView.spacing = 20
+        stackView.spacing = 5
         stackView.alignment = .center
         return stackView
        }()
@@ -263,9 +260,10 @@ extension DetailViewController: UITableViewDelegate {
          65
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("нажата ячейка \(recipe?.extendedIngredients[indexPath.row].name ?? "не прогрузилась")")
-    }
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+////        print("нажата ячейка \(recipe?.extendedIngredients[indexPath.row].name ?? "не прогрузилась")")
+//        
+//    }
 }
 
 
