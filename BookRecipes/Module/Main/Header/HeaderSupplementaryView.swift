@@ -60,9 +60,7 @@ class HeaderSupplementaryView: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func seeAllButtonTapped() {
-        print("кнопка See all нажалась")
-    
+    @objc func seeAllButtonTapped() {    
         let VC = RecipeListVC()
         VC.title = headerLabel.text
         

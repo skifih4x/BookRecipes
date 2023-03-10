@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class MainVC: UIViewController {
+final class MainViewController: UIViewController {
     
     private var searchController: UISearchController = {
         let searchController = UISearchController(searchResultsController: nil)
@@ -23,20 +23,17 @@ final class MainVC: UIViewController {
     private let mainTableView = MainTableView()
     
     var mainView = MainView()
-    private let sections = MockData.shared.pageData
-    private lazy var baseRecipe = Recipe(id: 0, image: "", title: "")
-    lazy var popularRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
-    lazy var healthyRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
-    lazy var dessertRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
-    
+    private let sections = SectionsData.shared.sectionsArray
+        
+    lazy var popularRecipes: [Recipe] = []
+    lazy var healthyRecipes: [Recipe] = []
+    lazy var dessertRecipes: [Recipe] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(mainView)
         title = "Team 11"
         mainView.configure(delegate: self, dataSource: self)
         mainView.collectionView.collectionViewLayout = createLayout()
-        //constraintView()
         setup()
         fetchData()
     }
@@ -51,9 +48,6 @@ final class MainVC: UIViewController {
         fetchCollectionData(for: .popularity)
         fetchCollectionData(for: .healthiness)
         fetchCollectionData(for: .sugar)
-
-        
-        //setup()
     }
     
     func updateMainTableView() {
@@ -64,15 +58,24 @@ final class MainVC: UIViewController {
 
 //MARK: - Setup
 
-private extension MainVC {
+private extension MainViewController {
     
     func setup() {
         setDelegate()
         setupView()
         setConstraints()
         configureNavigationBar()
-        
+        getBaseItems()
         hideMainTableView(isTableViewHidden: true)
+    }
+    
+    private func getBaseItems() {
+        let baseRecipe = Recipe(id: 0, image: "", title: "")
+        for _ in 1...10 {
+            popularRecipes.append(baseRecipe)
+            healthyRecipes.append(baseRecipe)
+            dessertRecipes.append(baseRecipe)
+        }
     }
     
     func setDelegate() {
@@ -88,10 +91,10 @@ private extension MainVC {
     
     func setConstraints() {
         NSLayoutConstraint.activate([
-            mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            mainView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            mainView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            mainView.topAnchor.constraint(equalTo: view.topAnchor),
+            mainView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            mainView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mainView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             mainTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             mainTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
@@ -113,7 +116,7 @@ private extension MainVC {
  
 //MARK: - UISearchBarDelegate
 
-extension MainVC: UISearchBarDelegate {
+extension MainViewController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         hideMainTableView(isTableViewHidden: true)
@@ -126,7 +129,7 @@ extension MainVC: UISearchBarDelegate {
 
 //MARK: - UISearchResultsUpdating
 
-extension MainVC: UISearchResultsUpdating {
+extension MainViewController: UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text, !searchText.isEmpty else {
@@ -141,7 +144,7 @@ extension MainVC: UISearchResultsUpdating {
 
 //MARK: - Search Recipes
 
-private extension MainVC {
+private extension MainViewController {
     
     func fetchSearchedRecipe(with searchText: String) {
         apiManager.searchRecipe(keyWord: searchText) { [weak self] result in
@@ -177,9 +180,8 @@ private extension MainVC {
 
 //MARK: - UICollectionViewDelegate
 
-extension MainVC: UICollectionViewDelegate {
+extension MainViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("тыкнул по ячейке \(indexPath.item) в секции \(indexPath.section)")
         var id = 0
         switch indexPath.section {
         case 0:
@@ -192,7 +194,6 @@ extension MainVC: UICollectionViewDelegate {
             return
         }
         
-        
         let detailVC = DetailViewController()
         detailVC.detailRecipeID = id
         navigationController?.pushViewController(detailVC, animated: true)
@@ -201,7 +202,7 @@ extension MainVC: UICollectionViewDelegate {
 
 //MARK: - UICollectionViewDataSource
 
-extension MainVC: UICollectionViewDataSource {
+extension MainViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         sections.count
@@ -214,8 +215,8 @@ extension MainVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         switch sections[indexPath.section] {
-        case .popular(_):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? ExampleCollectionViewCell
+        case .popular:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? CollectionViewCell
             else {
                 return UICollectionViewCell()
             }
@@ -226,20 +227,10 @@ extension MainVC: UICollectionViewDataSource {
                 section: indexPath.section,
                 item: indexPath.item,
                 saveButtonCompletion: self.createCompletion(with: detailedRecipe))
-            
-            print("srabotal cellForItemAt")
-            
-//            if popularRecipes.count < 10 {
-//                cell.configureCell(imageName: popular[indexPath.item].image, section: indexPath.section, item: indexPath.item)
-//                print("srabotal cellForItemAt")
-//            } else {
-//                cell.configure(model: popularRecipes[indexPath.item], section: indexPath.section, item: indexPath.item)
-//                print("srabotal cellForItemAt")
-//            }
             return cell
             
-        case .healthy(_):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? ExampleCollectionViewCell
+        case .healthy:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? CollectionViewCell
             else {
                 return UICollectionViewCell()
             }
@@ -252,8 +243,8 @@ extension MainVC: UICollectionViewDataSource {
                 saveButtonCompletion: self.createCompletion(with: detailedRecipe))
             return cell
             
-        case .dessert(_):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? ExampleCollectionViewCell
+        case .dessert:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? CollectionViewCell
             else {
                 return UICollectionViewCell()
             }
@@ -293,20 +284,18 @@ extension MainVC: UICollectionViewDataSource {
 
 //MARK: - Create Layout
 
-extension MainVC {
+extension MainViewController {
     
     private func createLayout() -> UICollectionViewCompositionalLayout {
         UICollectionViewCompositionalLayout { [weak self] sectionIndex, _ in
             guard let self = self else { return nil}
             let section = self.sections[sectionIndex]
             switch section {
-            case .popular(_):
-                //return self.createSalesSection()
+            case .popular:
                 return self.createExampleSection()
-            case .healthy(_):
-                //return self.createCategorySection()
+            case .healthy:
                 return self.createExampleSection()
-            case .dessert(_):
+            case .dessert:
                 return self.createExampleSection()
             }
         }
@@ -321,20 +310,20 @@ extension MainVC {
         section.orthogonalScrollingBehavior = behavior
         section.interGroupSpacing = interGroupSpacing
         section.boundarySupplementaryItems = supplementaryItems
-        //section.supplementariesFollowContentInsets = contentInsets
         return section
     }
      
     private func createExampleSection() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
         
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(0.7), heightDimension: .fractionalHeight(0.3)), subitems: [item])
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(0.7), heightDimension: .fractionalHeight(0.23)), subitems: [item])
         
         let section = createLayoutSection(group: group,
                                           behavior: .continuous,
                                           interGroupSpacing: 20,
                                           supplementaryItems: [supplementaryHeaderItem()],
                                           contentInsets: false)
+        section.contentInsets = .init(top: 0, leading: 20, bottom: 0, trailing: 20)
         
         return section
     }
@@ -342,6 +331,4 @@ extension MainVC {
     private func supplementaryHeaderItem() -> NSCollectionLayoutBoundarySupplementaryItem {
         .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
     }
-    
-    
 }
