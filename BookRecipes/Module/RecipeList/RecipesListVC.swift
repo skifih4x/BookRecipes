@@ -42,6 +42,12 @@ class RecipeListVC: UIViewController {
         configureNavigationBar()
     }
     
+    func configureRecipeListVC (isSorted: Bool?, category: String?, title: String?) {
+        self.isSorted = isSorted
+        self.category = category
+        self.title = title
+    }
+    
     func configureTableView() {
         view.addSubview(recipeTableView)
         view.addSubview(imageView)
