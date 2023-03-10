@@ -9,7 +9,7 @@ import UIKit
 
 class CategoriesVC: UIViewController {
     
-    var categories = [
+    let categories = [
         ["Main Course", CategoryImages.mainCourse!, Categories.maincourse.rawValue],
         ["Side Dish", CategoryImages.sideDish!, Categories.sidedish.rawValue],
         ["Dessert", CategoryImages.dessert!, Categories.dessert.rawValue],
@@ -26,6 +26,7 @@ class CategoriesVC: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
+        
         return tableView
     }()
     
@@ -33,16 +34,15 @@ class CategoriesVC: UIViewController {
         super.viewDidLoad()
         setupView()
         setupConstraints()
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.identifier)
     }
 }
 
 extension CategoriesVC {
     
     func setupView() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.identifier)
         
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.barTintColor = .systemBackground
@@ -50,7 +50,6 @@ extension CategoriesVC {
     }
     
     func setupConstraints() {
-        
         let safeArea = view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
@@ -85,7 +84,6 @@ extension CategoriesVC: UITableViewDataSource {
 extension CategoriesVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         let category = categories[indexPath.item][2] as? String
         let title = categories[indexPath.item][0] as? String
         

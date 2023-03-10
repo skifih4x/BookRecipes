@@ -58,14 +58,12 @@ class CategoryTableViewCell: UITableViewCell {
 extension CategoryTableViewCell {
     
     func setupView() {
-        
         contentView.addSubview(backImageView)
         contentView.addSubview(view)
         contentView.addSubview(titleLabel)
     }
     
     func setupConstraints() {
-        
         let safeArea = contentView.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
