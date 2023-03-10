@@ -14,7 +14,6 @@ import SDWebImage
     
     private let backgroundCell: UIView = {
         let view = UIView()
-//        view.backgroundColor = #colorLiteral(red: 0.9562537074, green: 0.9562535882, blue: 0.9562535882, alpha: 1) //#F1F1F1
         view.layer.cornerRadius = 12
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -24,15 +23,12 @@ import SDWebImage
        let stack = UIStackView()
         stack.axis = .horizontal
         stack.translatesAutoresizingMaskIntoConstraints = false
-//        stack.distribution = .fill
-//        stack.contentMode = .scaleAspectFit
-        stack.spacing = 20
+        stack.spacing = 10
         return stack
     }()
     
     private let ingridientImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "fish")
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = .white
         imageView.layer.cornerRadius = 10
@@ -49,12 +45,24 @@ import SDWebImage
     
     private let ingridientCountLable: UILabel = {
         let label = UILabel()
-        label.text = "100g"
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .systemGray
         label.textAlignment = .right
         return label
     }()
+     
+     private var checkboxUIButtom: UIButton = {
+         let button = UIButton(type: .system)
+         button.translatesAutoresizingMaskIntoConstraints = false
+         button.addTarget(nil, action: #selector(checkboxTapped), for: .touchUpInside)
+         button.setImage(UIImage(systemName: "checkmark"), for: .normal)
+         button.tintColor = #colorLiteral(red: 0.5258541185, green: 0.5836154322, blue: 1, alpha: 1)
+         return button
+     }()
+     
+    @objc private func checkboxTapped() {
+        checkboxUIButtom.isSelected = !checkboxUIButtom.isSelected
+     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -69,7 +77,7 @@ import SDWebImage
 //MARK: - Configure Cell
      
     func configure(_ ingridient: ExtendedIngredient) {
-        backgroundCell.backgroundColor = #colorLiteral(red: 0.9562537074, green: 0.9562535882, blue: 0.9562535882, alpha: 1)
+        backgroundCell.backgroundColor = #colorLiteral(red: 0.9562537074, green: 0.9562535882, blue: 0.9562535882, alpha: 1) //#F1F1F1
         ingridientNameLable.text = ingridient.name?.capitalized
         ingridientCountLable.text = String(format: "%.1F", ingridient.amount!) + " " + (ingridient.unit!)
         DispatchQueue.main.async {
@@ -80,11 +88,13 @@ import SDWebImage
     //MARK: - setupUI
     
     private func setupUI() {
-        addSubview(backgroundCell)
+        contentView.addSubview(backgroundCell)
+//        addSubview(backgroundCell)
         backgroundCell.addSubview(contentStackView)
         contentStackView.addArrangedSubview(ingridientImageView)
         contentStackView.addArrangedSubview(ingridientNameLable)
         contentStackView.addArrangedSubview(ingridientCountLable)
+        contentStackView.addArrangedSubview(checkboxUIButtom)
         selectionStyle = .none
     }
     
@@ -112,8 +122,12 @@ import SDWebImage
             ingridientNameLable.centerYAnchor.constraint(equalTo: backgroundCell.centerYAnchor),
 
             ingridientCountLable.centerYAnchor.constraint(equalTo: backgroundCell.centerYAnchor),
-            ingridientCountLable.trailingAnchor.constraint(equalTo: backgroundCell.trailingAnchor, constant: -20),
-            ingridientCountLable.widthAnchor.constraint(equalToConstant: 100)
+            ingridientCountLable.trailingAnchor.constraint(equalTo: checkboxUIButtom.leadingAnchor, constant: -10),
+            ingridientCountLable.widthAnchor.constraint(equalToConstant: 80),
+            
+            checkboxUIButtom.trailingAnchor.constraint(equalTo: backgroundCell.trailingAnchor, constant: -15),
+            checkboxUIButtom.widthAnchor.constraint(equalToConstant: 30),
+            checkboxUIButtom.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
 }
