@@ -96,7 +96,7 @@ final class DetailViewController: UIViewController  {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .fillProportionally
-        stackView.spacing = 20
+        stackView.spacing = 5
         stackView.alignment = .center
         return stackView
        }()
