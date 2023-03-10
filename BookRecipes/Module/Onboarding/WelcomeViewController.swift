@@ -11,7 +11,7 @@ class WelcomeViewController: UIViewController {
     
     let logoImageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "result")
+        view.image = UIImage(named: "result2")
         view.contentMode = .scaleAspectFill
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -29,7 +29,7 @@ class WelcomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 234/255, green: 226/255, blue: 183/255, alpha: 1)
         setupViews()
         setupConstraints()
     }

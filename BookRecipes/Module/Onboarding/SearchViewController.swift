@@ -30,7 +30,7 @@ class SearchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 234/255, green: 226/255, blue: 183/255, alpha: 1)
         setupViews()
         setupConstraints()
     }
