@@ -26,8 +26,9 @@ final class DetailViewController: UIViewController  {
                 DispatchQueue.main.async {
                     self?.ingridientsTableView.reloadData()
                     self?.navigationItem.title = recipes.title
+                    self?.dishNameLableView.text = recipes.title
                     self?.numberOfReviewsLabel.text = "\(recipes.aggregateLikes!)" + " Likes"
-                    //self?.descriptionOfDishesLabel.text = recipes.summary
+                    self?.descriptionOfDishesLabel.text = recipes.summary
                     self?.descriptionOfCookingLabel.text = recipes.instructions
                     self?.dishPictureImageView.sd_setImage(with: URL(string: recipes.image ?? ""))
                     
@@ -57,22 +58,22 @@ final class DetailViewController: UIViewController  {
     }()
     
 
-    
-//    lazy var dishNameLableView: UILabel = {
-//        let label = UILabel()
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.font = .systemFont(ofSize: 24, weight: .bold)
-//        label.textColor = .black
-//        label.numberOfLines = 0
-//        label.adjustsFontSizeToFitWidth = true
-//        return label
-//    }()
+
+    lazy var dishNameLableView: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 24, weight: .bold)
+        label.textColor = .black
+        label.numberOfLines = 0
+        label.adjustsFontSizeToFitWidth = true
+        return label
+    }()
 
     lazy var dishPictureImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "fish")
-        imageView.layer.cornerRadius = 15
+        imageView.layer.cornerRadius = 10
         imageView.clipsToBounds = true
         imageView.bounds = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 343, height: 223))
         return imageView
@@ -86,15 +87,15 @@ final class DetailViewController: UIViewController  {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
-    lazy var ratingLabel: UILabel = {
-        let view = UILabel()
-        view.text = "4,5"
-        view.font = UIFont(name: "Poppins", size: 15)
-        view.textColor = .black
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+//
+//    lazy var ratingLabel: UILabel = {
+//        let view = UILabel()
+//        view.text = "4,5"
+//        view.font = UIFont(name: "Poppins", size: 15)
+//        view.textColor = .black
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        return view
+//    }()
     
     lazy var numberOfReviewsLabel: UILabel = {
         let label = UILabel()
@@ -151,13 +152,16 @@ final class DetailViewController: UIViewController  {
     //MARK: - setupUI
     
      private func setupUI() {
+         
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.barTintColor = .systemBackground
         view.backgroundColor = .white
         view.addSubview(contentScrollView)
         //contentScrollView.addSubview(dishNameLableView)
         contentScrollView.addSubview(dishPictureImageView)
         contentScrollView.addSubview(raitingStackView)
         raitingStackView.addArrangedSubview(starRaitngImageView)
-        raitingStackView.addArrangedSubview(ratingLabel)
+        //raitingStackView.addArrangedSubview(ratingLabel)
         raitingStackView.addArrangedSubview(numberOfReviewsLabel)
         contentScrollView.addSubview(descriptionOfDishesLabel)
         contentScrollView.addSubview(descriptionOfCookingLabel)
@@ -171,7 +175,7 @@ final class DetailViewController: UIViewController  {
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            dishPictureImageView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
+            dishPictureImageView.topAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
 //            contentImageView.bottomAnchor.constraint(lessThanOrEqualTo: contentScrollView.bottomAnchor, constant: -20),
             dishPictureImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20 ),
             dishPictureImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
@@ -191,11 +195,11 @@ final class DetailViewController: UIViewController  {
             starRaitngImageView.widthAnchor.constraint(equalToConstant: 18),
             starRaitngImageView.heightAnchor.constraint(equalToConstant: 20),
 
-            ratingLabel.widthAnchor.constraint(equalToConstant: 25),
-            ratingLabel.heightAnchor.constraint(equalToConstant: 20),
-            ratingLabel.leadingAnchor.constraint(equalTo: starRaitngImageView.trailingAnchor, constant: 7),
+//            ratingLabel.widthAnchor.constraint(equalToConstant: 25),
+//            ratingLabel.heightAnchor.constraint(equalToConstant: 20),
+//            ratingLabel.leadingAnchor.constraint(equalTo: starRaitngImageView.trailingAnchor, constant: 7),
  
-            numberOfReviewsLabel.leadingAnchor.constraint(equalTo: ratingLabel.trailingAnchor, constant: 15),
+            numberOfReviewsLabel.leadingAnchor.constraint(equalTo: starRaitngImageView.trailingAnchor, constant: 10),
         
             raitingStackView.topAnchor.constraint(equalTo: dishPictureImageView.bottomAnchor, constant: 10),
             raitingStackView.heightAnchor.constraint(equalToConstant: 20),
@@ -226,12 +230,11 @@ final class DetailViewController: UIViewController  {
         setDelegates()
         let backButton = UIBarButtonItem(image: UIImage(systemName: "arrow.left"), style: .plain, target: self, action: #selector(backAction))
         navigationItem.leftBarButtonItem = backButton
-        backButton.tintColor = .black
         
-
+        backButton.tintColor = .black
 //        fetchData()
     }
-    
+
     @objc func backAction() {
         navigationController?.popViewController(animated: true)
     }
