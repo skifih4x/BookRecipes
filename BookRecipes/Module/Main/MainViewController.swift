@@ -21,6 +21,7 @@ final class MainViewController: UIViewController {
     
     private let apiManager = APICaller.shared
     private let mainTableView = MainTableView()
+    private var searchTimer: Timer?
     
     var mainView = MainView()
     private let sections = SectionsData.shared.sectionsArray
@@ -39,6 +40,8 @@ final class MainViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        searchedRecipes = recipesModels
+        updateMainTableView()
         searchController.isActive = false
         hideMainTableView(isTableViewHidden: true)
         mainView.collectionView.reloadData()
@@ -51,7 +54,7 @@ final class MainViewController: UIViewController {
     }
     
     func updateMainTableView() {
-        mainTableView.configure(models: searchedRecipes)
+        mainTableView.configure(models: searchedRecipes, navigationController: navigationController)
         mainTableView.mainTableView.reloadData()
     }
 }
@@ -66,7 +69,6 @@ private extension MainViewController {
         setConstraints()
         configureNavigationBar()
         getBaseItems()
-        hideMainTableView(isTableViewHidden: true)
     }
     
     private func getBaseItems() {
@@ -119,11 +121,21 @@ private extension MainViewController {
 extension MainViewController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchedRecipes = recipesModels
+        updateMainTableView()
         hideMainTableView(isTableViewHidden: true)
     }
  
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         hideMainTableView(isTableViewHidden: false)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        guard searchText.isEmpty else { return }
+        
+        searchController.isActive = false
+        searchedRecipes = []
+        updateMainTableView()
     }
 }
 
@@ -132,9 +144,9 @@ extension MainViewController: UISearchBarDelegate {
 extension MainViewController: UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text, !searchText.isEmpty else {
-            searchedRecipes = recipesModels
-            updateMainTableView()
+        guard searchController.isActive else { return }
+        
+        guard searchController.isActive, let searchText = searchController.searchBar.text, !searchText.isEmpty else {
             return
         }
         
@@ -147,34 +159,38 @@ extension MainViewController: UISearchResultsUpdating {
 private extension MainViewController {
     
     func fetchSearchedRecipe(with searchText: String) {
-        apiManager.searchRecipe(keyWord: searchText) { [weak self] result in
-            switch result {
-            case .success(let recipes):
-                let dispatchGroup = DispatchGroup()
-                var models: [Recipe] = []
-                recipes.forEach { recipe in
-                    dispatchGroup.enter()
-                    self?.apiManager.getDetailedRecipe(with: recipe.id) { result in
-                        defer { dispatchGroup.leave() }
-                        switch result {
-                        case .success(let data):
-                            guard let title = data.title, let image = data.image else { return }
-                            models.append(Recipe(id: data.id, image: image, title: title))
-                        case .failure(let error):
-                            print(error)
+        searchTimer?.invalidate()
+        
+        searchTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { [weak self] (timer) in
+            self?.apiManager.searchRecipe(keyWord: searchText) { [weak self] result in
+                switch result {
+                case .success(let recipes):
+                    let dispatchGroup = DispatchGroup()
+                    var models: [Recipe] = []
+                    recipes.forEach { recipe in
+                        dispatchGroup.enter()
+                        self?.apiManager.getDetailedRecipe(with: recipe.id) { result in
+                            defer { dispatchGroup.leave() }
+                            switch result {
+                            case .success(let data):
+                                guard let title = data.title, let image = data.image else { return }
+                                models.append(Recipe(id: data.id, image: image, title: title))
+                            case .failure(let error):
+                                print(error)
+                            }
                         }
                     }
-                }
 
-                dispatchGroup.notify(queue: .main) {
-                    self?.searchedRecipes = models
-                    self?.updateMainTableView()
-                    self?.hideMainTableView(isTableViewHidden: false)
+                    dispatchGroup.notify(queue: .main) {
+                        self?.searchedRecipes = models
+                        self?.updateMainTableView()
+                        self?.hideMainTableView(isTableViewHidden: false)
+                    }
+                case .failure(let error):
+                    print (error)
                 }
-            case .failure(let error):
-                print (error)
             }
-        }
+        })
     }
 }
 
