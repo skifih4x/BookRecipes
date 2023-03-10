@@ -11,7 +11,13 @@ struct SortedRecipes: Codable {
     let results: [Recipe]
 }
 
-struct Recipe: Codable {
+protocol RecipeProtocol {
+    var id: Int { get }
+    var image: String? { get }
+    var title: String? { get }
+}
+
+struct Recipe: RecipeProtocol, Codable {
     let id : Int
     let image: String?
     let title: String?

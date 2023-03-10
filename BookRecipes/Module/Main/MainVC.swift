@@ -225,7 +225,8 @@ extension MainVC: UICollectionViewDataSource {
                 model: detailedRecipe,
                 section: indexPath.section,
                 item: indexPath.item,
-                saveButtonCompletion: self.createCompletion(with: detailedRecipe))
+                saveButtonCompletion: Storage.shared.createCompletion(with: detailedRecipe))
+//                    self.createCompletion(with: detailedRecipe))
             
             print("srabotal cellForItemAt")
             
@@ -249,7 +250,7 @@ extension MainVC: UICollectionViewDataSource {
                 model: detailedRecipe,
                 section: indexPath.section,
                 item: indexPath.item,
-                saveButtonCompletion: self.createCompletion(with: detailedRecipe))
+                saveButtonCompletion: Storage.shared.createCompletion(with: detailedRecipe))
             return cell
             
         case .dessert(_):
@@ -263,7 +264,7 @@ extension MainVC: UICollectionViewDataSource {
                 model: detailedRecipe,
                 section: indexPath.section,
                 item: indexPath.item,
-                saveButtonCompletion: self.createCompletion(with: detailedRecipe))
+                saveButtonCompletion: Storage.shared.createCompletion(with: detailedRecipe))
             return cell
         }
     }
@@ -277,17 +278,6 @@ extension MainVC: UICollectionViewDataSource {
         default:
             return UICollectionReusableView()
         }
-    }
-    
-    private func createCompletion(with recipe: Recipe) -> (() -> ()) {
-        let closure = {
-            if Storage.shared.isItemSaved(withId: recipe.id) {
-                Storage.shared.deleteitem(withId: recipe.id)
-            } else {
-                Storage.shared.write(recipe: recipe)
-            }
-        }
-        return closure
     }
 }
 

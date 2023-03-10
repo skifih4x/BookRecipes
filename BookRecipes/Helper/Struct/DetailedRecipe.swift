@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DetailedRecipe: Codable {
+struct DetailedRecipe: RecipeProtocol, Codable {
     let id: Int
     let readyInMinutes: Int?
     let title: String?
