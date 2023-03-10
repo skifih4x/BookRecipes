@@ -1,5 +1,5 @@
 //
-//  ViewController2.swift
+//  ViewController1.swift
 //  BookRecipes
 //
 //  Created by Ян Бойко on 08.03.2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController2: UIViewController {
+class WelcomeViewController: UIViewController {
     
     let logoImageView: UIImageView = {
         let view = UIImageView()
@@ -19,9 +19,9 @@ class ViewController2: UIViewController {
     
     let textLabel: UILabel = {
         let view = UILabel()
-        view.text = "Here you will find many popular recipes from all over the world!"
+        view.text = "Welcome to our recipe book \u{1F4D6}"
         view.font = UIFont(name: "Helvetica Neue Bold", size: 40)
-        view.numberOfLines = 0
+        view.numberOfLines = 2
         view.textAlignment = .center
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -36,20 +36,20 @@ class ViewController2: UIViewController {
     
     private func setupViews() {
         view.addSubview(textLabel)
-        //view.addSubview(logoImageView)
+        view.addSubview(logoImageView)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             
-            textLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 60),
+            textLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             textLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             textLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            //            logoImageView.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 30),
-            //            logoImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            //            logoImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            //            logoImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            logoImageView.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 30),
+            logoImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            logoImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            logoImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 }

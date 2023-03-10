@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class MainVC: UIViewController {
+final class MainViewController: UIViewController {
     
     private var searchController: UISearchController = {
         let searchController = UISearchController(searchResultsController: nil)
@@ -23,12 +23,11 @@ final class MainVC: UIViewController {
     private let mainTableView = MainTableView()
     
     var mainView = MainView()
-    private let sections = MockData.shared.pageData
-    private lazy var baseRecipe = Recipe(id: 0, image: "", title: "")
-    lazy var popularRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
-    lazy var healthyRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
-    lazy var dessertRecipes: [Recipe] = [baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe, baseRecipe]
-    
+    private let sections = SectionsData.shared.sectionsArray
+        
+    lazy var popularRecipes: [Recipe] = []
+    lazy var healthyRecipes: [Recipe] = []
+    lazy var dessertRecipes: [Recipe] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,15 +58,24 @@ final class MainVC: UIViewController {
 
 //MARK: - Setup
 
-private extension MainVC {
+private extension MainViewController {
     
     func setup() {
         setDelegate()
         setupView()
         setConstraints()
         configureNavigationBar()
-        
+        getBaseItems()
         hideMainTableView(isTableViewHidden: true)
+    }
+    
+    private func getBaseItems() {
+        let baseRecipe = Recipe(id: 0, image: "", title: "")
+        for _ in 1...10 {
+            popularRecipes.append(baseRecipe)
+            healthyRecipes.append(baseRecipe)
+            dessertRecipes.append(baseRecipe)
+        }
     }
     
     func setDelegate() {
@@ -108,7 +116,7 @@ private extension MainVC {
  
 //MARK: - UISearchBarDelegate
 
-extension MainVC: UISearchBarDelegate {
+extension MainViewController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         hideMainTableView(isTableViewHidden: true)
@@ -121,7 +129,7 @@ extension MainVC: UISearchBarDelegate {
 
 //MARK: - UISearchResultsUpdating
 
-extension MainVC: UISearchResultsUpdating {
+extension MainViewController: UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text, !searchText.isEmpty else {
@@ -136,7 +144,7 @@ extension MainVC: UISearchResultsUpdating {
 
 //MARK: - Search Recipes
 
-private extension MainVC {
+private extension MainViewController {
     
     func fetchSearchedRecipe(with searchText: String) {
         apiManager.searchRecipe(keyWord: searchText) { [weak self] result in
@@ -172,7 +180,7 @@ private extension MainVC {
 
 //MARK: - UICollectionViewDelegate
 
-extension MainVC: UICollectionViewDelegate {
+extension MainViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         var id = 0
         switch indexPath.section {
@@ -194,7 +202,7 @@ extension MainVC: UICollectionViewDelegate {
 
 //MARK: - UICollectionViewDataSource
 
-extension MainVC: UICollectionViewDataSource {
+extension MainViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         sections.count
@@ -207,8 +215,8 @@ extension MainVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         switch sections[indexPath.section] {
-        case .popular(_):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? ExampleCollectionViewCell
+        case .popular:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? CollectionViewCell
             else {
                 return UICollectionViewCell()
             }
@@ -221,8 +229,8 @@ extension MainVC: UICollectionViewDataSource {
                 saveButtonCompletion: self.createCompletion(with: detailedRecipe))
             return cell
             
-        case .healthy(_):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? ExampleCollectionViewCell
+        case .healthy:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? CollectionViewCell
             else {
                 return UICollectionViewCell()
             }
@@ -235,8 +243,8 @@ extension MainVC: UICollectionViewDataSource {
                 saveButtonCompletion: self.createCompletion(with: detailedRecipe))
             return cell
             
-        case .dessert(_):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? ExampleCollectionViewCell
+        case .dessert:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ComingSoonCollectionViewCell", for: indexPath) as? CollectionViewCell
             else {
                 return UICollectionViewCell()
             }
@@ -276,18 +284,18 @@ extension MainVC: UICollectionViewDataSource {
 
 //MARK: - Create Layout
 
-extension MainVC {
+extension MainViewController {
     
     private func createLayout() -> UICollectionViewCompositionalLayout {
         UICollectionViewCompositionalLayout { [weak self] sectionIndex, _ in
             guard let self = self else { return nil}
             let section = self.sections[sectionIndex]
             switch section {
-            case .popular(_):
+            case .popular:
                 return self.createExampleSection()
-            case .healthy(_):
+            case .healthy:
                 return self.createExampleSection()
-            case .dessert(_):
+            case .dessert:
                 return self.createExampleSection()
             }
         }
