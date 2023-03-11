@@ -83,7 +83,7 @@ extension RecipeTableViewCell {
         recipeImageView.sd_setImage(with: URL(string: recipe.image!))
         titleLabel.text = recipe.title
         likesLabel.text = "Likes: \(recipe.aggregateLikes!)"
-        isSaved = Storage.shared.isItemSaved(withId: recipe.id)
+        isSaved = RealmDataBase.shared.isItemSaved(withId: recipe.id)
         self.saveButtonClosure = saveButtonClosure
     }
     

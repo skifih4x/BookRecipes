@@ -135,7 +135,7 @@ extension RecipeListVC: UITableViewDelegate, UITableViewDataSource {
         let recipe = recipesInList[indexPath.row]
         cell.setupData(
             recipe: recipe,
-            saveButtonClosure: Storage.shared.createCompletion(with: recipe))
+            saveButtonClosure: RealmDataBase.shared.createCompletion(with: recipe))
         return cell
     }
     
