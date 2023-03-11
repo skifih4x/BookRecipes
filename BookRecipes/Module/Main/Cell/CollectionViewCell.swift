@@ -21,6 +21,8 @@ class CollectionViewCell: UICollectionViewCell {
     }
 
     var saveButtonCompletion: (() -> ())?
+    
+    private let loadingImageView = PizzaLoading(isCell: true)
    
     private let foodImageView: UIImageView = {
         let view = UIImageView()
@@ -85,6 +87,7 @@ class CollectionViewCell: UICollectionViewCell {
     
     private func setupView() {
         clipsToBounds = true
+        addSubview(loadingImageView)
         addSubview(foodImageView)
         foodImageView.addSubview(bookmarkButton)
         bookmarkButton.addSubview(bookmarkImageView)
@@ -96,6 +99,7 @@ class CollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
         foodImageView.image = nil
     }
+    
     func configure(model: Recipe, section: Int, item: Int, saveButtonCompletion: @escaping () -> ()) {
         
         self.nameLabel.text = model.title
@@ -104,7 +108,7 @@ class CollectionViewCell: UICollectionViewCell {
         
         self.saveButtonCompletion = saveButtonCompletion
         
-        foodImageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
+//        foodImageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
         guard let image = model.image else { return }
         guard let url = URL(string: image) else { return }
         foodImageView.sd_setImage(with: url)
@@ -115,6 +119,11 @@ class CollectionViewCell: UICollectionViewCell {
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
+            
+            loadingImageView.topAnchor.constraint(equalTo: topAnchor),
+            loadingImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            loadingImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            loadingImageView.bottomAnchor.constraint(equalTo: nameView.topAnchor),
         
             foodImageView.topAnchor.constraint(equalTo: topAnchor),
             foodImageView.leadingAnchor.constraint(equalTo: leadingAnchor),

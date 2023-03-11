@@ -14,7 +14,7 @@ struct Constants {
 //    static let APIKey = "4ea5853dc94c40a296c7ac12e7fe5eb4"
 //    static let APIKey = "04864a53f7464c90820b2725af2c6ba0"
 //    static let APIKey = "206625f6a74745dda3cb47905f129e1c"
-    static let APIKey = "bc63ec8984094be58b7a2d77da76b373"
+//    static let APIKey = "bc63ec8984094be58b7a2d77da76b373"
 //    static let APIKey = "4ea5853dc94c40a296c7ac12e7fe5eb4"
 //    static let APIKey = "53848099fdeb4d0d9ad71bb84a1103e2"
 //    static let APIKey = "7e31fd338a334d03aafda200f55348c0"
@@ -38,6 +38,8 @@ struct Constants {
 //    static let APIKey = "53848099fdeb4d0d9ad71bb84a1103e2"
 //    static let APIKey = "c5579ba8b4734f44b80f0348e3a39505"
 //    static let APIKey = "9dffb89689f44ef994d6afae93681784"
+//    static let APIKey = "9fbf736013274b9980d90971a0b840f4"
+    static let APIKey = "b3f678ed98374f1ebdab46e0536bb665"
     
     
     static let basicURL = "https://api.spoonacular.com/recipes/"

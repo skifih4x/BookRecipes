@@ -74,6 +74,7 @@ extension CategoriesVC: UITableViewDataSource {
         let title = categories[indexPath.row][0]
         let image = categories[indexPath.row][1]
         
+        cell.selectionStyle = .none
         cell.titleLabel.text = title as? String
         cell.backImageView.image = image as? UIImage
         return cell
@@ -90,6 +91,5 @@ extension CategoriesVC: UITableViewDelegate {
         let VC = RecipeListVC()
         VC.configureRecipeListVC(isSorted: false, category: category, title: title)
         navigationController?.pushViewController(VC, animated: true)
-        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
