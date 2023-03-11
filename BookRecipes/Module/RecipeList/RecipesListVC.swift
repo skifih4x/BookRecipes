@@ -11,23 +11,7 @@ class RecipeListVC: UIViewController {
     
     var recipeTableView = UITableView()
     
-    lazy var imageView: UIImageView = {
-        let imageView = UIImageView()
-        
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        if let gifUrl = URL(string: "https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif") {
-            imageView.sd_setImage(with: gifUrl) { (image, error, cacheType, url) in
-                if error != nil {
-                    print("Error loading GIF image")
-                } else {
-                    imageView.image = image
-                }
-            }
-        }
-        
-        return imageView
-    }()
+    lazy var imageView = PizzaLoading()
     
     var recipesInList: [DetailedRecipe] = []
     
@@ -88,13 +72,9 @@ extension RecipeListVC {
     func setConstraints () {
         let safeArea = view.safeAreaLayoutGuide
         
-        let screenHeight = UIScreen.main.bounds.height
-        
         NSLayoutConstraint.activate([
             imageView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: screenHeight / 16),
-            imageView.widthAnchor.constraint(equalToConstant: screenHeight / 16)
+            imageView.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor)
         ])
         
         NSLayoutConstraint.activate([

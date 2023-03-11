@@ -14,8 +14,20 @@ final class DetailViewController: UIViewController  {
     
     private let apiManager = APICaller.shared
     
-    var recipe: DetailedRecipe?
+    lazy var loadingImageView = PizzaLoading()
     
+    lazy var titleLabel: UILabel = {
+        let view = UILabel()
+//        view.text = recipes.title
+        view.numberOfLines = 0
+        view.font = UIFont(name: "Helvetica Neue Bold", size: 28)
+        view.adjustsFontSizeToFitWidth = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private var recipe: DetailedRecipe?
+
     var detailRecipeID: Int = 1697641
     var saveButtonCompletion: (() -> ())?
     var isSaved = false {
@@ -35,27 +47,17 @@ final class DetailViewController: UIViewController  {
                 DispatchQueue.main.async {
                     self?.ingridientsTableView.reloadData()
                     self?.navigationController?.navigationBar.prefersLargeTitles = false
-                    
-                    let titleLabel: UILabel = {
-                        let view = UILabel()
-                        view.text = recipes.title
-                        view.numberOfLines = 0
-                        view.font = UIFont(name: "Helvetica Neue Bold", size: 28)
-                        view.adjustsFontSizeToFitWidth = true
-                        view.translatesAutoresizingMaskIntoConstraints = false
-                        return view
-                    }()
-                                           
-                    self?.navigationItem.titleView = titleLabel
-                    
                     //self?.dishNameLableView.text = recipes.title
                     self?.numberOfReviewsLabel.text = "\(recipes.aggregateLikes!)" + " Likes"
                     self?.descriptionOfDishesLabel.text = self?.convertHTML(from: recipes.summary ?? "cant convert from html")?.string
                     self?.descriptionOfCookingLabel.text = self?.convertHTML(from: recipes.instructions ?? "cant convert from html")?.string
                     self?.dishPictureImageView.sd_setImage(with: URL(string: recipes.image ?? ""))
                     
+                    guard let title = self?.recipe?.title else { return }
+                    
                     self?.checkIfItemIsSaved()
                     self?.barSaveButtonSetup()
+                    self?.unsetHide(title: title)
                 }
                 
             case .failure(let error):
@@ -86,6 +88,8 @@ final class DetailViewController: UIViewController  {
         label.textAlignment = .left
         return label
     }()
+    
+    lazy var loadingImageView2 = PizzaLoading(isCell: true)
 
     private lazy var dishPictureImageView: UIImageView = {
         let imageView = UIImageView()
@@ -196,23 +200,26 @@ final class DetailViewController: UIViewController  {
     //MARK: - setupUI
     
      private func setupUI() {
+         navigationController?.navigationBar.shadowImage = UIImage()
+         navigationController?.navigationBar.barTintColor = .systemBackground
          
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.barTintColor = .systemBackground
-        view.backgroundColor = .white
-        view.addSubview(contentScrollView)
-        contentScrollView.addSubview(dishPictureImageView)
-        raitingStackView.addArrangedSubview(starRaitngImageView)
-        raitingStackView.addArrangedSubview(numberOfReviewsLabel)
-        contentScrollView.addSubview(raitingStackView)
-        contentScrollView.addSubview(descriptionDish)
-        contentScrollView.addSubview(descriptionOfDishesLabel)
-        contentScrollView.addSubview(descriptionCook)
-        contentScrollView.addSubview(descriptionOfCookingLabel)
-        
-        view.addSubview(ingridientsTableView)
-        
-        setConstraints()
+         
+         view.backgroundColor = .white
+         view.addSubview(contentScrollView)
+         contentScrollView.addSubview(loadingImageView2)
+         contentScrollView.addSubview(dishPictureImageView)
+         raitingStackView.addArrangedSubview(starRaitngImageView)
+         raitingStackView.addArrangedSubview(numberOfReviewsLabel)
+         contentScrollView.addSubview(raitingStackView)
+         contentScrollView.addSubview(descriptionDish)
+         contentScrollView.addSubview(descriptionOfDishesLabel)
+         contentScrollView.addSubview(descriptionCook)
+         contentScrollView.addSubview(descriptionOfCookingLabel)
+         view.addSubview(ingridientsTableView)
+         
+         view.addSubview(loadingImageView)
+         
+         setConstraints()
     }
     
     //MARK: - setConstraints
@@ -220,10 +227,20 @@ final class DetailViewController: UIViewController  {
     private func setConstraints() {
         NSLayoutConstraint.activate([
             
+            loadingImageView.topAnchor.constraint(equalTo: view.topAnchor),
+            loadingImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            loadingImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            loadingImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
             contentScrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             contentScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             contentScrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             contentScrollView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.6),
+            
+            loadingImageView2.topAnchor.constraint(equalTo: dishPictureImageView.topAnchor),
+            loadingImageView2.leadingAnchor.constraint(equalTo: dishPictureImageView.leadingAnchor),
+            loadingImageView2.trailingAnchor.constraint(equalTo: dishPictureImageView.trailingAnchor),
+            loadingImageView2.bottomAnchor.constraint(equalTo: dishPictureImageView.bottomAnchor),
             
             dishPictureImageView.topAnchor.constraint(equalTo: contentScrollView.topAnchor, constant: 10),
             dishPictureImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -268,11 +285,12 @@ final class DetailViewController: UIViewController  {
         fetchData()
         setupUI()
         setDelegates()
+        setHidden()
+        
         let backButton = UIBarButtonItem(image: UIImage(systemName: "arrow.left"), style: .plain, target: self, action: #selector(backAction))
         navigationItem.leftBarButtonItem = backButton
         
         backButton.tintColor = .black
-//        fetchData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -288,6 +306,23 @@ final class DetailViewController: UIViewController  {
         ingridientsTableView.delegate = self
         ingridientsTableView.dataSource = self
         contentScrollView.delegate = self
+    }
+    
+    private func setHidden() {
+        contentScrollView.isHidden = true
+        raitingStackView.isHidden = true
+        ingridientsTableView.isHidden = true
+    }
+    
+    private func unsetHide(title: String) {
+        contentScrollView.isHidden = false
+        raitingStackView.isHidden = false
+        ingridientsTableView.isHidden = false
+        
+        titleLabel.text = title
+        navigationItem.titleView = titleLabel
+        
+        loadingImageView.isHidden = true
     }
 }
 

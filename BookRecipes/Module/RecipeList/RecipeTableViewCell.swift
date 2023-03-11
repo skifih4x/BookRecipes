@@ -12,6 +12,8 @@ class RecipeTableViewCell: UITableViewCell {
     
     static let identifier = "RecipeTableViewCell"
     
+    lazy var loadingImageView = PizzaLoading(isCell: true)
+    
     lazy var recipeImageView: UIImageView = {
         let imageView = UIImageView()
         
@@ -73,6 +75,7 @@ extension RecipeTableViewCell {
     
     func setupView() {
         
+        contentView.addSubview(loadingImageView)
         contentView.addSubview(recipeImageView)
         contentView.addSubview(saveButton)
         contentView.addSubview(titleLabel)
@@ -107,6 +110,13 @@ extension RecipeTableViewCell {
             recipeImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             recipeImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             recipeImageView.widthAnchor.constraint(equalTo: recipeImageView.heightAnchor, multiplier: 16/9),
+        ])
+        
+        NSLayoutConstraint.activate([
+            loadingImageView.topAnchor.constraint(equalTo: recipeImageView.topAnchor),
+            loadingImageView.leadingAnchor.constraint(equalTo: recipeImageView.leadingAnchor),
+            loadingImageView.trailingAnchor.constraint(equalTo: recipeImageView.trailingAnchor),
+            loadingImageView.bottomAnchor.constraint(equalTo: recipeImageView.bottomAnchor)
         ])
         
         NSLayoutConstraint.activate([
