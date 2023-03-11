@@ -274,6 +274,11 @@ final class DetailViewController: UIViewController  {
         backButton.tintColor = .black
 //        fetchData()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        guard let id = recipe?.id else { return }
+        isSaved = Storage.shared.isItemSaved(withId: id)
+    }
 
     @objc func backAction() {
         navigationController?.popViewController(animated: true)

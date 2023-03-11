@@ -137,6 +137,8 @@ extension MainViewController: UISearchBarDelegate {
         searchedRecipes = []
         updateMainTableView()
     }
+    
+    
 }
 
 //MARK: - UISearchResultsUpdating

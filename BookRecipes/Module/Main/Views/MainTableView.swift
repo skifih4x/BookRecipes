@@ -47,7 +47,9 @@ extension MainTableView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = mainTableView.dequeueReusableCell(withIdentifier: "MainTableViewCell", for: indexPath) as? MainTableViewCell else { return UITableViewCell() }
-        cell.configure(model: recipesItems[indexPath.item])
+        cell.configure(
+            model: recipesItems[indexPath.item],
+            saveButtonClosure: Storage.shared.createCompletion(with: recipesItems[indexPath.item]))
         cell.selectionStyle = .none
         return cell
     }
