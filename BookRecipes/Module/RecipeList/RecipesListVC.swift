@@ -41,6 +41,9 @@ class RecipeListVC: UIViewController {
         configureTableView()
         configureNavigationBar()
     }
+}
+
+extension RecipeListVC {
     
     func configureRecipeListVC (isSorted: Bool?, category: String?, title: String?) {
         self.isSorted = isSorted
@@ -61,7 +64,6 @@ class RecipeListVC: UIViewController {
     }
     
     func configureNavigationBar() {
-        
         let backButtonImage = UIImage(named: "BackButton")
         let backButton = UIBarButtonItem(image: backButtonImage, style: .plain, target: self, action: #selector(goBack))
         backButton.tintColor = .black
@@ -73,19 +75,12 @@ class RecipeListVC: UIViewController {
         navigationController?.navigationBar.barTintColor = .systemBackground
     }
     
-    @objc func goBack() {
-        navigationController?.popViewController(animated: true)
-    }
-    
     func setTableviewDelegates () {
         recipeTableView.delegate = self
         recipeTableView.dataSource = self
     }
     
-//MARK: - Constraints
-
     func setConstraints () {
-        
         let safeArea = view.safeAreaLayoutGuide
         
         let screenHeight = UIScreen.main.bounds.height
@@ -104,11 +99,17 @@ class RecipeListVC: UIViewController {
             recipeTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
         ])
     }
-
 }
 
-//MARK: - Delegates
+// MARK: - Actions
+extension RecipeListVC {
+    
+    @objc func goBack() {
+        navigationController?.popViewController(animated: true)
+    }
+}
 
+// MARK: - Delegates
 extension RecipeListVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -135,7 +136,6 @@ extension RecipeListVC: UITableViewDelegate, UITableViewDataSource {
 }
 
 //MARK: - Networking
-
 extension RecipeListVC {
     func fetchData(for category: String) {
         let dispatchGroup = DispatchGroup()
