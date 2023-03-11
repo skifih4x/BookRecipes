@@ -39,6 +39,8 @@ class SavedTableCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        selectionStyle = .none
+        
         contentView.addSubview(cellImageView)
         contentView.addSubview(nameLabel)
 //        contentView.addSubview(ratingView)

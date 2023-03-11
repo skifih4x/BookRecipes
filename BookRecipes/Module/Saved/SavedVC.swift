@@ -48,6 +48,7 @@ final class SavedVC: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(SavedTableCell.self, forCellReuseIdentifier: SavedTableCell.reuseId)
         tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -91,6 +92,13 @@ extension SavedVC {
 extension SavedVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let id = items[indexPath.row].id
+        let detailViewController = DetailViewController()
+        detailViewController.detailRecipeID = id
+        navigationController?.pushViewController(detailViewController, animated: true)
     }
 }
 
