@@ -10,22 +10,19 @@ import RealmSwift
 
 final class SavedVC: UIViewController {
     
+    // MARK: - Properties
+    
     lazy var tableView = UITableView()
     
     var items: Results<RealmRecipe>!
 
+    // MARK: - LifeCycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let deleteAllItems = UIBarButtonItem(
-            title: "Remove All",
-            style: .plain,
-            target: self,
-            action: #selector(deleteAllItemsAction))
-        navigationItem.rightBarButtonItem = deleteAllItems
-        
         title = "Saved recipes"
-        
+
+        setupDeleteAllItems()
         tableViewSetup()
         constraints()
     }
@@ -34,13 +31,13 @@ final class SavedVC: UIViewController {
         loadData()
     }
     
+    // MARK: - Private Methods
+    
     private func loadData() {
-        
         Storage.shared.read { recipes in
             self.items = recipes
         }
         tableView.reloadData()
-        
     }
     
     private func tableViewSetup() {
@@ -82,12 +79,26 @@ final class SavedVC: UIViewController {
     }
 }
 
+// MARK: - DeleteAll Button setup
+
 extension SavedVC {
+    
+    private func setupDeleteAllItems() {
+        let deleteAllItems = UIBarButtonItem(
+            title: "Remove All",
+            style: .plain,
+            target: self,
+            action: #selector(deleteAllItemsAction))
+        navigationItem.rightBarButtonItem = deleteAllItems
+    }
+    
     @objc func deleteAllItemsAction() {
         Storage.shared.deleteAll()
         tableView.reloadData()
     }
 }
+
+// MARK: - TableView Delegate
 
 extension SavedVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -101,6 +112,8 @@ extension SavedVC: UITableViewDelegate {
         navigationController?.pushViewController(detailViewController, animated: true)
     }
 }
+
+// MARK: - TableView Data Source
 
 extension SavedVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
