@@ -7,6 +7,17 @@
 
 import UIKit
 
+struct CategoryImages {
+    static let mainCourse = UIImage(named: "MainCourse")
+    static let sideDish = UIImage(named: "SideDish")
+    static let dessert = UIImage(named: "Dessert")
+    static let salad = UIImage(named: "Salad")
+    static let breakfast = UIImage(named: "Breakfast")
+    static let soup = UIImage(named: "Soup")
+    static let snack = UIImage(named: "Snack")
+    static let drink = UIImage(named: "Drink")
+}
+
 class CategoryTableViewCell: UITableViewCell {
     
     static let identifier = "CategoryTableViewCell"
