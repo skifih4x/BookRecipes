@@ -62,16 +62,15 @@ class HeaderSupplementaryView: UICollectionReusableView {
     
     @objc func seeAllButtonTapped() {    
         let VC = RecipeListVC()
-        VC.title = headerLabel.text
-        
-        switch VC.title {
-        case "Popular \u{1F525}": VC.category = Types.popularity.rawValue
-        case "Healthy \u{1F966}": VC.category = Types.healthiness.rawValue
-        case "Dessert \u{1F370}": VC.category = Types.sugar.rawValue
-        default : break
+        let category: String?
+        switch headerLabel.text {
+        case "Popular \u{1F525}": category = Types.popularity.rawValue
+        case "Healthy \u{1F966}": category = Types.healthiness.rawValue
+        case "Dessert \u{1F370}": category = Types.sugar.rawValue
+        default : category = ""
         }
         
-        VC.isSorted = true
+        VC.configureRecipeListVC(isSorted: true, category: category, title: headerLabel.text)
         navigationController?.pushViewController(VC, animated: true)
     }
     

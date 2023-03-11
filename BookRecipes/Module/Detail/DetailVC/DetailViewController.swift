@@ -25,8 +25,8 @@ final class DetailViewController: UIViewController  {
                     self?.ingridientsTableView.reloadData()
                     self?.dishNameLableView.text = recipes.title
                     self?.numberOfReviewsLabel.text = "\(recipes.aggregateLikes!)" + " Likes"
-                    self?.descriptionOfDishesLabel.text = self?.apiManager.convertHTML(from: recipes.summary ?? "cant convert from html")?.string
-                    self?.descriptionOfCookingLabel.text = self?.apiManager.convertHTML(from: recipes.instructions ?? "cant convert from html")?.string
+                    self?.descriptionOfDishesLabel.text = self?.convertHTML(from: recipes.summary ?? "cant convert from html")?.string
+                    self?.descriptionOfCookingLabel.text = self?.convertHTML(from: recipes.instructions ?? "cant convert from html")?.string
                     self?.dishPictureImageView.sd_setImage(with: URL(string: recipes.image ?? ""))
                 }
             case .failure(let error):
@@ -267,3 +267,16 @@ extension DetailViewController: UITableViewDelegate {
 }
 
 
+//MARK: - HTML converter
+
+extension DetailViewController {
+    func convertHTML (from string: String) -> NSAttributedString?{
+        do{
+            let atrString = try NSAttributedString(data: string.data(using: .utf8) ?? .init(), options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil)
+            return atrString
+        }catch{
+            print("error in HTML converter: \(error)")
+            return nil
+        }
+    }
+}
