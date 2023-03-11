@@ -137,6 +137,8 @@ extension MainViewController: UISearchBarDelegate {
         searchedRecipes = []
         updateMainTableView()
     }
+    
+    
 }
 
 //MARK: - UISearchResultsUpdating
@@ -242,7 +244,7 @@ extension MainViewController: UICollectionViewDataSource {
                 model: detailedRecipe,
                 section: indexPath.section,
                 item: indexPath.item,
-                saveButtonCompletion: self.createCompletion(with: detailedRecipe))
+                saveButtonCompletion: RealmDataBase.shared.createCompletion(with: detailedRecipe))
             return cell
             
         case .healthy:
@@ -256,7 +258,7 @@ extension MainViewController: UICollectionViewDataSource {
                 model: detailedRecipe,
                 section: indexPath.section,
                 item: indexPath.item,
-                saveButtonCompletion: self.createCompletion(with: detailedRecipe))
+                saveButtonCompletion: RealmDataBase.shared.createCompletion(with: detailedRecipe))
             return cell
             
         case .dessert:
@@ -270,7 +272,7 @@ extension MainViewController: UICollectionViewDataSource {
                 model: detailedRecipe,
                 section: indexPath.section,
                 item: indexPath.item,
-                saveButtonCompletion: self.createCompletion(with: detailedRecipe))
+                saveButtonCompletion: RealmDataBase.shared.createCompletion(with: detailedRecipe))
             return cell
         }
     }
@@ -284,17 +286,6 @@ extension MainViewController: UICollectionViewDataSource {
         default:
             return UICollectionReusableView()
         }
-    }
-    
-    private func createCompletion(with recipe: Recipe) -> (() -> ()) {
-        let closure = {
-            if Storage.shared.isItemSaved(withId: recipe.id) {
-                Storage.shared.deleteitem(withId: recipe.id)
-            } else {
-                Storage.shared.write(recipe: recipe)
-            }
-        }
-        return closure
     }
 }
 

@@ -114,7 +114,7 @@ class CollectionViewCell: UICollectionViewCell {
         foodImageView.sd_setImage(with: url)
         
         // checking whether the recipe is saved in database
-        isSaved = Storage.shared.isItemSaved(withId: model.id)
+        isSaved = RealmDataBase.shared.isItemSaved(withId: model.id)
     }
     
     private func setConstraints() {

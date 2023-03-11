@@ -11,8 +11,8 @@ class FavouritesViewController: UIViewController {
 
     let logoImageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "Favourites")
-        view.contentMode = .scaleAspectFit
+        view.image = UIImage(named: "fav")
+        view.contentMode = .scaleAspectFill
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -41,7 +41,7 @@ class FavouritesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 189/255, green: 205/255, blue: 214/255, alpha: 1)
         setupViews()
         setupConstraints()
     }
@@ -69,7 +69,7 @@ class FavouritesViewController: UIViewController {
             logoImageView.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 30),
             logoImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             logoImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            logoImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            logoImageView.bottomAnchor.constraint(equalTo: endButton.topAnchor, constant: 0),
             
             endButton.heightAnchor.constraint(equalToConstant: 50),
             endButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),

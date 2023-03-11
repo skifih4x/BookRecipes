@@ -8,7 +8,14 @@
 import UIKit
 import SDWebImage
 
+protocol IngridientTableViewCellDelegate: AnyObject {
+    
+    func checkboxToggle(sender: IngridientTableViewCell)
+}
+
  final class IngridientTableViewCell: UITableViewCell {
+     
+     weak var delegate: IngridientTableViewCellDelegate?
     
     //MARK: - Elements
     
@@ -47,11 +54,13 @@ import SDWebImage
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .systemGray
-        label.textAlignment = .right
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
      
-     private var checkboxUIButtom: UIButton = {
+      var checkboxUIButtom: UIButton = {
          let button = UIButton(type: .system)
          button.translatesAutoresizingMaskIntoConstraints = false
          button.addTarget(nil, action: #selector(checkboxTapped), for: .touchUpInside)
@@ -60,9 +69,10 @@ import SDWebImage
          return button
      }()
      
-    @objc private func checkboxTapped() {
+    @objc func checkboxTapped() {
+        delegate?.checkboxToggle(sender: self)
         checkboxUIButtom.isSelected = !checkboxUIButtom.isSelected
-     }
+}
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -81,7 +91,7 @@ import SDWebImage
         ingridientNameLable.text = ingridient.name?.capitalized
         ingridientCountLable.text = String(format: "%.1F", ingridient.amount!) + " " + (ingridient.unit!)
         DispatchQueue.main.async {
-            self.ingridientImageView.sd_setImage(with: URL(string: "https://spoonacular.com/cdn/ingredients_100x100/" + ingridient.image!), placeholderImage: UIImage(systemName: "fish"))
+            self.ingridientImageView.sd_setImage(with: URL(string: "https://spoonacular.com/cdn/ingredients_100x100/" + (ingridient.image ?? "fish")), placeholderImage: UIImage(systemName: "fish"))
         }
     }
     
@@ -102,10 +112,10 @@ import SDWebImage
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            backgroundCell.topAnchor.constraint(equalTo: topAnchor, constant: 7),
-            backgroundCell.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            backgroundCell.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
-            backgroundCell.bottomAnchor.constraint(equalTo: bottomAnchor),
+            backgroundCell.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 7),
+            backgroundCell.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            backgroundCell.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
+            backgroundCell.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
 
             contentStackView.topAnchor.constraint(equalTo: backgroundCell.topAnchor),
             contentStackView.bottomAnchor.constraint(equalTo: backgroundCell.bottomAnchor),

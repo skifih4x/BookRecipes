@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 struct Constants {
+
     
 //    static let APIKey = "09713914275c4aa2bd64c3ae7d7293c9"
 //    static let APIKey = "4ea5853dc94c40a296c7ac12e7fe5eb4"
@@ -40,7 +41,6 @@ struct Constants {
 //    static let APIKey = "9dffb89689f44ef994d6afae93681784"
 //    static let APIKey = "9fbf736013274b9980d90971a0b840f4"
     static let APIKey = "b3f678ed98374f1ebdab46e0536bb665"
-    
     
     static let basicURL = "https://api.spoonacular.com/recipes/"
     

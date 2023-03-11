@@ -10,22 +10,19 @@ import RealmSwift
 
 final class SavedVC: UIViewController {
     
+    // MARK: - Properties
+    
     lazy var tableView = UITableView()
     
     var items: Results<RealmRecipe>!
 
+    // MARK: - LifeCycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let deleteAllItems = UIBarButtonItem(
-            title: "Remove All",
-            style: .plain,
-            target: self,
-            action: #selector(deleteAllItemsAction))
-        navigationItem.rightBarButtonItem = deleteAllItems
-        
         title = "Saved recipes"
-        
+
+        setupDeleteAllItems()
         tableViewSetup()
         constraints()
     }
@@ -34,13 +31,13 @@ final class SavedVC: UIViewController {
         loadData()
     }
     
+    // MARK: - Private Methods
+    
     private func loadData() {
-        
-        Storage.shared.read { recipes in
+        RealmDataBase.shared.read { recipes in
             self.items = recipes
         }
         tableView.reloadData()
-        
     }
     
     private func tableViewSetup() {
@@ -48,6 +45,7 @@ final class SavedVC: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(SavedTableCell.self, forCellReuseIdentifier: SavedTableCell.reuseId)
         tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -75,24 +73,47 @@ final class SavedVC: UIViewController {
     
     private func createClosure(forItem id: Int) -> (() -> ()) {
         return {
-            Storage.shared.deleteitem(withId: id)
+            RealmDataBase.shared.deleteitem(withId: id)
             self.tableView.reloadData()
         }
     }
 }
 
+// MARK: - DeleteAll Button setup
+
 extension SavedVC {
+    
+    private func setupDeleteAllItems() {
+        let deleteAllItems = UIBarButtonItem(
+            title: "Remove All",
+            style: .plain,
+            target: self,
+            action: #selector(deleteAllItemsAction))
+        navigationItem.rightBarButtonItem = deleteAllItems
+    }
+    
     @objc func deleteAllItemsAction() {
-        Storage.shared.deleteAll()
+        RealmDataBase.shared.deleteAll()
         tableView.reloadData()
     }
 }
+
+// MARK: - TableView Delegate
 
 extension SavedVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let id = items[indexPath.row].id
+        let detailViewController = DetailViewController()
+        detailViewController.detailRecipeID = id
+        navigationController?.pushViewController(detailViewController, animated: true)
+    }
 }
+
+// MARK: - TableView Data Source
 
 extension SavedVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

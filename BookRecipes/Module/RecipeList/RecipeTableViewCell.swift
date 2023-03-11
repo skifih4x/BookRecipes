@@ -44,7 +44,14 @@ class RecipeTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var saveButton = SaveButton(isChecked: false)
+    lazy var saveButton = SaveButton()
+    
+    var isSaved = false {
+        didSet {
+            saveButton.toggle(with: isSaved)
+        }
+    }
+    var saveButtonClosure: (() -> ())?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -52,6 +59,7 @@ class RecipeTableViewCell: UITableViewCell {
         self.selectionStyle = .none
         setupView()
         setupConstraints()
+        saveButtonSetup()
     }
     
     required init?(coder: NSCoder) {
@@ -60,8 +68,6 @@ class RecipeTableViewCell: UITableViewCell {
     
     
 }
-
-
 
 //MARK: - Setups
 
@@ -76,10 +82,12 @@ extension RecipeTableViewCell {
         contentView.addSubview(likesLabel)
     }
     
-    func setupData(recipe: DetailedRecipe) {
+    func setupData(recipe: DetailedRecipe, saveButtonClosure: @escaping () -> ()) {
         recipeImageView.sd_setImage(with: URL(string: recipe.image!))
         titleLabel.text = recipe.title
         likesLabel.text = "Likes: \(recipe.aggregateLikes!)"
+        isSaved = RealmDataBase.shared.isItemSaved(withId: recipe.id)
+        self.saveButtonClosure = saveButtonClosure
     }
     
 }
@@ -130,5 +138,22 @@ extension RecipeTableViewCell {
             likesLabel.leadingAnchor.constraint(equalTo: recipeImageView.trailingAnchor, constant: 10),
             contentView.trailingAnchor.constraint(equalTo: likesLabel.trailingAnchor, constant: 16),
         ])
+    }
+}
+
+//  MARK: - Save button setup
+
+extension RecipeTableViewCell {
+    
+    private func saveButtonSetup() {
+        saveButton.addTarget(
+            self,
+            action: #selector(saveButtonTapped),
+            for: .touchUpInside)
+    }
+    
+    @objc func saveButtonTapped() {
+        saveButtonClosure?()
+        isSaved.toggle()
     }
 }

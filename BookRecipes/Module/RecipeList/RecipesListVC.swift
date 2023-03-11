@@ -25,6 +25,11 @@ class RecipeListVC: UIViewController {
         configureTableView()
         configureNavigationBar()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        recipeTableView.reloadData()
+    }
 }
 
 extension RecipeListVC {
@@ -108,7 +113,9 @@ extension RecipeListVC: UITableViewDelegate, UITableViewDataSource {
         
         let cell = recipeTableView.dequeueReusableCell(withIdentifier: RecipeTableViewCell.identifier) as! RecipeTableViewCell
         let recipe = recipesInList[indexPath.row]
-        cell.setupData(recipe: recipe)
+        cell.setupData(
+            recipe: recipe,
+            saveButtonClosure: RealmDataBase.shared.createCompletion(with: recipe))
         return cell
     }
     
