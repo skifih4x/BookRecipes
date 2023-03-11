@@ -82,7 +82,7 @@ final class DetailViewController: UIViewController  {
     lazy var dishPictureImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = 10
+        imageView.layer.cornerRadius = 12
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         return imageView
@@ -124,10 +124,35 @@ final class DetailViewController: UIViewController  {
         stackView.alignment = .center
         return stackView
        }()
+     
+    lazy var descriptionDish: UILabel = {
+        let label = UILabel()
+        label.text = "A description of the dish"
+        //label.font = UIFont(name: "Arial-ItalicMT", size: 20)
+        label.font = .boldSystemFont(ofSize: 20)
+        label.textColor = .black
+        label.numberOfLines = 0
+        //label.adjustsFontSizeToFitWidth = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     lazy var descriptionOfDishesLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 15, weight: .regular)
+        //label.font = .systemFont(ofSize: 15, weight: .regular)
+        label.font = UIFont(name: "Arial-ItalicMT", size: 15)
+        label.textColor = .black
+        label.numberOfLines = 0
+        //label.adjustsFontSizeToFitWidth = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var descriptionCook: UILabel = {
+        let label = UILabel()
+        label.text = "The description of cooking"
+        //label.font = UIFont(name: "Arial-ItalicMT", size: 20)
+        label.font = .boldSystemFont(ofSize: 20)
         label.textColor = .black
         label.numberOfLines = 0
         //label.adjustsFontSizeToFitWidth = true
@@ -138,7 +163,7 @@ final class DetailViewController: UIViewController  {
     lazy var descriptionOfCookingLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 15, weight: .regular)
+        label.font = UIFont(name: "Arial-ItalicMT", size: 15)
         label.textColor = .black
         label.numberOfLines = 0
         label.adjustsFontSizeToFitWidth = true
@@ -172,7 +197,9 @@ final class DetailViewController: UIViewController  {
         raitingStackView.addArrangedSubview(starRaitngImageView)
         raitingStackView.addArrangedSubview(numberOfReviewsLabel)
         contentScrollView.addSubview(raitingStackView)
+        contentScrollView.addSubview(descriptionDish)
         contentScrollView.addSubview(descriptionOfDishesLabel)
+        contentScrollView.addSubview(descriptionCook)
         contentScrollView.addSubview(descriptionOfCookingLabel)
         
         view.addSubview(ingridientsTableView)
@@ -203,12 +230,20 @@ final class DetailViewController: UIViewController  {
             raitingStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             raitingStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
-            descriptionOfDishesLabel.topAnchor.constraint(equalTo: raitingStackView.bottomAnchor, constant: 20),
+            descriptionDish.topAnchor.constraint(equalTo: raitingStackView.bottomAnchor, constant: 20),
+            descriptionDish.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25),
+            descriptionDish.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -25),
+            
+            descriptionOfDishesLabel.topAnchor.constraint(equalTo: descriptionDish.bottomAnchor, constant: 10),
             descriptionOfDishesLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
             descriptionOfDishesLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
             //descriptionOfDishesLabel.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
             
-            descriptionOfCookingLabel.topAnchor.constraint(equalTo: descriptionOfDishesLabel.bottomAnchor, constant: 25),
+            descriptionCook.topAnchor.constraint(equalTo: descriptionOfDishesLabel.bottomAnchor, constant: 20),
+            descriptionCook.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25),
+            descriptionCook.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -25),
+            
+            descriptionOfCookingLabel.topAnchor.constraint(equalTo: descriptionCook.bottomAnchor, constant: 10),
             descriptionOfCookingLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25),
             descriptionOfCookingLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -25),
             descriptionOfCookingLabel.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
