@@ -7,12 +7,12 @@
 
 import UIKit
 
-class ViewController3: UIViewController {
+class FavouritesViewController: UIViewController {
 
     let logoImageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "result")
-        view.contentMode = .scaleAspectFill
+        view.image = UIImage(named: "Favourites")
+        view.contentMode = .scaleAspectFit
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -34,7 +34,7 @@ class ViewController3: UIViewController {
         view.backgroundColor = .red
         view.setTitleColor(.black, for: .normal)
         view.layer.cornerRadius = 10
-        view.addTarget(self, action: #selector(endButtonTapped), for: .touchUpInside)
+        view.addTarget(nil, action: #selector(endButtonTapped), for: .touchUpInside)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -47,7 +47,6 @@ class ViewController3: UIViewController {
     }
     
     @objc func endButtonTapped() {
-        print("endButton Tapped")
         UserDefaults.standard.set(true, forKey: "hasOnboarded")
         let tabBar = BaseTabBarController()
         tabBar.modalPresentationStyle = .fullScreen
@@ -56,21 +55,21 @@ class ViewController3: UIViewController {
     
     private func setupViews() {
         view.addSubview(textLabel)
+        view.addSubview(logoImageView)
         view.addSubview(endButton)
-        //view.addSubview(logoImageView)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             
-            textLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 60),
+            textLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             textLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             textLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            //            logoImageView.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 30),
-            //            logoImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            //            logoImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            //            logoImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            logoImageView.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 30),
+            logoImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            logoImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            logoImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             endButton.heightAnchor.constraint(equalToConstant: 50),
             endButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),

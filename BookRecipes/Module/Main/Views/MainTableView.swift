@@ -19,6 +19,7 @@ final class MainTableView: UIView {
     }()
     
     private var recipesItems: [Recipe] = []
+    private var navigationController: UINavigationController?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,8 +31,9 @@ final class MainTableView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(models: [Recipe]) {
+    func configure(models: [Recipe], navigationController: UINavigationController?) {
         recipesItems = models
+        self.navigationController = navigationController
     }
 }
 
@@ -46,7 +48,14 @@ extension MainTableView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = mainTableView.dequeueReusableCell(withIdentifier: "MainTableViewCell", for: indexPath) as? MainTableViewCell else { return UITableViewCell() }
         cell.configure(model: recipesItems[indexPath.item])
+        cell.selectionStyle = .none
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detailViewController = DetailViewController()
+        detailViewController.detailRecipeID = recipesItems[indexPath.item].id
+        navigationController?.pushViewController(detailViewController, animated: true)
     }
 }
 

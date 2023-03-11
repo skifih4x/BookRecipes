@@ -9,6 +9,8 @@ import UIKit
 
 class HeaderSupplementaryView: UICollectionReusableView {
     
+    weak var navigationController: UINavigationController?
+    
     private let headerLabel: UILabel = {
         let view = UILabel()
         view.text = "header"
@@ -58,12 +60,24 @@ class HeaderSupplementaryView: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func seeAllButtonTapped() {
-        print("кнопка See all нажалась")
+    @objc func seeAllButtonTapped() {    
+        let VC = RecipeListVC()
+        VC.title = headerLabel.text
+        
+        switch VC.title {
+        case "Popular \u{1F525}": VC.category = Types.popularity.rawValue
+        case "Healthy \u{1F966}": VC.category = Types.healthiness.rawValue
+        case "Dessert \u{1F370}": VC.category = Types.sugar.rawValue
+        default : break
+        }
+        
+        VC.isSorted = true
+        navigationController?.pushViewController(VC, animated: true)
     }
     
-    func configureHeader(categoryName: String) {
+    func configureHeader(categoryName: String, navController: UINavigationController) {
         headerLabel.text = categoryName
+        navigationController = navController
     }
     
     private func setConstraints() {
@@ -73,14 +87,14 @@ class HeaderSupplementaryView: UICollectionReusableView {
             headerLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
             
             seeAllButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            seeAllButton.widthAnchor.constraint(equalToConstant: 85),
+            seeAllButton.widthAnchor.constraint(equalTo: widthAnchor),
             seeAllButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
             
-            seeAllLabel.centerYAnchor.constraint(equalTo: seeAllButton.centerYAnchor),
-            seeAllLabel.leadingAnchor.constraint(equalTo: seeAllButton.leadingAnchor),
-            
             arrowImageView.centerYAnchor.constraint(equalTo: seeAllButton.centerYAnchor),
-            arrowImageView.trailingAnchor.constraint(equalTo: seeAllButton.trailingAnchor),
+            arrowImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
+            
+            seeAllLabel.centerYAnchor.constraint(equalTo: seeAllButton.centerYAnchor),
+            seeAllLabel.trailingAnchor.constraint(equalTo: arrowImageView.leadingAnchor, constant: -10),
         ])
     }
     

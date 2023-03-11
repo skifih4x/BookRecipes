@@ -6,35 +6,41 @@
 //
 
 import UIKit
-import SwiftUI
+import RealmSwift
 
 final class SavedVC: UIViewController {
     
     lazy var tableView = UITableView()
-    var data = [Recipe]()
     
+    var items: Results<RealmRecipe>!
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let deleteAllItems = UIBarButtonItem(
+            title: "Remove All",
+            style: .plain,
+            target: self,
+            action: #selector(deleteAllItemsAction))
+        navigationItem.rightBarButtonItem = deleteAllItems
         
         title = "Saved recipes"
         
         tableViewSetup()
-        loadData()
         constraints()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        loadData()
+    }
+    
     private func loadData() {
-        APICaller.shared.getSortedRecipes(type: .dessert) { result in
-            switch result {
-            case .success(let recipes):
-                self.data = recipes
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            case .failure(let err):
-                print(err.localizedDescription)
-            }
+        
+        Storage.shared.read { recipes in
+            self.items = recipes
         }
+        tableView.reloadData()
+        
     }
     
     private func tableViewSetup() {
@@ -55,6 +61,31 @@ final class SavedVC: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
     }
+    
+    private func presentErrorAlert(with error: Error) {
+        let alertController = UIAlertController(
+            title: "Error",
+            message: error.localizedDescription,
+            preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    private func createClosure(forItem id: Int) -> (() -> ()) {
+        return {
+            Storage.shared.deleteitem(withId: id)
+            self.tableView.reloadData()
+        }
+    }
+}
+
+extension SavedVC {
+    @objc func deleteAllItemsAction() {
+        Storage.shared.deleteAll()
+        tableView.reloadData()
+    }
 }
 
 extension SavedVC: UITableViewDelegate {
@@ -65,14 +96,22 @@ extension SavedVC: UITableViewDelegate {
 
 extension SavedVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return items.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SavedTableCell.reuseId)
                 as? SavedTableCell else { return UITableViewCell() }
-        let recipe = data[indexPath.row]
-//        cell.configure(with: recipe.image, text: recipe.title)
+        
+        let recipe = items[indexPath.row]
+        
+        cell.configure(
+            with: recipe.image,
+            text: recipe.title,
+            saveButtonAction: createClosure(
+                forItem: recipe.id))
+        
         return cell
     }
 }

@@ -85,12 +85,13 @@ final class DetailViewController: UIViewController  {
         imageView.layer.cornerRadius = 12
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
+
         return imageView
     }()
     
     lazy var starRaitngImageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(systemName: "hand.thumbsup.fill")
+        view.image = UIImage(systemName: "hand.thumbsup")
         view.contentMode = .scaleAspectFit
         view.tintColor = .black
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -99,7 +100,6 @@ final class DetailViewController: UIViewController  {
 
     lazy var ratingLabel: UILabel = {
         let view = UILabel()
-        //view.text = "4,5"
         view.font = UIFont(name: "Poppins", size: 15)
         view.textColor = .black
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -120,7 +120,7 @@ final class DetailViewController: UIViewController  {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .fillProportionally
-        stackView.spacing = 20
+        stackView.spacing = 5
         stackView.alignment = .center
         return stackView
        }()
@@ -319,9 +319,10 @@ extension DetailViewController: UITableViewDelegate {
          65
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("нажата ячейка \(recipe?.extendedIngredients[indexPath.row].name ?? "не прогрузилась")")
-    }
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+////        print("нажата ячейка \(recipe?.extendedIngredients[indexPath.row].name ?? "не прогрузилась")")
+//        
+//    }
 }
 
 

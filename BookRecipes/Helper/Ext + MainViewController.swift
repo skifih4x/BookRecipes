@@ -7,22 +7,22 @@
 
 import Foundation
 
-extension MainVC {
+extension MainViewController {
     
     func fetchCollectionData(for type: Types) {
-        APICaller.shared.getSortedRecipes(type: type) { results in
+        APICaller.shared.getCategoryRecipes(sorted: true, searchParameter: type.rawValue) { results in
             switch results {
             case .success(let recipes):
                 self.recipesModels = self.recipesModels + recipes
                 for recipe in recipes {
                     switch type {
-                    case .popular:
+                    case .popularity:
                         self.popularRecipes.remove(at: 0)
                         self.popularRecipes.append(recipe)
-                    case .healthy:
+                    case .healthiness:
                         self.healthyRecipes.remove(at: 0)
                         self.healthyRecipes.append(recipe)
-                    case .dessert:
+                    case .sugar:
                         self.dessertRecipes.remove(at: 0)
                         self.dessertRecipes.append(recipe)
                     }
