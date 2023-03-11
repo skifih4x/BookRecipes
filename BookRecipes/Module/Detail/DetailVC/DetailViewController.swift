@@ -16,6 +16,14 @@ final class DetailViewController: UIViewController  {
     
     private var recipe: DetailedRecipe?
     var detailRecipeID: Int = 1697641
+    var saveButtonCompletion: (() -> ())?
+    var isSaved = false {
+        didSet {
+            saveButton.toggle(with: isSaved)
+        }
+    }
+    
+    var saveButton = SaveButton(isChecked: false)
     
     //MARK: - FetchData
     private func fetchData() {
@@ -45,6 +53,9 @@ final class DetailViewController: UIViewController  {
                     self?.descriptionOfDishesLabel.text = self?.convertHTML(from: recipes.summary ?? "cant convert from html")?.string
                     self?.descriptionOfCookingLabel.text = self?.convertHTML(from: recipes.instructions ?? "cant convert from html")?.string
                     self?.dishPictureImageView.sd_setImage(with: URL(string: recipes.image ?? ""))
+                    
+                    self?.checkIfItemIsSaved()
+                    self?.barSaveButtonSetup()
                 }
                 
             case .failure(let error):
@@ -185,12 +196,11 @@ final class DetailViewController: UIViewController  {
     
     //MARK: - setupUI
     
+
      private func setupUI() {
          
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.barTintColor = .systemBackground
-         
-         
         view.backgroundColor = .white
         view.addSubview(contentScrollView)
         contentScrollView.addSubview(dishPictureImageView)
@@ -323,6 +333,31 @@ extension DetailViewController: UITableViewDelegate {
 ////        print("нажата ячейка \(recipe?.extendedIngredients[indexPath.row].name ?? "не прогрузилась")")
 //        
 //    }
+}
+
+//  MARK: - Database
+
+extension DetailViewController {
+    
+    private func checkIfItemIsSaved() {
+        isSaved = Storage.shared.isItemSaved(withId: detailRecipeID)
+    }
+    
+    private func barSaveButtonSetup() {
+        
+        guard let recipe = recipe else { return }
+        saveButtonCompletion = Storage.shared.createCompletion(with: recipe)
+        
+        saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+        
+        let saveBarButton = UIBarButtonItem(customView: saveButton)
+        navigationItem.rightBarButtonItem = saveBarButton
+    }
+    
+    @objc func saveButtonTapped() {
+        saveButtonCompletion?()
+        isSaved.toggle()
+    }
 }
 
 

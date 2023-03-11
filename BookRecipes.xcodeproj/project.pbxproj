@@ -30,6 +30,7 @@
 		95564F8929AFB9A20078BDB3 /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95564F8829AFB9A20078BDB3 /* MainTableViewCell.swift */; };
 		956471E429B26FF500E981F6 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 956471E329B26FF500E981F6 /* SDWebImage */; };
 		956471E629B26FF500E981F6 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 956471E529B26FF500E981F6 /* SDWebImageMapKit */; };
+		C756B00029BB123200F04D1F /* Ext + Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C756AFFF29BB123200F04D1F /* Ext + Storage.swift */; };
 		C77A3FE529B4A29E0090F5BA /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = C77A3FE429B4A29E0090F5BA /* Realm */; };
 		C77A3FE729B4A29E0090F5BA /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = C77A3FE629B4A29E0090F5BA /* RealmSwift */; };
 		C77A3FEC29B4A31A0090F5BA /* RealmRecipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77A3FEB29B4A31A0090F5BA /* RealmRecipe.swift */; };
@@ -70,6 +71,7 @@
 		95564F8629AFAFFA0078BDB3 /* MainTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableView.swift; sourceTree = "<group>"; };
 		95564F8829AFB9A20078BDB3 /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
 		C710EAC829AE1F0E000C85C9 /* SavedTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedTableCell.swift; sourceTree = "<group>"; };
+		C756AFFF29BB123200F04D1F /* Ext + Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Ext + Storage.swift"; sourceTree = "<group>"; };
 		C77A3FEB29B4A31A0090F5BA /* RealmRecipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmRecipe.swift; sourceTree = "<group>"; };
 		C79CFEEB29B9EF0400E5E5B1 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		C7CB34C029ABF49B001AA24C /* BaseTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTabBarController.swift; sourceTree = "<group>"; };
@@ -227,6 +229,7 @@
 			children = (
 				C77A3FEB29B4A31A0090F5BA /* RealmRecipe.swift */,
 				C79CFEEB29B9EF0400E5E5B1 /* Storage.swift */,
+				C756AFFF29BB123200F04D1F /* Ext + Storage.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -389,6 +392,8 @@
 				C7D90F9C29B23EA40008F962 /* RatingView.swift in Sources */,
 				4E76CB8429B1DC6A00A9791E /* DetailViewController.swift in Sources */,
 				C79CFEEC29B9EF0400E5E5B1 /* Storage.swift in Sources */,
+				2CF0F84329AE7EBE0054CE6F /* ListItem.swift in Sources */,
+				C756B00029BB123200F04D1F /* Ext + Storage.swift in Sources */,
 				003A12FA29B4D8F5001F29F0 /* CategoryTableViewCell.swift in Sources */,
 				CE1B860F29B4A36100665969 /* SafeRecipe.swift in Sources */,
 				CE7A20E729B6A560002C6F12 /* RecipeTableViewCell.swift in Sources */,

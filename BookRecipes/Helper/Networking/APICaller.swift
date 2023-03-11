@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 struct Constants {
+
     
 //    static let APIKey = "09713914275c4aa2bd64c3ae7d7293c9"
 //    static let APIKey = "4ea5853dc94c40a296c7ac12e7fe5eb4"
@@ -28,18 +29,8 @@ struct Constants {
 //    static let APIKey = "37f723dc553444e88435a44768859ae4"
 //    static let APIKey = "4ea5853dc94c40a296c7ac12e7fe5eb4"
 //    static let APIKey = "53848099fdeb4d0d9ad71bb84a1103e2"
-//    static let APIKey = "7e31fd338a334d03aafda200f55348c0"
-//    static let APIKey = "3632101b02674a0e97fb8b63eb12646e"
-//    static let APIKey = "4ea5853dc94c40a296c7ac12e7fe5eb4"
-//    static let APIKey = "04864a53f7464c90820b2725af2c6ba0"
-//    static let APIKey = "206625f6a74745dda3cb47905f129e1c"
-//    static let APIKey = "bc63ec8984094be58b7a2d77da76b373"
-//    static let APIKey = "4ea5853dc94c40a296c7ac12e7fe5eb4"
-//    static let APIKey = "53848099fdeb4d0d9ad71bb84a1103e2"
-//    static let APIKey = "c5579ba8b4734f44b80f0348e3a39505"
-//    static let APIKey = "9dffb89689f44ef994d6afae93681784"
-    
-    
+
+
     static let basicURL = "https://api.spoonacular.com/recipes/"
     
     static func exactURL(with id: Int) -> String {

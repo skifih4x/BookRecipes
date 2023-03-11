@@ -37,6 +37,10 @@ final class SaveButton: UIButton {
         ])
     }
     
+    func toggle(with isChecked: Bool) {
+        bookmarkImageView.image = isChecked ? UIImage(named: "bookmark selected") : UIImage(named: "bookmark")
+    }
+    
     required init?(coder: NSCoder) {
         fatalError()
     }

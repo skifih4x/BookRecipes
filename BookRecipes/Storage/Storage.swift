@@ -24,7 +24,7 @@ class Storage {
         return !itemsWithId.isEmpty
     }
     
-    func write(recipe: Recipe) {
+    func write<T: RecipeProtocol>(recipe: T) {
         
         let realmRecipe = RealmRecipe()
         
