@@ -10,6 +10,8 @@ import SDWebImage
 
 final class DetailViewController: UIViewController  {
     
+    var label: UILabel?
+    
     private let apiManager = APICaller.shared
     
     private var recipe: DetailedRecipe?
@@ -23,12 +25,28 @@ final class DetailViewController: UIViewController  {
                 self?.recipe = recipes
                 DispatchQueue.main.async {
                     self?.ingridientsTableView.reloadData()
-                    self?.dishNameLableView.text = recipes.title
+                    self?.navigationController?.navigationBar.prefersLargeTitles = false
+                    
+                    let titleLabel: UILabel = {
+                        let view = UILabel()
+                        view.text = recipes.title
+                        view.numberOfLines = 0
+                        view.font = UIFont(name: "Helvetica Neue Bold", size: 28)
+                        view.adjustsFontSizeToFitWidth = true
+                        view.translatesAutoresizingMaskIntoConstraints = false
+                        return view
+                    }()
+                                           
+                    self?.navigationItem.titleView = titleLabel
+                    
+                    
+                    //self?.dishNameLableView.text = recipes.title
                     self?.numberOfReviewsLabel.text = "\(recipes.aggregateLikes!)" + " Likes"
                     self?.descriptionOfDishesLabel.text = self?.convertHTML(from: recipes.summary ?? "cant convert from html")?.string
                     self?.descriptionOfCookingLabel.text = self?.convertHTML(from: recipes.instructions ?? "cant convert from html")?.string
                     self?.dishPictureImageView.sd_setImage(with: URL(string: recipes.image ?? ""))
                 }
+                
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -42,13 +60,15 @@ final class DetailViewController: UIViewController  {
     lazy var contentScrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
-//        scroll.backgroundColor = .red
         scroll.contentSize = CGSize(width: 100, height: 1500)
         scroll.isUserInteractionEnabled = true
         scroll.showsVerticalScrollIndicator = false
+        scroll.isDirectionalLockEnabled = true
         return scroll
     }()
     
+
+
     lazy var dishNameLableView: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -62,6 +82,10 @@ final class DetailViewController: UIViewController  {
     lazy var dishPictureImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 12
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
+
         return imageView
     }()
     
@@ -73,7 +97,7 @@ final class DetailViewController: UIViewController  {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
+
     lazy var ratingLabel: UILabel = {
         let view = UILabel()
         view.font = UIFont(name: "Poppins", size: 15)
@@ -92,7 +116,7 @@ final class DetailViewController: UIViewController  {
         return label
     }()
     
-    private let raitingStackView: UIStackView = {
+    lazy var raitingStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .fillProportionally
@@ -100,13 +124,38 @@ final class DetailViewController: UIViewController  {
         stackView.alignment = .center
         return stackView
        }()
+     
+    lazy var descriptionDish: UILabel = {
+        let label = UILabel()
+        label.text = "A description of the dish"
+        //label.font = UIFont(name: "Arial-ItalicMT", size: 20)
+        label.font = .boldSystemFont(ofSize: 20)
+        label.textColor = .black
+        label.numberOfLines = 0
+        //label.adjustsFontSizeToFitWidth = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     lazy var descriptionOfDishesLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 15, weight: .regular)
+        //label.font = .systemFont(ofSize: 15, weight: .regular)
+        label.font = UIFont(name: "Arial-ItalicMT", size: 15)
         label.textColor = .black
         label.numberOfLines = 0
-        label.adjustsFontSizeToFitWidth = true
+        //label.adjustsFontSizeToFitWidth = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var descriptionCook: UILabel = {
+        let label = UILabel()
+        label.text = "The description of cooking"
+        //label.font = UIFont(name: "Arial-ItalicMT", size: 20)
+        label.font = .boldSystemFont(ofSize: 20)
+        label.textColor = .black
+        label.numberOfLines = 0
+        //label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -114,14 +163,14 @@ final class DetailViewController: UIViewController  {
     lazy var descriptionOfCookingLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 15, weight: .regular)
+        label.font = UIFont(name: "Arial-ItalicMT", size: 15)
         label.textColor = .black
         label.numberOfLines = 0
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
-    private let ingridientsTableView: UITableView = {
+    lazy var ingridientsTableView: UITableView = {
 //        let table = UITableView(frame: .zero, style: .plain)
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -137,15 +186,20 @@ final class DetailViewController: UIViewController  {
     //MARK: - setupUI
     
      private func setupUI() {
+         
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.barTintColor = .systemBackground
+         
+         
         view.backgroundColor = .white
         view.addSubview(contentScrollView)
-        contentScrollView.addSubview(dishNameLableView)
         contentScrollView.addSubview(dishPictureImageView)
-        contentScrollView.addSubview(raitingStackView)
         raitingStackView.addArrangedSubview(starRaitngImageView)
-        raitingStackView.addArrangedSubview(ratingLabel)
         raitingStackView.addArrangedSubview(numberOfReviewsLabel)
+        contentScrollView.addSubview(raitingStackView)
+        contentScrollView.addSubview(descriptionDish)
         contentScrollView.addSubview(descriptionOfDishesLabel)
+        contentScrollView.addSubview(descriptionCook)
         contentScrollView.addSubview(descriptionOfCookingLabel)
         
         view.addSubview(ingridientsTableView)
@@ -157,47 +211,43 @@ final class DetailViewController: UIViewController  {
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            dishPictureImageView.topAnchor.constraint(equalTo: dishNameLableView.bottomAnchor, constant: 27),
-//            contentImageView.bottomAnchor.constraint(lessThanOrEqualTo: contentScrollView.bottomAnchor, constant: -20),
-            dishPictureImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20 ),
-            dishPictureImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            dishPictureImageView.heightAnchor.constraint(equalToConstant: 200),
-  
-            dishNameLableView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
-            dishNameLableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 19),
-            dishNameLableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -23),
-//            dishNameLableView.bottomAnchor.constraint(equalTo: contentImageView.topAnchor, constant: -27)
- 
-            contentScrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 19),
+            
+            contentScrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             contentScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             contentScrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-//            contentScrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -300),
             contentScrollView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.6),
+            
+            dishPictureImageView.topAnchor.constraint(equalTo: contentScrollView.topAnchor, constant: 10),
+            dishPictureImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            dishPictureImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            dishPictureImageView.heightAnchor.constraint(equalToConstant: 200),
 
             starRaitngImageView.widthAnchor.constraint(equalToConstant: 18),
-            starRaitngImageView.heightAnchor.constraint(equalToConstant: 20),
-
-            ratingLabel.widthAnchor.constraint(equalToConstant: 25),
-            ratingLabel.heightAnchor.constraint(equalToConstant: 20),
-            ratingLabel.leadingAnchor.constraint(equalTo: starRaitngImageView.trailingAnchor, constant: 7),
- 
-            numberOfReviewsLabel.leadingAnchor.constraint(equalTo: ratingLabel.trailingAnchor, constant: 15),
-        
+            starRaitngImageView.centerYAnchor.constraint(equalTo: raitingStackView.centerYAnchor),
+            
             raitingStackView.topAnchor.constraint(equalTo: dishPictureImageView.bottomAnchor, constant: 10),
             raitingStackView.heightAnchor.constraint(equalToConstant: 20),
             raitingStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             raitingStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-  
-            descriptionOfDishesLabel.topAnchor.constraint(equalTo: raitingStackView.bottomAnchor, constant: 25),
-            descriptionOfDishesLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 27),
-            descriptionOfDishesLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -25),
-//            descriptionOfDishesLabel.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
-
-            descriptionOfCookingLabel.topAnchor.constraint(equalTo: descriptionOfDishesLabel.bottomAnchor, constant: 25),
-            descriptionOfCookingLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 23),
+            
+            descriptionDish.topAnchor.constraint(equalTo: raitingStackView.bottomAnchor, constant: 20),
+            descriptionDish.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25),
+            descriptionDish.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -25),
+            
+            descriptionOfDishesLabel.topAnchor.constraint(equalTo: descriptionDish.bottomAnchor, constant: 10),
+            descriptionOfDishesLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            descriptionOfDishesLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
+            //descriptionOfDishesLabel.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
+            
+            descriptionCook.topAnchor.constraint(equalTo: descriptionOfDishesLabel.bottomAnchor, constant: 20),
+            descriptionCook.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25),
+            descriptionCook.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -25),
+            
+            descriptionOfCookingLabel.topAnchor.constraint(equalTo: descriptionCook.bottomAnchor, constant: 10),
+            descriptionOfCookingLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25),
             descriptionOfCookingLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -25),
             descriptionOfCookingLabel.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
-       
+            
             ingridientsTableView.topAnchor.constraint(equalTo: contentScrollView.bottomAnchor, constant: 3),
             ingridientsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             ingridientsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -210,12 +260,21 @@ final class DetailViewController: UIViewController  {
         fetchData()
         setupUI()
         setDelegates()
+        let backButton = UIBarButtonItem(image: UIImage(systemName: "arrow.left"), style: .plain, target: self, action: #selector(backAction))
+        navigationItem.leftBarButtonItem = backButton
+        
+        backButton.tintColor = .black
 //        fetchData()
+    }
+
+    @objc func backAction() {
+        navigationController?.popViewController(animated: true)
     }
     
     private func setDelegates() {
         ingridientsTableView.delegate = self
         ingridientsTableView.dataSource = self
+        contentScrollView.delegate = self
     }
 }
 
