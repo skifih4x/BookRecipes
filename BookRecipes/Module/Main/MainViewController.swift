@@ -244,7 +244,7 @@ extension MainViewController: UICollectionViewDataSource {
                 model: detailedRecipe,
                 section: indexPath.section,
                 item: indexPath.item,
-                saveButtonCompletion: Storage.shared.createCompletion(with: detailedRecipe))
+                saveButtonCompletion: RealmDataBase.shared.createCompletion(with: detailedRecipe))
             return cell
             
         case .healthy:
@@ -258,7 +258,7 @@ extension MainViewController: UICollectionViewDataSource {
                 model: detailedRecipe,
                 section: indexPath.section,
                 item: indexPath.item,
-                saveButtonCompletion: Storage.shared.createCompletion(with: detailedRecipe))
+                saveButtonCompletion: RealmDataBase.shared.createCompletion(with: detailedRecipe))
             return cell
             
         case .dessert:
@@ -272,7 +272,7 @@ extension MainViewController: UICollectionViewDataSource {
                 model: detailedRecipe,
                 section: indexPath.section,
                 item: indexPath.item,
-                saveButtonCompletion: Storage.shared.createCompletion(with: detailedRecipe))
+                saveButtonCompletion: RealmDataBase.shared.createCompletion(with: detailedRecipe))
             return cell
         }
     }

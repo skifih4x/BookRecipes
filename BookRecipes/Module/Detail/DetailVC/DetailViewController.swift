@@ -277,7 +277,7 @@ final class DetailViewController: UIViewController  {
     
     override func viewWillAppear(_ animated: Bool) {
         guard let id = recipe?.id else { return }
-        isSaved = Storage.shared.isItemSaved(withId: id)
+        isSaved = RealmDataBase.shared.isItemSaved(withId: id)
     }
 
     @objc func backAction() {
@@ -345,13 +345,13 @@ extension DetailViewController: UITableViewDelegate {
 extension DetailViewController {
     
     private func checkIfItemIsSaved() {
-        isSaved = Storage.shared.isItemSaved(withId: detailRecipeID)
+        isSaved = RealmDataBase.shared.isItemSaved(withId: detailRecipeID)
     }
     
     private func barSaveButtonSetup() {
         
         guard let recipe = recipe else { return }
-        saveButtonCompletion = Storage.shared.createCompletion(with: recipe)
+        saveButtonCompletion = RealmDataBase.shared.createCompletion(with: recipe)
         
         saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         

@@ -52,7 +52,7 @@ final class MainTableViewCell: UITableViewCell {
         guard let image = model.image else { return }
         recipeImageView.sd_setImage(with: URL(string: image), placeholderImage: UIImage(named: "loading.jpg"))
         recipeNameLabel.text = model.title
-        isSaved = Storage.shared.isItemSaved(withId: model.id)
+        isSaved = RealmDataBase.shared.isItemSaved(withId: model.id)
         self.saveButtonClosure = saveButtonClosure
     }
 }

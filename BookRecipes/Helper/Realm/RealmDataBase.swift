@@ -8,16 +8,22 @@
 import RealmSwift
 import Foundation
 
-class Storage {
+class RealmDataBase {
     
-    static let shared = Storage()
+    // MARK: - Properties
+    
+    static let shared = RealmDataBase()
 
     private let realm = try! Realm()
     private var items: Results<RealmRecipe>!
     
+    // MARK: - Initialization
+    
     private init() {
         print("Realm is located at:", realm.configuration.fileURL!)
     }
+    
+    // MARK: - Public methods
     
     func isItemSaved(withId id: Int) -> Bool {
         let itemsWithId = realm.objects(RealmRecipe.self).filter("id = %@", id)

@@ -34,7 +34,7 @@ final class SavedVC: UIViewController {
     // MARK: - Private Methods
     
     private func loadData() {
-        Storage.shared.read { recipes in
+        RealmDataBase.shared.read { recipes in
             self.items = recipes
         }
         tableView.reloadData()
@@ -73,7 +73,7 @@ final class SavedVC: UIViewController {
     
     private func createClosure(forItem id: Int) -> (() -> ()) {
         return {
-            Storage.shared.deleteitem(withId: id)
+            RealmDataBase.shared.deleteitem(withId: id)
             self.tableView.reloadData()
         }
     }
@@ -93,7 +93,7 @@ extension SavedVC {
     }
     
     @objc func deleteAllItemsAction() {
-        Storage.shared.deleteAll()
+        RealmDataBase.shared.deleteAll()
         tableView.reloadData()
     }
 }
