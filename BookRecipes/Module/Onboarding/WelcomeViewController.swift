@@ -29,7 +29,7 @@ class WelcomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(red: 234/255, green: 226/255, blue: 183/255, alpha: 1)
+        view.backgroundColor = UIColor(red: 189/255, green: 205/255, blue: 214/255, alpha: 1)
         setupViews()
         setupConstraints()
     }
