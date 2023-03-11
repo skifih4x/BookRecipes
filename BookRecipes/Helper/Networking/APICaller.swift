@@ -9,8 +9,7 @@ import Foundation
 import UIKit
 
 struct Constants {
-//    static let APIKey = "7e31fd338a334d03aafda200f55348c0"
-//    static let APIKey = "3632101b02674a0e97fb8b63eb12646e"
+
 
     //static let APIKey = "7e31fd338a334d03aafda200f55348c0"
     //static let APIKey = "3632101b02674a0e97fb8b63eb12646e"
@@ -43,13 +42,11 @@ struct Constants {
 //    static let APIKey = "c5579ba8b4734f44b80f0348e3a39505"
 //    static let APIKey = "9dffb89689f44ef994d6afae93681784"
 
-    
     static let basicURL = "https://api.spoonacular.com/recipes/"
     
     static func exactURL(with id: Int) -> String {
         return "\(basicURL)\(id)/information?apiKey=\(APIKey)"
     }
-    static let randomURL = "\(basicURL)random?apiKey=\(APIKey)"
     static let searchRecipeURL = "\(basicURL)autocomplete?number=10&apiKey=\(APIKey)&query="
     static let ingredientImageURL = "https://spoonacular.com/cdn/ingredients_100x100/"
     
@@ -84,14 +81,14 @@ class APICaller {
         task.resume()
     }
     
-    func searchRecipe (keyWord: String, completion: @escaping (Result<[RecipeId], Error>) -> Void) {
+    func searchRecipe (keyWord: String, completion: @escaping (Result<[Recipe], Error>) -> Void) {
         guard let url = URL(string: Constants.searchRecipeURL+keyWord) else {return}
         print ("url for searched : \(url)")
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
             
             guard let data = data, error == nil else {return}
             do {
-                let results = try JSONDecoder().decode([RecipeId].self, from: data)
+                let results = try JSONDecoder().decode([Recipe].self, from: data)
                 completion(.success(results))
             } catch {
                 completion(.failure(error))
@@ -99,16 +96,6 @@ class APICaller {
             }
         }
         task.resume()
-    }
-        
-    func convertHTML (from string: String) -> NSAttributedString?{
-        do{
-            let atrString = try NSAttributedString(data: string.data(using: .utf8) ?? .init(), options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil)
-            return atrString
-        }catch{
-            print("error in HTML converter: \(error)")
-            return nil
-        }
     }
 }
 

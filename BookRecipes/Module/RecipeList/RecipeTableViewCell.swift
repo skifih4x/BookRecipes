@@ -70,6 +70,18 @@ extension RecipeTableViewCell {
         contentView.addSubview(likesLabel)
     }
     
+    func setupData(recipe: DetailedRecipe) {
+        recipeImageView.sd_setImage(with: URL(string: recipe.image!))
+        titleLabel.text = recipe.title
+        likesLabel.text = "Likes: \(recipe.aggregateLikes!)"
+    }
+    
+}
+
+//MARK: - Constraints
+
+extension RecipeTableViewCell {
+    
     func setupConstraints() {
         
         let screenHeight = UIScreen.main.bounds.height
@@ -100,9 +112,5 @@ extension RecipeTableViewCell {
         ])
     }
     
-    func setupData(recipe: DetailedRecipe) {
-        recipeImageView.sd_setImage(with: URL(string: recipe.image!))
-        titleLabel.text = recipe.title
-        likesLabel.text = "Likes: \(recipe.aggregateLikes!)"
-    }
+
 }

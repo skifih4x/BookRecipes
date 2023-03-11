@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension MainVC {
+extension MainViewController {
     
     func fetchCollectionData(for type: Types) {
         APICaller.shared.getCategoryRecipes(sorted: true, searchParameter: type.rawValue) { results in
