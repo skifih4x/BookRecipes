@@ -10,11 +10,12 @@ import SDWebImage
 
 final class DetailViewController: UIViewController  {
     
-    var label: UILabel?
+    var label: UILabel? //что за лэйбл? нейминг
     
     private let apiManager = APICaller.shared
     
-    private var recipe: DetailedRecipe?
+    var recipe: DetailedRecipe?
+    
     var detailRecipeID: Int = 1697641
     var saveButtonCompletion: (() -> ())?
     var isSaved = false {
@@ -47,7 +48,6 @@ final class DetailViewController: UIViewController  {
                                            
                     self?.navigationItem.titleView = titleLabel
                     
-                    
                     //self?.dishNameLableView.text = recipes.title
                     self?.numberOfReviewsLabel.text = "\(recipes.aggregateLikes!)" + " Likes"
                     self?.descriptionOfDishesLabel.text = self?.convertHTML(from: recipes.summary ?? "cant convert from html")?.string
@@ -63,12 +63,10 @@ final class DetailViewController: UIViewController  {
             }
         }
     }
-    
-    var id: Int?
-    
+
     //MARK: - Elements
     
-    lazy var contentScrollView: UIScrollView = {
+    private lazy var contentScrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
         scroll.contentSize = CGSize(width: 100, height: 1500)
@@ -77,20 +75,19 @@ final class DetailViewController: UIViewController  {
         scroll.isDirectionalLockEnabled = true
         return scroll
     }()
-    
 
-
-    lazy var dishNameLableView: UILabel = {
+    private lazy var dishNameLableView: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 24, weight: .bold)
         label.textColor = .black
         label.numberOfLines = 0
         label.adjustsFontSizeToFitWidth = true
+        label.textAlignment = .left
         return label
     }()
 
-    lazy var dishPictureImageView: UIImageView = {
+    private lazy var dishPictureImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 12
@@ -100,7 +97,7 @@ final class DetailViewController: UIViewController  {
         return imageView
     }()
     
-    lazy var starRaitngImageView: UIImageView = {
+    private lazy var starRaitngImageView: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(systemName: "hand.thumbsup")
         view.contentMode = .scaleAspectFit
@@ -109,7 +106,7 @@ final class DetailViewController: UIViewController  {
         return view
     }()
 
-    lazy var ratingLabel: UILabel = {
+    private lazy var ratingLabel: UILabel = {
         let view = UILabel()
         view.font = UIFont(name: "Poppins", size: 15)
         view.textColor = .black
@@ -117,7 +114,7 @@ final class DetailViewController: UIViewController  {
         return view
     }()
     
-    lazy var numberOfReviewsLabel: UILabel = {
+    private lazy var numberOfReviewsLabel: UILabel = {
         let label = UILabel()
         label.text = "(300 Reviews)"
         label.font = UIFont(name: "Poppins", size: 15)
@@ -127,7 +124,7 @@ final class DetailViewController: UIViewController  {
         return label
     }()
     
-    lazy var raitingStackView: UIStackView = {
+    private lazy var raitingStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .fillProportionally
@@ -136,7 +133,7 @@ final class DetailViewController: UIViewController  {
         return stackView
        }()
      
-    lazy var descriptionDish: UILabel = {
+    private lazy var descriptionDish: UILabel = {
         let label = UILabel()
         label.text = "A description of the dish"
         //label.font = UIFont(name: "Arial-ItalicMT", size: 20)
@@ -148,7 +145,7 @@ final class DetailViewController: UIViewController  {
         return label
     }()
     
-    lazy var descriptionOfDishesLabel: UILabel = {
+    private lazy var descriptionOfDishesLabel: UILabel = {
         let label = UILabel()
         //label.font = .systemFont(ofSize: 15, weight: .regular)
         label.font = UIFont(name: "Arial-ItalicMT", size: 15)
@@ -159,7 +156,7 @@ final class DetailViewController: UIViewController  {
         return label
     }()
     
-    lazy var descriptionCook: UILabel = {
+    private lazy var descriptionCook: UILabel = {
         let label = UILabel()
         label.text = "The description of cooking"
         //label.font = UIFont(name: "Arial-ItalicMT", size: 20)
@@ -171,7 +168,7 @@ final class DetailViewController: UIViewController  {
         return label
     }()
     
-    lazy var descriptionOfCookingLabel: UILabel = {
+    private lazy var descriptionOfCookingLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: "Arial-ItalicMT", size: 15)
@@ -181,7 +178,9 @@ final class DetailViewController: UIViewController  {
         return label
     }()
     
-    lazy var ingridientsTableView: UITableView = {
+    private var cellsSelectedStateDict = [Int:Bool]()
+    
+     private let ingridientsTableView: UITableView = {
 //        let table = UITableView(frame: .zero, style: .plain)
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -196,7 +195,6 @@ final class DetailViewController: UIViewController  {
     
     //MARK: - setupUI
     
-
      private func setupUI() {
          
         navigationController?.navigationBar.shadowImage = UIImage()
@@ -290,10 +288,14 @@ final class DetailViewController: UIViewController  {
 
 // MARK: - extension UITableViewDataSource
 
-extension DetailViewController: UITableViewDataSource {
+extension DetailViewController: UITableViewDataSource, IngridientTableViewCellDelegate {
     
-    
-    
+    func checkboxToggle(sender: IngridientTableViewCell) {
+        if let selectedIndexPath = ingridientsTableView.indexPath(for: sender) {
+            cellsSelectedStateDict[selectedIndexPath.row] = !(cellsSelectedStateDict[selectedIndexPath.row] ?? false)
+        }
+    }
+ 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let ingridients = recipe?.extendedIngredients else {return 1}
         return ingridients.count
@@ -301,9 +303,12 @@ extension DetailViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell" , for: indexPath) as! IngridientTableViewCell
+        cell.delegate = self
 //        guard let ingridient = recipe?.extendedIngredients[indexPath.row] else { return UITableViewCell() } //  если делать через guard то создается пустая ячейка
         if let ingridient = recipe?.extendedIngredients[indexPath.row]  {
             cell.configure(ingridient)
+//            print(cellsSelectedStateDict)
+            cell.checkboxUIButtom.isSelected = cellsSelectedStateDict[indexPath.row] ?? false
         }
         return cell
     }
@@ -328,11 +333,6 @@ extension DetailViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
          65
     }
-    
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-////        print("нажата ячейка \(recipe?.extendedIngredients[indexPath.row].name ?? "не прогрузилась")")
-//        
-//    }
 }
 
 //  MARK: - Database
