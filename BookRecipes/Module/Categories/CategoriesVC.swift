@@ -88,9 +88,7 @@ extension CategoriesVC: UITableViewDelegate {
         let title = categories[indexPath.item][0] as? String
         
         let VC = RecipeListVC()
-        VC.category = category
-        VC.isSorted = false
-        VC.title = title
+        VC.configureRecipeListVC(isSorted: false, category: category, title: title)
         navigationController?.pushViewController(VC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
