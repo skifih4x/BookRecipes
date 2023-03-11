@@ -42,6 +42,8 @@ class RecipeTableViewCell: UITableViewCell {
         return label
     }()
     
+    lazy var saveButton = SaveButton(isChecked: false)
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
  
@@ -66,9 +68,22 @@ extension RecipeTableViewCell {
     func setupView() {
         
         contentView.addSubview(recipeImageView)
+        contentView.addSubview(saveButton)
         contentView.addSubview(titleLabel)
         contentView.addSubview(likesLabel)
     }
+    
+    func setupData(recipe: DetailedRecipe) {
+        recipeImageView.sd_setImage(with: URL(string: recipe.image!))
+        titleLabel.text = recipe.title
+        likesLabel.text = "Likes: \(recipe.aggregateLikes!)"
+    }
+    
+}
+
+//MARK: - Constraints
+
+extension RecipeTableViewCell {
     
     func setupConstraints() {
         
@@ -87,10 +102,17 @@ extension RecipeTableViewCell {
         ])
         
         NSLayoutConstraint.activate([
+            saveButton.topAnchor.constraint(equalTo: recipeImageView.topAnchor),
+            contentView.trailingAnchor.constraint(equalTo: saveButton.trailingAnchor, constant: 16),
+            saveButton.heightAnchor.constraint(equalToConstant: 20),
+            saveButton.widthAnchor.constraint(equalToConstant: 20)
+        ])
+        
+        NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: recipeImageView.topAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: recipeImageView.trailingAnchor, constant: 10),
-            contentView.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 16),
-            titleLabel.heightAnchor.constraint(equalToConstant: screenHeight / 14)
+            saveButton.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 16),
+            titleLabel.heightAnchor.constraint(equalToConstant: screenHeight / 15)
         ])
         
         NSLayoutConstraint.activate([
@@ -98,11 +120,5 @@ extension RecipeTableViewCell {
             likesLabel.leadingAnchor.constraint(equalTo: recipeImageView.trailingAnchor, constant: 10),
             contentView.trailingAnchor.constraint(equalTo: likesLabel.trailingAnchor, constant: 16),
         ])
-    }
-    
-    func setupData(recipe: DetailedRecipe) {
-        recipeImageView.sd_setImage(with: URL(string: recipe.image!))
-        titleLabel.text = recipe.title
-        likesLabel.text = "Likes: \(recipe.aggregateLikes!)"
     }
 }
