@@ -14,6 +14,7 @@ class BaseTabBarController: UITabBarController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
+        tabBar.tintColor = .black
         
         viewControllers = [
             createNavController(viewController: MainViewController(), title: "Main", imageName: "main"),
