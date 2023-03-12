@@ -90,6 +90,7 @@ extension SavedVC {
             target: self,
             action: #selector(deleteAllItemsAction))
         navigationItem.rightBarButtonItem = deleteAllItems
+        deleteAllItems.tintColor = .black
     }
     
     @objc func deleteAllItemsAction() {
